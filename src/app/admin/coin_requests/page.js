@@ -1,6 +1,5 @@
 'use client';
-import React, { useState, useEffect, Suspense } from "react";
-
+import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import {
   Table,
@@ -37,12 +36,7 @@ const CoinRequestsComponent = () => {
           setError(true);
           setSnackbarMessage(response.data.error);
         } else {
-          // Ensure the response is an array before updating the state
-          if (Array.isArray(response.data)) {
-            setCoinRequests(response.data);
-          } else {
-            setCoinRequests([]);  // Set to an empty array if the response is not an array
-          }
+          setCoinRequests(Array.isArray(response.data) ? response.data : []);
         }
       } catch (err) {
         console.error('Error fetching coin requests:', err);
@@ -60,34 +54,33 @@ const CoinRequestsComponent = () => {
   const handleStatusChange = async (id, newStatus) => {
     setLoading(true);
     try {
-        const response = await axios.put(`${apiUrl}/coin_request_api.php`, {
-            id,  // Send 'id'
-            request_status: newStatus,
-        });
+      const response = await axios.put(`${apiUrl}/coin_request_api.php`, {
+        id,  // Send 'id'
+        request_status: newStatus,
+      });
 
-        if (response.data.success) {
-            setSnackbarMessage('Request status updated successfully');
-            setSnackbarOpen(true);
-            setCoinRequests((prevRequests) =>
-                prevRequests.map((request) =>
-                    request.id === id ? { ...request, request_status: newStatus } : request
-                )
-            );
-        } else {
-            setSnackbarMessage(response.data.error || 'Failed to update request status');
-            setSnackbarOpen(true);
-        }
-    } catch (error) {
-        console.error('Error updating request status:', error);
-        setSnackbarMessage('Failed to update request status');
+      if (response.data.success) {
+        setSnackbarMessage('Request status updated successfully');
         setSnackbarOpen(true);
+        setCoinRequests((prevRequests) =>
+          prevRequests.map((request) =>
+            request.id === id ? { ...request, request_status: newStatus } : request
+          )
+        );
+      } else {
+        setSnackbarMessage(response.data.error || 'Failed to update request status');
+        setSnackbarOpen(true);
+      }
+    } catch (error) {
+      console.error('Error updating request status:', error);
+      setSnackbarMessage('Failed to update request status');
+      setSnackbarOpen(true);
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
   };
 
   return (
-    <Suspense fallback={<CircularProgress />}>
     <Box sx={{ padding: 3 }}>
       {loading ? (
         <Box display="flex" justifyContent="center" alignItems="center">
@@ -113,15 +106,13 @@ const CoinRequestsComponent = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {/* Ensure coinRequests is an array */}
-                {Array.isArray(coinRequests) && coinRequests.length > 0 ? (
+                {coinRequests.length > 0 ? (
                   coinRequests.map((request) => (
                     <TableRow key={request.id}>
                       <TableCell>{request.id}</TableCell>
                       <TableCell>{request.teacher_id}</TableCell>
                       <TableCell>{request.requested_amount}</TableCell>
                       <TableCell>
-                        {/* Display the bank receipt image using the URL path */}
                         <img
                           src={`${apiUrl}/uploads/${request.bank_receipt_url}`}
                           alt="Receipt"
@@ -168,7 +159,6 @@ const CoinRequestsComponent = () => {
         <Alert severity="success">{snackbarMessage}</Alert>
       </Snackbar>
     </Box>
-    </Suspense>
   );
 };
 
