@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import {
   Table,
   TableContainer,
@@ -25,6 +25,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  CircularProgress,
 } from "@mui/material";
 
 import {
@@ -83,7 +84,7 @@ const AdminUsers = () => {
   const handleAddOpen = () => {
     setFormData({
       name: "",
-      role: "admin", // Default role set to 'admin'
+      role: "admin",
       email: "",
       password: "",
       confirmPassword: "",
@@ -239,45 +240,19 @@ const AdminUsers = () => {
 
   const columns = React.useMemo(
     () => [
-      {
-        Header: "ID",
-        accessor: "id",
-      },
-      {
-        Header: "Name",
-        accessor: "name",
-      },
-      {
-        Header: "Role",
-        accessor: "role",
-      },
-      {
-        Header: "Email",
-        accessor: "email",
-      },
-      {
-        Header: "Created At",
-        accessor: "createdAt",
-        Cell: ({ value }) => new Date(value).toLocaleDateString(),
-      },
-      {
-        Header: "Updated At",
-        accessor: "updatedAt",
-        Cell: ({ value }) => new Date(value).toLocaleDateString(),
-      },
+      { Header: "ID", accessor: "id" },
+      { Header: "Name", accessor: "name" },
+      { Header: "Role", accessor: "role" },
+      { Header: "Email", accessor: "email" },
+      { Header: "Created At", accessor: "createdAt", Cell: ({ value }) => new Date(value).toLocaleDateString() },
+      { Header: "Updated At", accessor: "updatedAt", Cell: ({ value }) => new Date(value).toLocaleDateString() },
       {
         Header: "Actions",
         accessor: "actions",
         Cell: ({ row }) => (
           <div style={{ display: "flex", gap: "10px" }}>
-            <FaUserEdit
-              onClick={() => handleEditOpen(row.original)}
-              style={{ fontSize: "20px", color: "#1976d2", cursor: "pointer" }}
-            />
-            <MdDeleteForever
-              onClick={() => handleDelete(row.original.id)}
-              style={{ fontSize: "20px", color: "#d32f2f", cursor: "pointer" }}
-            />
+            <FaUserEdit onClick={() => handleEditOpen(row.original)} style={{ fontSize: "20px", color: "#1976d2", cursor: "pointer" }} />
+            <MdDeleteForever onClick={() => handleDelete(row.original.id)} style={{ fontSize: "20px", color: "#d32f2f", cursor: "pointer" }} />
           </div>
         ),
       },
@@ -296,10 +271,7 @@ const AdminUsers = () => {
     gotoPage,
     setPageSize,
   } = useTable(
-    {
-      columns,
-      data: adminUsers,
-    },
+    { columns, data: adminUsers },
     useGlobalFilter,
     useSortBy,
     usePagination
@@ -308,6 +280,7 @@ const AdminUsers = () => {
   const { pageIndex, pageSize, globalFilter } = state;
 
   return (
+    <Suspense fallback={<CircularProgress />}>
     <div style={{ padding: "20px" }}>
       {/* Toolbar */}
       <div
@@ -621,6 +594,7 @@ const AdminUsers = () => {
         </Alert>
       </Snackbar>
     </div>
+    </Suspense>
   );
 };
 

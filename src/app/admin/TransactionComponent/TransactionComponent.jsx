@@ -1,5 +1,6 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
+
 import {
   Backdrop,
   CircularProgress,
@@ -168,6 +169,7 @@ const handleEdit = (transaction) => {
   };
 
   return (
+    <Suspense fallback={<CircularProgress />}>
     <Box sx={{ padding: 3 }}>
       <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>
         <CircularProgress color="inherit" />
@@ -341,6 +343,7 @@ const handleEdit = (transaction) => {
         <Alert severity="error">Please fill in all the required fields.</Alert>
       </Snackbar>
     </Box>
+    </Suspense>
   );
 };
 

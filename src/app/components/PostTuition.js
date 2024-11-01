@@ -13,7 +13,7 @@ const PostTuitionBox = () => {
 
     if (user && user.role === 'student') {
       setRole(user.role);
-      setProfileImage(user.image ? `http://localhost/academy/uploads/${user.image}` : '/default-profile.png');
+      setProfileImage(user.image ? `https://studysir.m3xtrader.com/api/uploads/${user.image}` : '/default-profile.png');
     }
   }, []);
 

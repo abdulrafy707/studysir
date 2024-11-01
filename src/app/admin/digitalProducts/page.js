@@ -1,5 +1,5 @@
-'use client';
-import React, { useState, useEffect } from 'react';
+"use client"; // Enforces client-side rendering for this component
+import React, { useState, useEffect, Suspense } from "react";
 import axios from 'axios';
 import {
   Table,
@@ -99,77 +99,79 @@ const EbookComponent = () => {
   };
 
   return (
-    <Box sx={{ padding: 3 }}>
-      {loading ? (
-        <Box display="flex" justifyContent="center" alignItems="center">
-          <CircularProgress />
-        </Box>
-      ) : error ? (
-        <Snackbar open={true} autoHideDuration={6000}>
-          <Alert severity="error">{snackbarMessage}</Alert>
-        </Snackbar>
-      ) : (
-        <>
-          <Typography variant="h4" gutterBottom>
-            Ebooks List
-          </Typography>
+    <Suspense fallback={<CircularProgress />}>
+      <Box sx={{ padding: 3 }}>
+        {loading ? (
+          <Box display="flex" justifyContent="center" alignItems="center">
+            <CircularProgress />
+          </Box>
+        ) : error ? (
+          <Snackbar open={true} autoHideDuration={6000}>
+            <Alert severity="error">{snackbarMessage}</Alert>
+          </Snackbar>
+        ) : (
+          <>
+            <Typography variant="h4" gutterBottom>
+              Ebooks List
+            </Typography>
 
-          {/* Table to display ebooks */}
-          <TableContainer component={Paper}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Ebook ID</TableCell>
-                  <TableCell>Ebook Title</TableCell>
-                  <TableCell>Author Name</TableCell>
-                  <TableCell>Price</TableCell>
-                  <TableCell>Seller Name</TableCell>
-                  <TableCell>Downloads</TableCell>
-                  <TableCell>Status</TableCell>
-                  <TableCell>Action</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {filteredEbooks.map((ebook) => (
-                  <TableRow key={ebook.ebook_id}>
-                    <TableCell>{ebook.ebook_id}</TableCell>
-                    <TableCell>{ebook.ebook_title}</TableCell>
-                    <TableCell>{ebook.author_name}</TableCell>
-                    <TableCell>Rs {ebook.price}</TableCell>
-                    <TableCell>{ebook.seller_name}</TableCell>
-                    <TableCell>{ebook.downloads}</TableCell>
-                    <TableCell>{ebook.status === 'active' ? 'Active' : 'Inactive'}</TableCell>
-                    <TableCell>
-                      <FormControl fullWidth>
-                        <InputLabel>Status</InputLabel>
-                        <Select
-                          value={ebook.status}
-                          onChange={(e) => handleStatusChange(ebook.ebook_id, e.target.value)}
-                          label="Status"
-                        >
-                          <MenuItem value="active">Active</MenuItem>
-                          <MenuItem value="inactive">Inactive</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </TableCell>
+            {/* Table to display ebooks */}
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Ebook ID</TableCell>
+                    <TableCell>Ebook Title</TableCell>
+                    <TableCell>Author Name</TableCell>
+                    <TableCell>Price</TableCell>
+                    <TableCell>Seller Name</TableCell>
+                    <TableCell>Downloads</TableCell>
+                    <TableCell>Status</TableCell>
+                    <TableCell>Action</TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </>
-      )}
+                </TableHead>
+                <TableBody>
+                  {filteredEbooks.map((ebook) => (
+                    <TableRow key={ebook.ebook_id}>
+                      <TableCell>{ebook.ebook_id}</TableCell>
+                      <TableCell>{ebook.ebook_title}</TableCell>
+                      <TableCell>{ebook.author_name}</TableCell>
+                      <TableCell>Rs {ebook.price}</TableCell>
+                      <TableCell>{ebook.seller_name}</TableCell>
+                      <TableCell>{ebook.downloads}</TableCell>
+                      <TableCell>{ebook.status === 'active' ? 'Active' : 'Inactive'}</TableCell>
+                      <TableCell>
+                        <FormControl fullWidth>
+                          <InputLabel>Status</InputLabel>
+                          <Select
+                            value={ebook.status}
+                            onChange={(e) => handleStatusChange(ebook.ebook_id, e.target.value)}
+                            label="Status"
+                          >
+                            <MenuItem value="active">Active</MenuItem>
+                            <MenuItem value="inactive">Inactive</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </>
+        )}
 
-      {/* Success/Error Snackbar */}
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={4000}
-        onClose={() => setSnackbarOpen(false)}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      >
-        <Alert severity="success">{snackbarMessage}</Alert>
-      </Snackbar>
-    </Box>
+        {/* Success/Error Snackbar */}
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={4000}
+          onClose={() => setSnackbarOpen(false)}
+          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        >
+          <Alert severity="success">{snackbarMessage}</Alert>
+        </Snackbar>
+      </Box>
+    </Suspense>
   );
 };
 

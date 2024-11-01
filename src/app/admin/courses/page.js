@@ -1,5 +1,6 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from "react";
+
 import axios from 'axios';
 import {
   Table,
@@ -78,6 +79,7 @@ const CourseComponent = () => {
   
 
   return (
+    <Suspense fallback={<CircularProgress />}>
     <Box sx={{ padding: 3 }}>
       {loading ? (
         <Box display="flex" justifyContent="center" alignItems="center">
@@ -147,6 +149,7 @@ const CourseComponent = () => {
         <Alert severity="success">{snackbarMessage}</Alert>
       </Snackbar>
     </Box>
+    </Suspense>
   );
 };
 

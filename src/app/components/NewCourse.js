@@ -55,7 +55,7 @@ export default function NewCourse({ onCloseForm }) {
     });
   
     try {
-      const response = await fetch('http://localhost/academy/courses_api.php', {
+      const response = await fetch('https://studysir.m3xtrader.com/api/courses_api.php', {
         method: 'POST',
         body: formPayload,
       });
