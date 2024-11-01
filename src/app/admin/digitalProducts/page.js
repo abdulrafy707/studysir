@@ -1,4 +1,4 @@
-"use client"; // Enforces client-side rendering for this component
+"use client";
 import React, { useState, useEffect, Suspense } from "react";
 import axios from 'axios';
 import {
@@ -19,7 +19,6 @@ import {
   InputLabel,
   Typography,
 } from '@mui/material';
-import { useSearchParams } from 'next/navigation'; // Use for URL parameters
 
 const EbookComponent = () => {
   const [ebooks, setEbooks] = useState([]); // Store all ebooks
@@ -28,10 +27,16 @@ const EbookComponent = () => {
   const [error, setError] = useState(false); // Error state
   const [snackbarOpen, setSnackbarOpen] = useState(false); // Snackbar for success/error messages
   const [snackbarMessage, setSnackbarMessage] = useState(''); // Message for snackbar
+  const [searchQuery, setSearchQuery] = useState(''); // State to hold search query
 
-  const searchParams = useSearchParams(); // Fetch query parameters from URL
-  const searchQuery = searchParams.get('q') || ''; // Get the search query from the URL
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL; // Fetch base URL from .env file
+
+  // Fetch the search query from URL using URLSearchParams
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const query = params.get('q') || '';
+    setSearchQuery(query);
+  }, []);
 
   // Fetch the list of ebooks when the component mounts
   useEffect(() => {
