@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 export default function NotificationsPage() {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [showPopup, setShowPopup] = useState(false);
   const [selectedNotification, setSelectedNotification] = useState(null);
   const [actionType, setActionType] = useState('');

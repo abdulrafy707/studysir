@@ -5,6 +5,7 @@ import { ThreeDots } from 'react-loader-spinner'; // Import the spinner
 export default function NotificationsPage() {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   // Fetch the notifications when the component loads
