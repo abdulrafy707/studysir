@@ -1,6 +1,5 @@
 'use client';
 import React, { useState, useEffect, Suspense } from "react";
-
 import axios from 'axios';
 import {
   Table,
@@ -19,7 +18,6 @@ import {
   FormControl,
   InputLabel
 } from '@mui/material';
-import { useSearchParams } from 'next/navigation'; // Use for URL parameters
 
 const TeacherComponent = () => {
   const [teachers, setTeachers] = useState([]);
@@ -28,10 +26,16 @@ const TeacherComponent = () => {
   const [error, setError] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [searchQuery, setSearchQuery] = useState(''); // State to store query parameter
 
-  const searchParams = useSearchParams(); // Fetch query parameters from URL
-  const searchQuery = searchParams.get('q') || ''; // Get the search query from the URL
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL; // Fetch base URL from .env file
+
+  // Fetch the query parameter directly from the URL
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const query = urlParams.get('q') || '';
+    setSearchQuery(query);
+  }, []);
 
   // Fetch the list of teachers when the component mounts
   useEffect(() => {
@@ -100,7 +104,6 @@ const TeacherComponent = () => {
   };
 
   return (
-    <Suspense fallback={<CircularProgress />}>
     <Box sx={{ padding: 3 }}>
       {loading ? (
         <Box display="flex" justifyContent="center" alignItems="center">
@@ -167,7 +170,6 @@ const TeacherComponent = () => {
         <Alert severity="success">{snackbarMessage}</Alert>
       </Snackbar>
     </Box>
-    </Suspense>
   );
 };
 

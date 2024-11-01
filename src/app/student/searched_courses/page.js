@@ -1,7 +1,6 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import React, { useState, useEffect } from 'react';
 import {
   FaLanguage,
   FaCalendarAlt,
@@ -22,8 +21,7 @@ const SearchCourses = () => {
   const [likes, setLikes] = useState({});
   const [isJoinRequestOpen, setIsJoinRequestOpen] = useState(false);
   const [joinRequestMessage, setJoinRequestMessage] = useState('');
-  const searchParams = useSearchParams();
-  const query = searchParams.get('query');
+  const [query, setQuery] = useState('');
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   useEffect(() => {
@@ -128,8 +126,6 @@ const SearchCourses = () => {
     <div className="flex flex-wrap justify-center gap-6">
       {courses.map((course) => (
         <div key={course.course_id} className="bg-white border rounded-lg w-[300px] sm:w-[300px] md:w-[600px] shadow-lg p-4 my-8 relative mx-auto">
-          
-          {/* Dropdown menu */}
           <div className="absolute top-4 right-4 flex justify-end">
             <FaEllipsisV className="cursor-pointer" onClick={() => setDropdownOpen(dropdownOpen === course.course_id ? null : course.course_id)} />
             {dropdownOpen === course.course_id && (
@@ -141,7 +137,6 @@ const SearchCourses = () => {
             )}
           </div>
 
-          {/* Teacher Info */}
           {teachers[course.teacher_id] && (
             <div className="flex items-center mb-4">
               <img
@@ -156,13 +151,13 @@ const SearchCourses = () => {
             </div>
           )}
 
-          {/* Course Title, Description, and Status */}
           <div className="flex justify-between items-center mb-2">
             <h2 className="text-sm sm:text-lg font-bold">{course.course_title}</h2>
             <span className={`px-3 py-1 rounded-full text-xs sm:text-sm ${course.status === 'active' ? 'bg-green-600 text-white' : 'bg-red-600 text-white'}`}>
               {course.status === 'active' ? 'Active' : 'Inactive'}
             </span>
           </div>
+
           <p className="text-gray-700 text-xs sm:text-sm mt-2">
             {course.description ? course.description.slice(0, 100) : 'Description not available'}
             {course.description?.length > 100 && <span>...</span>}
@@ -170,21 +165,6 @@ const SearchCourses = () => {
 
           <img src={`${baseUrl}/uploads/${course.poster_image}`} alt="Course Banner" className="rounded-lg w-full mt-4" />
 
-          {/* Course Details */}
-          <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="flex items-center space-x-2"><FaLanguage size={16} /><p className="font-bold text-xs sm:text-sm">Language:</p><p className="text-xs sm:text-sm">{course.language || 'Not specified'}</p></div>
-            <div className="flex items-center space-x-2"><AiOutlineFileText size={16} /><p className="font-bold text-xs sm:text-sm">Subject:</p><p className="text-xs sm:text-sm">{course.subject || 'Not specified'}</p></div>
-            <div className="flex items-center space-x-2"><BiUser size={16} /><p className="font-bold text-xs sm:text-sm">Gender:</p><p className="text-xs sm:text-sm">{course.gender || 'Anyone'}</p></div>
-            <div className="flex items-center space-x-2"><FaCalendarAlt size={16} /><p className="font-bold text-xs sm:text-sm">Course Duration:</p><p className="text-xs sm:text-sm">{course.course_duration || 'Not specified'}</p></div>
-            <div className="flex items-center space-x-2"><FaClock size={16} /><p className="font-bold text-xs sm:text-sm">Class Duration:</p><p className="text-xs sm:text-sm">{course.class_duration || 'Not specified'}</p></div>
-            <div className="flex items-center space-x-2"><FaClock size={16} /><p className="font-bold text-xs sm:text-sm">Class Timing:</p><p className="text-xs sm:text-sm">{course.class_timing || 'Not specified'}</p></div>
-            <div className="flex items-center space-x-2"><FaChalkboardTeacher size={16} /><p className="font-bold text-xs sm:text-sm">Total Classes:</p><p className="text-xs sm:text-sm">{course.total_classes || 'Not specified'}</p></div>
-            <div className="flex items-center space-x-2"><FaChalkboardTeacher             size={16} /><p className="font-bold text-xs sm:text-sm">Platform:</p><p className="text-xs sm:text-sm">{course.platform || 'Not specified'}</p></div>
-            <div className="flex items-center space-x-2"><FaDollarSign size={16} /><p className="font-bold text-xs sm:text-sm">Fee:</p><p className="text-xs sm:text-sm">{course.fee ? `$${Number(course.fee).toFixed(2)}` : 'Not specified'}</p></div>
-            <div className="flex items-center space-x-2"><FaCalendarAlt size={16} /><p className="font-bold text-xs sm:text-sm">Course Start Date:</p><p className="text-xs sm:text-sm">{course.course_start_date || 'Not specified'}</p></div>
-          </div>
-
-          {/* Action Buttons */}
           <div className="mt-4 flex justify-around items-center border-t pt-2">
             <div className="flex items-center space-x-2">
               <FaRegThumbsUp size={16} className="text-blue-500" />
@@ -197,7 +177,6 @@ const SearchCourses = () => {
             </div>
           </div>
 
-          {/* Join Request Popup */}
           {isJoinRequestOpen && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
               <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
@@ -223,4 +202,3 @@ const SearchCourses = () => {
 };
 
 export default SearchCourses;
-

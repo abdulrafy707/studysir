@@ -1,6 +1,5 @@
 'use client';
-import React, { useState, useEffect, Suspense } from "react";
-
+import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import {
   Table,
@@ -20,7 +19,7 @@ import {
   InputLabel,
   TextField
 } from '@mui/material';
-import { useSearchParams } from 'next/navigation'; // Use for URL parameters
+import { useRouter } from 'next/navigation'; // Use for URL parameters
 
 const PostComponent = () => {
   const [posts, setPosts] = useState([]);               // Store all posts
@@ -30,8 +29,8 @@ const PostComponent = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false); // Snackbar for success/error messages
   const [snackbarMessage, setSnackbarMessage] = useState(''); // Message for snackbar
 
-  const searchParams = useSearchParams();                // Fetch query parameters from URL
-  const searchQuery = searchParams.get('q') || '';       // Get the search query from the URL
+  const router = useRouter();                            // Fetch router instance
+  const searchQuery = router.query.q || '';              // Get the search query from the URL
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;   // Fetch base URL from .env file
 
   // Fetch the list of posts when the component mounts
@@ -100,7 +99,6 @@ const PostComponent = () => {
   };
 
   return (
-    <Suspense fallback={<CircularProgress />}>
     <Box sx={{ padding: 3 }}>
       {loading ? (
         <Box display="flex" justifyContent="center" alignItems="center">
@@ -112,8 +110,6 @@ const PostComponent = () => {
         </Snackbar>
       ) : (
         <>
-         
-
           {/* Table to display posts */}
           <TableContainer component={Paper}>
             <Table>
@@ -164,7 +160,6 @@ const PostComponent = () => {
         <Alert severity="success">{snackbarMessage}</Alert>
       </Snackbar>
     </Box>
-    </Suspense>
   );
 };
 

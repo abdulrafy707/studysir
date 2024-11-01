@@ -1,6 +1,5 @@
-'use client';
+"use client";
 import React, { useState, useEffect, Suspense } from "react";
-
 import axios from 'axios';
 import {
   Table,
@@ -19,25 +18,26 @@ import {
   FormControl,
   InputLabel,
 } from '@mui/material';
-import { useSearchParams } from 'next/navigation'; // Use for URL parameters
+import { useRouter, usePathname } from "next/navigation"; // Using useRouter and usePathname
 
 const TeacherPostComponent = () => {
-  const [posts, setPosts] = useState([]);               // Store all posts
-  const [filteredPosts, setFilteredPosts] = useState([]); // Store filtered posts
-  const [loading, setLoading] = useState(true);          // Loading state
-  const [error, setError] = useState(false);             // Error state
-  const [snackbarOpen, setSnackbarOpen] = useState(false); // Snackbar for success/error messages
-  const [snackbarMessage, setSnackbarMessage] = useState(''); // Message for snackbar
+  const [posts, setPosts] = useState([]);
+  const [filteredPosts, setFilteredPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [searchQuery, setSearchQuery] = useState(""); // New state for search query
 
-  const searchParams = useSearchParams();                // Fetch query parameters from URL
-  const searchQuery = searchParams.get('q') || '';       // Get the search query from the URL
-  const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;   // Fetch base URL from .env file
+  const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL; // Fetch base URL from .env file
+  const router = useRouter();
+  const pathname = usePathname();
 
   // Fetch the list of posts when the component mounts
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await axios.get(`${apiUrl}/teacherpost_api.php`); // Call the API to fetch teacher posts
+        const response = await axios.get(`${apiUrl}/teacherpost_api.php`);
         if (response.data.error) {
           setError(true);
           setSnackbarMessage(response.data.error);
@@ -45,9 +45,9 @@ const TeacherPostComponent = () => {
           setPosts(response.data);
         }
       } catch (err) {
-        console.error('Error fetching posts:', err);
+        console.error("Error fetching posts:", err);
         setError(true);
-        setSnackbarMessage('Failed to fetch posts');
+        setSnackbarMessage("Failed to fetch posts");
       } finally {
         setLoading(false);
       }
@@ -68,17 +68,34 @@ const TeacherPostComponent = () => {
     }
   }, [searchQuery, posts]);
 
+  // Debounced search handler to update query in URL
+  const handleSearch = (e) => {
+    const searchValue = e.target.value;
+    setSearchQuery(searchValue);
+
+    const newUrl = new URL(window.location.href);
+    newUrl.searchParams.set("page", "1");
+
+    if (searchValue && searchValue.length > 2) {
+      newUrl.searchParams.set("q", searchValue);
+    } else {
+      newUrl.searchParams.delete("q");
+    }
+
+    router.push(newUrl.toString());
+  };
+
   // Handle status change (Active/Inactive)
   const handleStatusChange = async (postId, newStatus) => {
     setLoading(true);
     try {
       const response = await axios.put(`${apiUrl}/teacherpost_api.php`, {
         post_id: postId,
-        status: newStatus,  // 'active' or 'inactive'
+        status: newStatus,
       });
 
       if (response.data.success) {
-        setSnackbarMessage('Post status updated successfully');
+        setSnackbarMessage("Post status updated successfully");
         setSnackbarOpen(true);
         setPosts((prevPosts) =>
           prevPosts.map((post) =>
@@ -86,12 +103,12 @@ const TeacherPostComponent = () => {
           )
         );
       } else {
-        setSnackbarMessage(response.data.error || 'Failed to update post status');
+        setSnackbarMessage(response.data.error || "Failed to update post status");
         setSnackbarOpen(true);
       }
     } catch (error) {
-      console.error('Error updating post status:', error);
-      setSnackbarMessage('Failed to update post status');
+      console.error("Error updating post status:", error);
+      setSnackbarMessage("Failed to update post status");
       setSnackbarOpen(true);
     } finally {
       setLoading(false);
@@ -100,69 +117,74 @@ const TeacherPostComponent = () => {
 
   return (
     <Suspense fallback={<CircularProgress />}>
-    <Box sx={{ padding: 3 }}>
-      {loading ? (
-        <Box display="flex" justifyContent="center" alignItems="center">
-          <CircularProgress />
-        </Box>
-      ) : error ? (
-        <Snackbar open={true} autoHideDuration={6000}>
-          <Alert severity="error">{snackbarMessage}</Alert>
-        </Snackbar>
-      ) : (
-        <>
-          {/* Table to display posts */}
-          <TableContainer component={Paper}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Post ID</TableCell>
-                  <TableCell>Post Description</TableCell>
-                  <TableCell>Teacher Name</TableCell>
-                  <TableCell>Fee Range</TableCell>
-                  <TableCell>Status</TableCell>
-                  <TableCell>Action</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {filteredPosts.map((post) => (
-                  <TableRow key={post.post_id}>
-                    <TableCell>{post.post_id}</TableCell>
-                    <TableCell>{post.post_description}</TableCell>
-                    <TableCell>{post.teacher_details.fullname}</TableCell>
-                    <TableCell>{post.fee_range}</TableCell>
-                    <TableCell>{post.status === 'active' ? 'Active' : 'Inactive'}</TableCell>
-                    <TableCell>
-                      <FormControl fullWidth>
-                        <InputLabel>Status</InputLabel>
-                        <Select
-                          value={post.status}
-                          onChange={(e) => handleStatusChange(post.post_id, e.target.value)}
-                          label="Status"
-                        >
-                          <MenuItem value="active">Active</MenuItem>
-                          <MenuItem value="inactive">Inactive</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </TableCell>
+      <Box sx={{ padding: 3 }}>
+        <input
+          type="text"
+          placeholder="Search posts..."
+          value={searchQuery}
+          onChange={handleSearch}
+          style={{ marginBottom: "20px", padding: "10px", width: "100%" }}
+        />
+        {loading ? (
+          <Box display="flex" justifyContent="center" alignItems="center">
+            <CircularProgress />
+          </Box>
+        ) : error ? (
+          <Snackbar open={true} autoHideDuration={6000}>
+            <Alert severity="error">{snackbarMessage}</Alert>
+          </Snackbar>
+        ) : (
+          <>
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Post ID</TableCell>
+                    <TableCell>Post Description</TableCell>
+                    <TableCell>Teacher Name</TableCell>
+                    <TableCell>Fee Range</TableCell>
+                    <TableCell>Status</TableCell>
+                    <TableCell>Action</TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </>
-      )}
+                </TableHead>
+                <TableBody>
+                  {filteredPosts.map((post) => (
+                    <TableRow key={post.post_id}>
+                      <TableCell>{post.post_id}</TableCell>
+                      <TableCell>{post.post_description}</TableCell>
+                      <TableCell>{post.teacher_details.fullname}</TableCell>
+                      <TableCell>{post.fee_range}</TableCell>
+                      <TableCell>{post.status === "active" ? "Active" : "Inactive"}</TableCell>
+                      <TableCell>
+                        <FormControl fullWidth>
+                          <InputLabel>Status</InputLabel>
+                          <Select
+                            value={post.status}
+                            onChange={(e) => handleStatusChange(post.post_id, e.target.value)}
+                            label="Status"
+                          >
+                            <MenuItem value="active">Active</MenuItem>
+                            <MenuItem value="inactive">Inactive</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </>
+        )}
 
-      {/* Success/Error Snackbar */}
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={4000}
-        onClose={() => setSnackbarOpen(false)}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      >
-        <Alert severity="success">{snackbarMessage}</Alert>
-      </Snackbar>
-    </Box>
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={4000}
+          onClose={() => setSnackbarOpen(false)}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        >
+          <Alert severity="success">{snackbarMessage}</Alert>
+        </Snackbar>
+      </Box>
     </Suspense>
   );
 };

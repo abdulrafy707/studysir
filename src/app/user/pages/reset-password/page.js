@@ -1,13 +1,11 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import Link from 'next/link';
 
 export default function ResetPassword() {
-    const searchParams = useSearchParams();
     const router = useRouter();
-    const token = searchParams.get('token'); // Correct way to get query parameters in App Router
+    const [token, setToken] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [message, setMessage] = useState('');
@@ -15,11 +13,14 @@ export default function ResetPassword() {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        console.log('Token:', token); // Debugging
-        if (!token) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const tokenParam = urlParams.get('token');
+        if (tokenParam) {
+            setToken(tokenParam);
+        } else {
             setError('Invalid or missing token.');
         }
-    }, [token]);
+    }, []);
 
     const handleResetPassword = async () => {
         if (!newPassword || !confirmPassword) {
@@ -54,19 +55,15 @@ export default function ResetPassword() {
 
             const data = await response.json();
 
-            console.log('API Response:', data); // Debugging
-
             if (response.ok && data.success) {
                 setMessage(data.success);
-                // Redirect to login after 3 seconds
                 setTimeout(() => {
-                    router.push('/user/pages/login'); // Ensure this path is correct
+                    router.push('/user/pages/login');
                 }, 3000);
             } else {
                 setError(data.error || 'An error occurred.');
             }
         } catch (err) {
-            console.error('Error:', err);
             setError('An error occurred while resetting the password.');
         } finally {
             setLoading(false);
@@ -77,18 +74,15 @@ export default function ResetPassword() {
         <div className="min-h-screen flex justify-center items-center bg-gray-100">
             {/* Mobile View */}
             <div className="block md:hidden w-full max-w-sm p-8 bg-white shadow-lg rounded-lg relative">
-                {/* Wave-like structure with images */}
                 <div className="absolute top-0 left-0 w-full flex justify-between">
                     <Image src="/left.png" alt="Left Wave" width={160} height={100} className="h-[150px]" />
                     <Image src="/right.png" alt="Right Wave" width={160} height={100} className="h-[150px]" />
                 </div>
 
-                {/* Logo */}
                 <div className="text-center mt-16">
                     <h1 className="text-4xl font-bold text-blue-500">StudySir</h1>
                 </div>
 
-                {/* Reset Password Form */}
                 <h2 className="text-center text-blue-500 font-semibold text-2xl mt-8">Reset Password</h2>
                 {error && <p className="text-red-500 text-center mb-4">{error}</p>}
                 {message && <p className="text-green-500 text-center mb-4">{message}</p>}
@@ -123,7 +117,6 @@ export default function ResetPassword() {
                     </button>
                 </form>
 
-                {/* Bottom Image */}
                 <div className="mt-8 flex justify-center">
                     <Image src="/login.png" alt="Reset Password Bottom Image" width={150} height={150} className="w-[200px] h-[200px]" />
                 </div>
@@ -131,7 +124,6 @@ export default function ResetPassword() {
 
             {/* Desktop View */}
             <div className="hidden md:flex w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden">
-                {/* Left Side with Image */}
                 <div className="relative w-1/2 overflow-hidden">
                     <Image
                         src="/image1.png"
@@ -142,7 +134,6 @@ export default function ResetPassword() {
                     />
                 </div>
 
-                {/* Right Side Form */}
                 <div className="w-1/2 p-8 flex flex-col justify-center">
                     <h2 className="text-3xl font-bold text-blue-600 text-center mb-8">Reset Password</h2>
                     {error && <p className="text-red-500 mb-4 text-center">{error}</p>}

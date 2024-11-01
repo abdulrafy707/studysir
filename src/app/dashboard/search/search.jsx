@@ -2,21 +2,23 @@
 
 import { MdSearch } from "react-icons/md";
 import styles from "./search.module.css";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
 const Search = ({ placeholder }) => {
-  const searchParams = useSearchParams();
   const router = useRouter();
+  const [searchValue, setSearchValue] = useState("");
 
   const handleSearch = useDebouncedCallback((e) => {
-    const searchValue = e.target.value;
-    const params = new URLSearchParams(searchParams);
+    const newValue = e.target.value;
+    setSearchValue(newValue);
 
+    const params = new URLSearchParams(window.location.search);
     params.set("page", 1); // Reset to the first page when searching
 
-    if (searchValue && searchValue.length > 2) {
-      params.set("q", searchValue); // Set query parameter for search
+    if (newValue && newValue.length > 2) {
+      params.set("q", newValue); // Set query parameter for search
     } else {
       params.delete("q"); // Remove the query if input is empty
     }
@@ -32,6 +34,7 @@ const Search = ({ placeholder }) => {
         type="text"
         placeholder={placeholder}
         className={styles.input}
+        value={searchValue}
         onChange={handleSearch}
       />
     </div>

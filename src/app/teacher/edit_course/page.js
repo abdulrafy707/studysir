@@ -1,21 +1,21 @@
 'use client';
-import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
 
-const EditCoursePage = () => {
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+
+const EditCoursePage = ({ courseId }) => {
     const [course, setCourse] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [successMessage, setSuccessMessage] = useState('');
     const router = useRouter();
-    const searchParams = useSearchParams();
-    const course_id = searchParams.get('course_id'); // Get course_id from the query string
+    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
     // Fetch course details for editing
     useEffect(() => {
         const fetchCourse = async () => {
             try {
-                const response = await fetch(`https://studysir.m3xtrader.com/api/course_api.php?course_id=${course_id}`);
+                const response = await fetch(`${baseUrl}/course_api.php?course_id=${courseId}`);
                 const data = await response.json();
                 if (response.ok) {
                     setCourse(data);
@@ -30,22 +30,22 @@ const EditCoursePage = () => {
             }
         };
 
-        if (course_id) {
+        if (courseId) {
             fetchCourse();
         }
-    }, [course_id]);
+    }, [courseId, baseUrl]);
 
     // Handle input changes
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setCourse({ ...course, [name]: value });
+        setCourse((prev) => ({ ...prev, [name]: value }));
     };
 
     // Handle form submission to update the course
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch(`https://studysir.m3xtrader.com/api/course_api.php`, {
+            const response = await fetch(`${baseUrl}/course_api.php`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -55,7 +55,7 @@ const EditCoursePage = () => {
 
             if (response.ok) {
                 setSuccessMessage('Course updated successfully!');
-                router.push(`/teacher/courses?teacher_id=${course.teacher_id}`); // Redirect after update
+                router.push(`/teacher/courses?teacher_id=${course.teacher_id}`);
             } else {
                 const errorData = await response.json();
                 setError(errorData.error || 'Failed to update course');

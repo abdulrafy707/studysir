@@ -1,39 +1,39 @@
 "use client";
-import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { MdNotifications, MdOutlineChat, MdPublic, MdSearch } from "react-icons/md";
 import { useDebouncedCallback } from "use-debounce";
 
 const Navbar = () => {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   const router = useRouter();
 
   // Debounced function to handle search input and update URL
   const handleSearch = useDebouncedCallback((e) => {
     const searchValue = e.target.value;
-    const params = new URLSearchParams(searchParams);
 
-    // Reset to first page and set query parameter for search
-    params.set("page", 1);
+    // Construct a new URL with the updated search parameter
+    const newUrl = new URL(window.location.href);
+    newUrl.searchParams.set("page", "1");
+
     if (searchValue && searchValue.length > 2) {
-      params.set("q", searchValue);
+      newUrl.searchParams.set("q", searchValue);
     } else {
-      params.delete("q"); // Remove the search parameter if empty
+      newUrl.searchParams.delete("q"); // Remove the search parameter if empty
     }
 
-    // Update the URL
-    router.push(`${pathname}?${params.toString()}`);
+    // Push the updated URL
+    router.push(newUrl.toString());
   }, 300);
+
+  // Capitalize page title or handle specific route title
+  const pageTitle = pathname.split("/").pop();
+  const formattedTitle = pageTitle === "Submittions" ? "Submissions" : pageTitle;
 
   return (
     <header className="flex items-center justify-between bg-gray-700 p-3 mb-5 h-16">
       <div className="flex items-center">
         <div className="text-white text-xl font-bold capitalize ml-5">
-          {pathname.split("/").pop() === "Submittions" ? (
-            <>Submissions</>
-          ) : (
-            <>{pathname.split("/").pop()}</>
-          )}
+          {formattedTitle}
         </div>
       </div>
       <div className="flex items-center space-x-6">

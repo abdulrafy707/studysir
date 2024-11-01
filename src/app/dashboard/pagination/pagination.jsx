@@ -1,26 +1,36 @@
 "use client";
 
 import styles from "./pagination.module.css";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const Pagination = ({ count }) => {
-  const searchParams = useSearchParams();
-  const { replace } = useRouter();
+  const router = useRouter();
   const pathname = usePathname();
 
-  const page = searchParams.get("page") || 1;
-
-  const params = new URLSearchParams(searchParams);
   const ITEM_PER_PAGE = 2;
+  const [page, setPage] = useState(1);
 
-  const hasPrev = ITEM_PER_PAGE * (parseInt(page) - 1) > 0;
-  const hasNext = ITEM_PER_PAGE * (parseInt(page) - 1) + ITEM_PER_PAGE < count;
+  // Calculate navigation availability
+  const hasPrev = ITEM_PER_PAGE * (page - 1) > 0;
+  const hasNext = ITEM_PER_PAGE * (page - 1) + ITEM_PER_PAGE < count;
 
+  // Sync the page number with URL changes
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentPage = parseInt(urlParams.get("page")) || 1;
+    setPage(currentPage);
+  }, []);
+
+  // Handle page changes and update the URL
   const handleChangePage = (type) => {
-    type === "prev"
-      ? params.set("page", parseInt(page) - 1)
-      : params.set("page", parseInt(page) + 1);
-    replace(`${pathname}?${params}`);
+    const newPage = type === "prev" ? page - 1 : page + 1;
+    setPage(newPage);
+
+    const params = new URLSearchParams(window.location.search);
+    params.set("page", newPage);
+
+    router.push(`${pathname}?${params.toString()}`);
   };
 
   return (

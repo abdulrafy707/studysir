@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
 import {
   FaLanguage,
   FaCalendarAlt,
@@ -15,15 +14,13 @@ import {
 import { AiOutlineFileText } from 'react-icons/ai';
 import { BiUser } from 'react-icons/bi';
 
-const SearchCourses = () => {
+const SearchCourses = ({ query }) => {
   const [courses, setCourses] = useState([]);
   const [teachers, setTeachers] = useState({});
   const [dropdownOpen, setDropdownOpen] = useState(null);
   const [likes, setLikes] = useState({});
   const [isJoinRequestOpen, setIsJoinRequestOpen] = useState(false);
   const [joinRequestMessage, setJoinRequestMessage] = useState('');
-  const searchParams = useSearchParams();
-  const query = searchParams.get('query');
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   useEffect(() => {
@@ -120,7 +117,7 @@ const SearchCourses = () => {
   };
 
   const handleSaveCourse = () => {
-    alert('Course saved!'); // Add your saving logic here
+    alert('Course saved!');
     setDropdownOpen(null);  // Close the dropdown after saving
   };
 
@@ -179,7 +176,7 @@ const SearchCourses = () => {
             <div className="flex items-center space-x-2"><FaClock size={16} /><p className="font-bold text-xs sm:text-sm">Class Duration:</p><p className="text-xs sm:text-sm">{course.class_duration || 'Not specified'}</p></div>
             <div className="flex items-center space-x-2"><FaClock size={16} /><p className="font-bold text-xs sm:text-sm">Class Timing:</p><p className="text-xs sm:text-sm">{course.class_timing || 'Not specified'}</p></div>
             <div className="flex items-center space-x-2"><FaChalkboardTeacher size={16} /><p className="font-bold text-xs sm:text-sm">Total Classes:</p><p className="text-xs sm:text-sm">{course.total_classes || 'Not specified'}</p></div>
-            <div className="flex items-center space-x-2"><FaChalkboardTeacher             size={16} /><p className="font-bold text-xs sm:text-sm">Platform:</p><p className="text-xs sm:text-sm">{course.platform || 'Not specified'}</p></div>
+            <div className="flex items-center space-x-2"><FaChalkboardTeacher size={16} /><p className="font-bold text-xs sm:text-sm">Platform:</p><p className="text-xs sm:text-sm">{course.platform || 'Not specified'}</p></div>
             <div className="flex items-center space-x-2"><FaDollarSign size={16} /><p className="font-bold text-xs sm:text-sm">Fee:</p><p className="text-xs sm:text-sm">{course.fee ? `$${Number(course.fee).toFixed(2)}` : 'Not specified'}</p></div>
             <div className="flex items-center space-x-2"><FaCalendarAlt size={16} /><p className="font-bold text-xs sm:text-sm">Course Start Date:</p><p className="text-xs sm:text-sm">{course.course_start_date || 'Not specified'}</p></div>
           </div>
@@ -223,4 +220,3 @@ const SearchCourses = () => {
 };
 
 export default SearchCourses;
-
