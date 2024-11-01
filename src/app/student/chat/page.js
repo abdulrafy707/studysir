@@ -319,7 +319,7 @@ export default function ChatInterface() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-100 flex">
+    <div className="min-h-screen bg-gray-100 flex flex-col md:flex-row">
       {/* Display Error Message */}
       {error && (
         <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded shadow z-50 flex items-center">
@@ -330,7 +330,9 @@ export default function ChatInterface() {
 
       {/* Chatrooms List Sidebar */}
       <div
-        className={`bg-white shadow-lg overflow-hidden flex-shrink-0 flex flex-col w-full md:w-[300px]`}
+        className={`bg-white shadow-lg overflow-hidden flex-shrink-0 flex flex-col w-full md:w-[300px] ${
+          selectedChatroom ? 'hidden md:flex' : 'flex'
+        }`}
       >
         {/* Sticky Header */}
         <div className="sticky top-0 bg-blue-600 text-white px-4 py-2 flex items-center justify-between z-10">
@@ -350,16 +352,16 @@ export default function ChatInterface() {
                 }`}
                 onClick={() => handleChatroomSelect(chatroom)}
               >
-                <img
+                <Image
                   src={chatroom.image ? `${baseUrl}/uploads/${chatroom.image}` : '/default-profile.png'}
                   alt="Profile"
                   width={40}
                   height={40}
-                  className="rounded-full"
+                  className="rounded-full object-cover"
                 />
                 <div className="ml-3">
                   <p className="font-bold">{chatroom.fullname}</p>
-                  <p className="text-xs text-gray-600">{chatroom.last_message}</p>
+                  <p className="text-xs text-gray-600 truncate">{chatroom.last_message}</p>
                 </div>
               </div>
             ))
@@ -370,10 +372,11 @@ export default function ChatInterface() {
       </div>
 
       {/* Chatroom Messages Area */}
-      {selectedChatroom ? (
-        <div className="flex-1 flex flex-col">
-          {/* Sticky Chatroom Header */}
+      <div className={`flex-1 flex flex-col ${selectedChatroom ? 'block' : 'hidden md:block'}`}>
+        {/* Sticky Chatroom Header */}
+        {selectedChatroom && (
           <div className="sticky top-0 bg-blue-600 text-white px-4 py-2 flex items-center z-10">
+            {/* Back Button for Mobile */}
             <button
               className="md:hidden mr-2 focus:outline-none"
               onClick={handleBack}
@@ -389,12 +392,12 @@ export default function ChatInterface() {
               </svg>
             </button>
             <div className="flex items-center">
-              <img
+              <Image
                 src={teacherDetails?.image ? `${baseUrl}/uploads/${teacherDetails.image}` : '/default-profile.png'}
                 alt="Profile"
                 width={40}
                 height={40}
-                className="rounded-full"
+                className="rounded-full object-cover"
               />
               <div className="ml-3">
                 <p className="font-bold">{teacherDetails?.fullname || 'Unknown Teacher'}</p>
@@ -402,9 +405,11 @@ export default function ChatInterface() {
               </div>
             </div>
           </div>
+        )}
 
-          {/* Messages List */}
-          <div className="p-4 space-y-4 flex-1 overflow-y-auto">
+        {/* Messages List */}
+        {selectedChatroom ? (
+          <div className="flex-1 p-4 space-y-4 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300">
             {messages.length > 0 ? (
               messages.map((message) => (
                 <div
@@ -417,7 +422,7 @@ export default function ChatInterface() {
                     }`}
                   >
                     <p>{message.message}</p>
-                    <p className="text-xs mt-1">{new Date(message.sent_at).toLocaleString()}</p>
+                    <p className="text-xs mt-1 text-right">{new Date(message.sent_at).toLocaleString()}</p>
                   </div>
                 </div>
               ))
@@ -425,8 +430,15 @@ export default function ChatInterface() {
               <p className="text-gray-500">No messages in this chat yet.</p>
             )}
           </div>
+        ) : (
+          // Placeholder when no chatroom is selected (for desktop)
+          <div className="flex-1 flex items-center justify-center">
+            <p className="text-gray-500">Select a chat to start messaging</p>
+          </div>
+        )}
 
-          {/* Sticky Input and Action Buttons */}
+        {/* Sticky Input and Action Buttons */}
+        {selectedChatroom && (
           <div className="sticky bottom-0 bg-gray-100 px-4 py-2 z-10">
             {/* Input Field */}
             <div className="flex items-center space-x-2">
@@ -435,42 +447,44 @@ export default function ChatInterface() {
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
                 placeholder="Write your message"
-                className="flex-grow px-4 py-2 rounded-full border"
+                className="flex-grow px-4 py-2 rounded-full border focus:outline-none"
               />
               <button
                 onClick={handleSendMessage}
-                className="bg-blue-500 text-white px-4 py-2 rounded-full"
+                className={`bg-blue-500 text-white px-4 py-2 rounded-full flex items-center justify-center ${
+                  !newMessage.trim() ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
                 disabled={!newMessage.trim()}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
+                  className="h-5 w-5 transform rotate-90"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
-                  <path d="M2.94 15.61l2.804-1.001A8.146 8.146 0 005.5 11c0-.774.106-1.523.308-2.224L2.94 7.775a.5.5 0 00-.94.218v6.797c0 .373.421.605.76.42zM10.897 3.071a8.004 8.004 0 014.868 3.246l-3.32 1.187a.5.5 0 00-.25.253L9.5 10l3.322 1.817a.5.5 0 00.25.253l3.32 1.187a8.004 8.004 0 01-4.868 3.246A7.999 7.999 0 013.224 4.897a7.998 7.998 0 017.673-1.826z" />
+                  <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.429a1 1 0 001.169-1.409l-7-14z" />
                 </svg>
               </button>
             </div>
 
             {/* Bottom Action Buttons */}
-            <div className="flex justify-between mt-2">
-              <button onClick={handleHireTeacher} className="bg-blue-500 text-white px-4 py-2 rounded-lg">Hire Teacher</button>
-              <button onClick={handleRejectTeacher} className="bg-red-500 text-white px-4 py-2 rounded-lg">Reject</button>
-              <button onClick={handleBlockTeacher} className="bg-red-500 text-white px-4 py-2 rounded-lg">Block</button>
-              <button className="bg-red-400 text-white px-4 py-2 rounded-lg">Report</button>
+            <div className="flex justify-between mt-2 space-x-2">
+              <button onClick={handleHireTeacher} className="bg-blue-500 text-white px-4 py-2 rounded-lg flex-1">Hire Teacher</button>
+              <button onClick={handleRejectTeacher} className="bg-red-500 text-white px-4 py-2 rounded-lg flex-1">Reject</button>
+              <button onClick={handleBlockTeacher} className="bg-red-500 text-white px-4 py-2 rounded-lg flex-1">Block</button>
+              <button className="bg-red-400 text-white px-4 py-2 rounded-lg flex-1">Report</button>
             </div>
           </div>
-        </div>
-      ) : (
-        // Placeholder when no chatroom is selected
-        <div className="flex-1 flex items-center justify-center md:hidden">
-          <p className="text-gray-500">Select a chat to start messaging</p>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Display Toast Notification */}
       {toast && showToast(toast.message, toast.type)}
+
+      {/* Overlay for Mobile when Chatroom is Selected */}
+      {selectedChatroom && (
+        <div className="md:hidden flex-1"></div>
+      )}
     </div>
   );
 }

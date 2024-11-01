@@ -71,7 +71,7 @@ export default function PlansPage() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-50 py-8">
+    <div className="flex text-black justify-center items-center min-h-screen bg-gray-50 py-8">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full px-4 sm:px-8">
         {plans.map((plan, index) => (
           <div

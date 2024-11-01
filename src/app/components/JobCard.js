@@ -226,7 +226,7 @@ export default function JobCard({ post }) {
   const shareTitle = post.job_title || 'Check out this job opportunity!';
 
   return (
-    <div className="bg-white border rounded-lg w-[300px] sm:w-[500px] md:w-[600px] shadow-lg p-4 my-8 relative mx-auto">
+    <div className="bg-white text-black border rounded-lg w-[300px] sm:w-[500px] md:w-[600px] shadow-lg p-4 my-8 relative mx-auto">
       {/* Header with student profile, name, location, and status */}
       <div className="flex items-start justify-between relative">
         <div className="flex items-center">

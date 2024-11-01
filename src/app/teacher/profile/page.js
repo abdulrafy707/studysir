@@ -165,7 +165,7 @@ export default function TeacherProfilePage() {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto mt-8 p-6 bg-white shadow-lg rounded-lg">
+    <div className="w-full text-black max-w-4xl mx-auto mt-8 p-6 bg-white shadow-lg rounded-lg">
       <h2 className="text-4xl font-semibold mb-8 text-center text-blue-600">Teacher Profile</h2>
 
       {loading && (

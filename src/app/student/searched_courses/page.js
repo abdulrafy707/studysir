@@ -1,4 +1,5 @@
 "use client";
+import {ThreeDots} from 'react-loader-spinner';
 
 import React, { useState, useEffect } from 'react';
 import {
@@ -13,6 +14,7 @@ import {
 } from 'react-icons/fa';
 import { AiOutlineFileText } from 'react-icons/ai';
 import { BiUser } from 'react-icons/bi';
+import { ThreeDots } from 'react-loader-spinner';
 
 const SearchCourses = () => {
   const [courses, setCourses] = useState([]);
@@ -121,9 +123,23 @@ const SearchCourses = () => {
     alert('Course saved!'); // Add your saving logic here
     setDropdownOpen(null);  // Close the dropdown after saving
   };
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <ThreeDots
+          height="80"
+          width="80"
+          radius="9"
+          color="#3498db"
+          ariaLabel="three-dots-loading"
+          visible={true}
+        />
+      </div>
+    );
+  }
 
   return (
-    <div className="flex flex-wrap justify-center gap-6">
+    <div className="flex text-black flex-wrap justify-center gap-6">
       {courses.map((course) => (
         <div key={course.course_id} className="bg-white border rounded-lg w-[300px] sm:w-[300px] md:w-[600px] shadow-lg p-4 my-8 relative mx-auto">
           <div className="absolute top-4 right-4 flex justify-end">

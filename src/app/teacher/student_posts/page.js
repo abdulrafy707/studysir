@@ -37,7 +37,7 @@ export default function Page() {
   }, [baseUrl]);
 
   return (
-    <div className="container mx-auto flex justify-center items-center flex-wrap">
+    <div className="container text-black mx-auto flex justify-center items-center flex-wrap">
       {/* Render the random teachers */}
       {randomTeachers.map((teacher) => (
         <div key={teacher.teacher_id} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 mb-2 flex justify-center">

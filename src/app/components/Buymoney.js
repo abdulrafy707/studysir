@@ -79,7 +79,7 @@ const RequestMoneyModal = ({ onClose }) => {
     };
 
     return (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-[9999]"> {/* Ensured z-index is high */}
+        <div className="fixed text-black inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-[9999]"> {/* Ensured z-index is high */}
             <div className="bg-white rounded-lg p-6 w-96 relative z-50"> {/* Added z-50 for the modal */}
                 <h2 className="text-xl font-bold mb-4">Request Money</h2>
                 <div className="mb-4">

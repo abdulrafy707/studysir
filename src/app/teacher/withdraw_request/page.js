@@ -74,7 +74,7 @@ export default function WithdrawalRequestPage() {
   };
 
   return (
-    <div className="container mx-auto p-8">
+    <div className="container text-black mx-auto p-8">
       <h2 className="text-2xl font-bold mb-4">Withdrawal Request</h2>
 
       {successMessage && <p className="text-green-500 mb-4">{successMessage}</p>}

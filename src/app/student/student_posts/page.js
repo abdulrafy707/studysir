@@ -1,12 +1,13 @@
-'use client'; // Ensure this is a client-side component
+// Page.js
+'use client';
 
 import { useEffect, useState } from "react";
-import TeacherList from "@/app/components/Teachercard"; // Assuming Teachercard renders individual teacher
-import { ThreeDots } from 'react-loader-spinner'; // Import the spinner
+import TeacherCard from "@/app/components/Teachercard"; // Assuming Teachercard renders individual teacher
 
 export default function Page() {
   const [randomTeachers, setRandomTeachers] = useState([]);
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   // Helper function to shuffle an array (Fisher-Yates algorithm)
@@ -21,51 +22,54 @@ export default function Page() {
   useEffect(() => {
     const fetchTeacherData = async () => {
       try {
-        // Fetch teacher data
         const response = await fetch(`${baseUrl}/teacher_api.php`);
+        if (!response.ok) throw new Error("Failed to fetch teacher data");
+
         const teachers = await response.json();
 
-        // Ensure unique teacher records based on a unique identifier (e.g., teacher_id)
+        // Log response to inspect structure
+        console.log("Fetched teachers:", teachers);
+
+        // Remove duplicates and shuffle
         const uniqueTeachers = Array.from(
           new Map(teachers.map((teacher) => [teacher.teacher_id, teacher])).values()
         );
 
-        // Shuffle the unique teacher records
         const shuffledTeachers = shuffleArray(uniqueTeachers);
-
-        // Set the random teachers in state
-        setRandomTeachers(shuffledTeachers.slice(0, 5)); // Fetch 5 random teachers
+        setRandomTeachers(shuffledTeachers.slice(0, 5));
       } catch (error) {
         console.error("Error fetching teachers:", error);
+        setError("Could not load teacher data.");
       } finally {
-        setLoading(false); // Set loading to false after data fetch
+        setLoading(false);
       }
     };
 
     fetchTeacherData();
   }, [baseUrl]);
 
-  // Show loading spinner while data is being fetched
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <ThreeDots
-          height="80"
-          width="80"
-          radius="9"
-          color="#3498db"
-          ariaLabel="three-dots-loading"
-          visible={true}
-        />
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-red-500">{error}</p>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto p-8">
-      {/* Render the random teachers */}
+    <div className="container text-black mx-auto flex justify-center items-center flex-wrap">
       {randomTeachers.map((teacher) => (
-        <TeacherList key={teacher.teacher_id} teacher={teacher} baseUrl={baseUrl} />
+        <div key={teacher.teacher_id} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 mb-2 flex justify-center">
+          <TeacherCard teacher={teacher} baseUrl={baseUrl} />
+        </div>
       ))}
     </div>
   );

@@ -75,7 +75,7 @@ const AddTuitionPost = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 max-h-[90vh] overflow-y-auto">
+    <div className="container text-black mx-auto p-4 max-h-[90vh] overflow-y-auto">
       <h2 className="text-2xl font-bold mb-4">Post a Tuition Ad</h2>
 
       {/* Form Fields */}

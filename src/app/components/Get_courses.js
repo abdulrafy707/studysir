@@ -214,7 +214,7 @@ export default function CourseList({ course }) {
   };
 
   return (
-    <div className="bg-white border z-10 rounded-lg w-[300px] sm:w-[300px] md:w-[600px] shadow-lg p-4 my-8 relative mx-auto">
+    <div className="bg-white text-black border z-10 rounded-lg w-[300px] sm:w-[300px] md:w-[600px] shadow-lg p-4 my-8 relative mx-auto">
       
       {/* Join Request Popup */}
       {isJoinRequestOpen && (

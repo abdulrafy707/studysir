@@ -136,7 +136,7 @@ const Sidebar = () => {
     return (
         <div>
             {/* Sidebar for Desktop only */}
-            <div className={`hidden md:block fixed inset-y-0 left-0 bg-gray-100 w-64 p-5 pt-10 h-screen overflow-y-auto sticky top-0`}>
+            <div className={`hidden md:block text-black fixed inset-y-0 left-0 bg-gray-100 w-64 p-5 pt-10 h-screen overflow-y-auto sticky top-0`}>
                 <ul className="space-y-6">
                     {/* User Profile */}
                     <li className="flex items-center space-x-3">

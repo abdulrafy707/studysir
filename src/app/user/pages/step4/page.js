@@ -68,7 +68,7 @@ export default function SignupStep4() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="min-h-screen text-black flex items-center justify-center bg-gray-50">
       <div className="bg-white shadow-lg rounded-lg p-8 max-w-lg w-full">
         <h1 className="text-2xl font-bold text-center mb-6 text-blue-600">Educational Details (Step 4)</h1>
         {error && <div className="text-red-500 text-sm text-center mb-4">{error}</div>}

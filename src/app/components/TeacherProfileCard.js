@@ -85,7 +85,7 @@ export default function TeacherPostPopup() {
     <div>
       {/* Popup box */}
       {isPopupOpen && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center p-4 sm:p-6">
+        <div className="fixed text-black inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center p-4 sm:p-6">
           <div className="bg-white border rounded-lg shadow-lg p-4 sm:p-6 w-full max-w-[95%] sm:max-w-[600px] h-[80vh] overflow-y-auto relative">
             <button className="absolute top-2 right-2 text-red-500 text-lg sm:text-2xl" onClick={handleClosePopup}>
               &times; {/* Cross button for closing the popup */}

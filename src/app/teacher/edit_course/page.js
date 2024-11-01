@@ -74,7 +74,7 @@ const EditCoursePage = ({ courseId }) => {
     }
 
     return (
-        <div className="container mx-auto p-4">
+        <div className="container text-black mx-auto p-4">
             <h1 className="text-2xl font-bold mb-4">Edit Course</h1>
             {successMessage && <p className="text-green-500">{successMessage}</p>}
             <form onSubmit={handleSubmit}>

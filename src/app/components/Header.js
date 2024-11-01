@@ -47,7 +47,7 @@ const Header = () => {
     };
 
     return (
-        <header className="bg-white flex items-center justify-between px-4 py-1 sm:py-2 shadow-md w-full fixed top-0 z-50">
+        <header className="bg-white text-black flex items-center justify-between px-4 py-1 sm:py-2 shadow-md w-full fixed top-0 z-50">
             <div className="flex items-center space-x-4">
                 <Link href={userRole ? `/${userRole}` : '/'}>
                     <span className="text-blue-500 text-2xl font-bold">S</span>

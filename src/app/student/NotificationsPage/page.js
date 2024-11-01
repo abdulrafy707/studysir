@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { ThreeDots } from 'react-loader-spinner'; // Import the spinner
 
 export default function NotificationsPage() {
   const [notifications, setNotifications] = useState([]);
@@ -35,12 +36,23 @@ export default function NotificationsPage() {
     fetchNotifications();
   }, [baseUrl]);
 
-  if (loading) {
-    return <div className="flex justify-center items-center h-screen">Loading...</div>;
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <ThreeDots
+          height="80"
+          width="80"
+          radius="9"
+          color="#3498db"
+          ariaLabel="three-dots-loading"
+          visible={true}
+        />
+      </div>
+    );
   }
 
   return (
-    <div className="h-screen flex flex-col items-center justify-start bg-gray-100 py-4 px-4 sm:px-6 lg:px-8">
+    <div className="h-screen text-black flex flex-col items-center justify-start bg-gray-100 py-4 px-4 sm:px-6 lg:px-8">
       <h1 className="text-2xl font-bold mb-6 w-full text-center">Notifications</h1>
       {notifications.length > 0 ? (
         <div className="w-full space-y-4">  {/* Removed max-w-md to make it full width */}

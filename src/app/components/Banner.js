@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function Banner() {
   return (
-    <div className="flex justify-center items-center w-full bg-gray-100 py-10">
+    <div className="flex text-black justify-center items-center w-full bg-gray-100 py-10">
       <div className="flex items-center justify-between w-full max-w-6xl relative">
         {/* Left Image */}
         <div className="w-1/3 flex justify-center">

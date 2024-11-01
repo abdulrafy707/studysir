@@ -76,7 +76,7 @@ const BuyCoinsModal = ({ onClose, selectedPlan }) => {
     };
 
     return (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
+        <div className="fixed text-black inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
             <div className="bg-white rounded-lg p-6 w-96">
                 {/* Conditional rendering to avoid undefined error */}
                 <h2 className="text-xl font-bold mb-4">

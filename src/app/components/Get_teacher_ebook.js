@@ -119,7 +119,7 @@ export default function TeacherEbookCard() {
 
   // Render fetched ebooks
   return (
-    <div className="container mx-auto p-4">
+    <div className="container text-black mx-auto p-4">
       {ebooks.map((ebook) => (
         <div key={ebook.id} className="bg-white border rounded-lg shadow-lg p-6 w-full md:w-[600px] my-6">
           <div className="flex flex-col md:flex-row justify-between space-y-6 md:space-y-0 md:space-x-6">

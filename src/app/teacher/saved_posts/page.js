@@ -260,7 +260,7 @@ export default function SavedPostsPage() {
 
   if (!Array.isArray(filteredPosts) || filteredPosts.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center mt-8">
+      <div className="flex text-black flex-col items-center justify-center mt-8">
         <Image src="/nopost.png" alt="No Posts Available" width={256} height={256} />
         <p className=" text-red-500 font-semibold mt-4">No saved posts available.</p>
       </div>
@@ -268,7 +268,7 @@ export default function SavedPostsPage() {
   }
 
   return (
-    <div className="space-y-4 px-4 sm:px-6 lg:px-8 py-6">
+    <div className="space-y-4 text-black px-4 sm:px-6 lg:px-8 py-6">
       {filteredPosts.map((post, index) => {
         const postType = post.post_type;
 

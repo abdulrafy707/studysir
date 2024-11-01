@@ -59,7 +59,7 @@ const TeacherCoursesPage = ({ teacherId }) => {
     }
 
     return (
-        <div className="container mx-auto p-4">
+        <div className="container text-black mx-auto p-4">
             <h1 className="text-3xl font-bold mb-8 text-center">Your Courses</h1>
 
             <div className="flex justify-center mb-8">

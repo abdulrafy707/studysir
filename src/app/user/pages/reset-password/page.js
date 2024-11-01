@@ -71,7 +71,7 @@ export default function ResetPassword() {
     };
 
     return (
-        <div className="min-h-screen flex justify-center items-center bg-gray-100">
+        <div className="min-h-screen text-black flex justify-center items-center bg-gray-100">
             {/* Mobile View */}
             <div className="block md:hidden w-full max-w-sm p-8 bg-white shadow-lg rounded-lg relative">
                 <div className="absolute top-0 left-0 w-full flex justify-between">

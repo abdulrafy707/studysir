@@ -78,7 +78,7 @@ const TeacherSideBar = () => {
     ];
 
     return user ? (
-        <div className="fixed inset-0 bg-white shadow-lg overflow-y-auto h-full w-full px-4">
+        <div className="fixed inset-0 text-black bg-white shadow-lg overflow-y-auto h-full w-full px-4">
             <div className="p-4 bg-white rounded-lg shadow-lg overflow-y-auto h-full flex flex-col items-center">
                 {/* User Profile Section */}
                 <div className="flex flex-col items-center p-4 bg-gray-100 rounded-lg shadow mb-6 w-full">

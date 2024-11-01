@@ -136,7 +136,7 @@ function TeacherCard({ teacher, baseUrl }) {
   };
 
   return (
-    <div className="bg-white border rounded-lg shadow p-4 w-[300px] sm:w-[300px] md:w-[600px] relative z-10 mx-auto">
+    <div className="bg-white text-black border rounded-lg shadow p-4 w-[300px] sm:w-[300px] md:w-[600px] relative z-10 mx-auto">
       {/* Header with teacher profile, name, and location */}
       <div className="flex items-start justify-between">
         <div className="flex items-center">

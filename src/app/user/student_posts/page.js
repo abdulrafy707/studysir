@@ -43,7 +43,7 @@ export default function Page() {
   }, [baseUrl]);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center">
+    <div className="min-h-screen text-black flex flex-col items-center justify-center">
       <Header /> {/* Added Header component */}
       <div className="flex flex-wrap justify-center items-center mt-8 w-full max-w-5xl p-4">
         {/* Render the random teachers */}

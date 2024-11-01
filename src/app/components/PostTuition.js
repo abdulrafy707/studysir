@@ -23,7 +23,7 @@ const PostTuitionBox = () => {
   };
 
   return (
-    <div className="relative w-full max-w-[600px] mx-auto">
+    <div className="relative text-black w-full max-w-[600px] mx-auto">
       <div className="flex items-center shadow-lg justify-between w-full p-4 border-2 hover:border-blue-200 rounded-lg">
         {/* Profile Image fetched from localStorage */}
         <div className="flex-shrink-0">

@@ -53,7 +53,7 @@ export default function SignupStep2() {
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-center bg-gray-100">
+    <div className="min-h-screen text-black flex justify-center items-center bg-gray-100">
       <div className="hidden lg:flex w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden relative">
         {/* Form Section */}
         <div className="w-1/2 p-8 flex flex-col justify-center">

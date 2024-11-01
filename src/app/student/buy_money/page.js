@@ -87,7 +87,7 @@ const RequestMoneyPage = () => {
     };
 
     return (
-        <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100">
+        <div className="min-h-screen text-black flex flex-col justify-center items-center bg-gray-100">
             <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-lg relative z-50">
                 <h2 className="text-xl font-bold mb-4">Request Money for Books, Courses, etc.</h2>
                 

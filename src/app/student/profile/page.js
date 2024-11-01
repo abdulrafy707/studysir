@@ -134,7 +134,7 @@ export default function StudentUpdateForm() {
   };
 
   return (
-    <div className="w-full max-w-lg mx-auto mt-8 p-6 bg-white shadow-md rounded-lg">
+    <div className="w-full text-black max-w-lg mx-auto mt-8 p-6 bg-white shadow-md rounded-lg">
       <h2 className="text-3xl font-semibold mb-6 text-center text-blue-600">Your Profile</h2>
       {loading && <p className="text-center text-gray-500">Loading...</p>}
       {message && <p className="text-center text-red-500">{message}</p>}

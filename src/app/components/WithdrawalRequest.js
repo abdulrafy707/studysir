@@ -77,7 +77,7 @@ export default function WithdrawalRequest({ onClose }) {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-lg relative">
+    <div className="bg-white text-black p-6 rounded-lg shadow-lg relative">
       <button onClick={onClose} className="text-red-500 text-2xl absolute top-2 right-2">&times;</button>
       <h2 className="text-2xl font-bold mb-4">Withdrawal Request</h2>
 
