@@ -24,6 +24,7 @@ const SearchCourses = () => {
   const [isJoinRequestOpen, setIsJoinRequestOpen] = useState(false);
   const [joinRequestMessage, setJoinRequestMessage] = useState('');
   const [query, setQuery] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   useEffect(() => {

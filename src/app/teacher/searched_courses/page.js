@@ -19,6 +19,7 @@ const SearchCourses = ({ query }) => {
   const [teachers, setTeachers] = useState({});
   const [dropdownOpen, setDropdownOpen] = useState(null);
   const [likes, setLikes] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
   const [isJoinRequestOpen, setIsJoinRequestOpen] = useState(false);
   const [joinRequestMessage, setJoinRequestMessage] = useState('');
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
