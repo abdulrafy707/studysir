@@ -1,6 +1,5 @@
 'use client';
 import React, { useState, useEffect, Suspense } from "react";
-
 import axios from 'axios';
 import {
   Table,
@@ -19,7 +18,6 @@ import {
   FormControl,
   InputLabel
 } from '@mui/material';
-import { useSearchParams } from 'next/navigation'; // Use for URL parameters
 
 const StudentComponent = () => {
   const [students, setStudents] = useState([]);
@@ -29,10 +27,16 @@ const StudentComponent = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+  const [searchQuery, setSearchQuery] = useState(''); // State to hold search query
 
-  const searchParams = useSearchParams(); // Fetch query parameters from URL
-  const searchQuery = searchParams.get('q') || ''; // Get the search query from the URL
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL; // Fetch base URL from .env file
+
+  // Get the search query from the URL using URLSearchParams
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const query = params.get('q') || '';
+    setSearchQuery(query);
+  }, []);
 
   // Fetch the list of students when the component mounts
   useEffect(() => {
@@ -108,70 +112,70 @@ const StudentComponent = () => {
 
   return (
     <Suspense fallback={<CircularProgress />}>
-    <Box sx={{ padding: 3 }}>
-      {loading ? (
-        <Box display="flex" justifyContent="center" alignItems="center">
-          <CircularProgress />
-        </Box>
-      ) : error ? (
-        <Snackbar open={true} autoHideDuration={6000}>
-          <Alert severity="error">{snackbarMessage}</Alert>
-        </Snackbar>
-      ) : (
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>ID</TableCell>
-                <TableCell>Username</TableCell>
-                <TableCell>Full Name</TableCell>
-                <TableCell>Gender</TableCell>
-                <TableCell>City</TableCell>
-                <TableCell>Country</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Action</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {filteredStudents.map((student) => (
-                <TableRow key={student.id}>
-                  <TableCell>{student.id}</TableCell>
-                  <TableCell>{student.username}</TableCell>
-                  <TableCell>{student.fullname}</TableCell>
-                  <TableCell>{student.gender}</TableCell>
-                  <TableCell>{student.city || 'N/A'}</TableCell>
-                  <TableCell>{student.country || 'N/A'}</TableCell>
-                  <TableCell>{student.status === 'active' ? 'Active' : 'Inactive'}</TableCell>
-                  <TableCell>
-                    <FormControl fullWidth>
-                      <InputLabel>Status</InputLabel>
-                      <Select
-                        value={student.status}
-                        onChange={(e) => handleStatusChange(student.id, e.target.value)}
-                        label="Status"
-                      >
-                        <MenuItem value="active">Active</MenuItem>
-                        <MenuItem value="inactive">Inactive</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </TableCell>
+      <Box sx={{ padding: 3 }}>
+        {loading ? (
+          <Box display="flex" justifyContent="center" alignItems="center">
+            <CircularProgress />
+          </Box>
+        ) : error ? (
+          <Snackbar open={true} autoHideDuration={6000}>
+            <Alert severity="error">{snackbarMessage}</Alert>
+          </Snackbar>
+        ) : (
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>ID</TableCell>
+                  <TableCell>Username</TableCell>
+                  <TableCell>Full Name</TableCell>
+                  <TableCell>Gender</TableCell>
+                  <TableCell>City</TableCell>
+                  <TableCell>Country</TableCell>
+                  <TableCell>Status</TableCell>
+                  <TableCell>Action</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      )}
+              </TableHead>
+              <TableBody>
+                {filteredStudents.map((student) => (
+                  <TableRow key={student.id}>
+                    <TableCell>{student.id}</TableCell>
+                    <TableCell>{student.username}</TableCell>
+                    <TableCell>{student.fullname}</TableCell>
+                    <TableCell>{student.gender}</TableCell>
+                    <TableCell>{student.city || 'N/A'}</TableCell>
+                    <TableCell>{student.country || 'N/A'}</TableCell>
+                    <TableCell>{student.status === 'active' ? 'Active' : 'Inactive'}</TableCell>
+                    <TableCell>
+                      <FormControl fullWidth>
+                        <InputLabel>Status</InputLabel>
+                        <Select
+                          value={student.status}
+                          onChange={(e) => handleStatusChange(student.id, e.target.value)}
+                          label="Status"
+                        >
+                          <MenuItem value="active">Active</MenuItem>
+                          <MenuItem value="inactive">Inactive</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
 
-      {/* Success/Error Snackbar */}
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={4000}
-        onClose={() => setSnackbarOpen(false)}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      >
-        <Alert severity={snackbarSeverity}>{snackbarMessage}</Alert>
-      </Snackbar>
-    </Box>
+        {/* Success/Error Snackbar */}
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={4000}
+          onClose={() => setSnackbarOpen(false)}
+          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        >
+          <Alert severity={snackbarSeverity}>{snackbarMessage}</Alert>
+        </Snackbar>
+      </Box>
     </Suspense>
   );
 };
