@@ -19,7 +19,6 @@ import {
   InputLabel,
   TextField
 } from '@mui/material';
-import { useRouter } from 'next/navigation'; // Use for URL parameters
 
 const PostComponent = () => {
   const [posts, setPosts] = useState([]);               // Store all posts
@@ -28,9 +27,8 @@ const PostComponent = () => {
   const [error, setError] = useState(false);             // Error state
   const [snackbarOpen, setSnackbarOpen] = useState(false); // Snackbar for success/error messages
   const [snackbarMessage, setSnackbarMessage] = useState(''); // Message for snackbar
+  const [searchQuery, setSearchQuery] = useState('');    // Store search query
 
-  const router = useRouter();                            // Fetch router instance
-  const searchQuery = router.query.q || '';              // Get the search query from the URL
   const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;   // Fetch base URL from .env file
 
   // Fetch the list of posts when the component mounts
@@ -110,6 +108,16 @@ const PostComponent = () => {
         </Snackbar>
       ) : (
         <>
+          {/* Search Field */}
+          <TextField
+            label="Search Job Title"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+
           {/* Table to display posts */}
           <TableContainer component={Paper}>
             <Table>
