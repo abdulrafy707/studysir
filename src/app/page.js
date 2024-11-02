@@ -9,6 +9,7 @@ import JobCard from "./components/JobCard";
 import CourseList from './components/Get_courses';
 import EbookCard from './components/EbookCard';
 import { ThreeDots } from 'react-loader-spinner';
+import { toast } from 'react-toastify'; // Import toast
 
 export default function Home() {
   const [combinedPosts, setCombinedPosts] = useState([]);
@@ -48,8 +49,19 @@ export default function Home() {
 
         const shuffledPosts = shuffleArray(combinedData);
         setCombinedPosts(shuffledPosts);
+
+        // Optional: Show success toast
+        toast.success('Data loaded successfully!', {
+          className: 'bg-green-600 text-white',
+          bodyClassName: 'text-sm',
+        });
+
       } catch (error) {
         console.error('Error fetching data:', error);
+        toast.error('Failed to load data. Please try again later.', {
+          className: 'bg-red-600 text-white',
+          bodyClassName: 'text-sm',
+        });
       } finally {
         setLoading(false);
       }

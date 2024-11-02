@@ -77,6 +77,30 @@ const CourseComponent = () => {
     }
   };
   
+  const handleDeleteCourse = async (courseId) => {
+    setLoading(true);
+    try {
+      const response = await axios.delete(`https://studysir.m3xtrader.com/api/course_api.php`, {
+        params: { course_id: courseId } // Pass course_id as a query parameter
+      });
+  
+      if (response.data.success) {
+        setCourses((prevCourses) =>
+          prevCourses.filter((course) => course.course_id !== courseId)
+        );
+        setSnackbarMessage('Course deleted successfully');
+      } else {
+        setSnackbarMessage(response.data.error || 'Failed to delete course');
+      }
+      setSnackbarOpen(true);
+    } catch (error) {
+      setSnackbarMessage('Error deleting course');
+      setSnackbarOpen(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
 
   return (
     <Suspense fallback={<CircularProgress />}>
@@ -117,17 +141,15 @@ const CourseComponent = () => {
                     <TableCell>{course.fee}</TableCell>
                     <TableCell>{course.status === 'active' ? 'Active' : 'Inactive'}</TableCell>
                     <TableCell>
-  <FormControl fullWidth>
-    <InputLabel>Status</InputLabel>
-    <Select
-      value={course.status.toLowerCase()} // Convert status to lowercase
-      onChange={(e) => handleStatusChange(course.course_id, e.target.value)}
-      label="Status"
-    >
-      <MenuItem value="active">Active</MenuItem>
-      <MenuItem value="inactive">Inactive</MenuItem>
-    </Select>
-  </FormControl>
+                    <TableCell>
+  <button
+    onClick={() => handleDeleteCourse(course.course_id)}
+    style={{ color: 'red', cursor: 'pointer', background: 'none', border: 'none' }}
+  >
+    Delete
+  </button>
+</TableCell>
+
 </TableCell>
 
                    

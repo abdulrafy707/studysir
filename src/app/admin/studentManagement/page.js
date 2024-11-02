@@ -42,7 +42,7 @@ const StudentComponent = () => {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        const response = await axios.get(`${apiUrl}/student_api.php`); // Call the API
+        const response = await axios.get(`https://studysir.m3xtrader.com/api/student_api.php`); // Call the API
         if (response.data.error) {
           setError(true);
           setSnackbarMessage(response.data.error);
@@ -81,10 +81,15 @@ const StudentComponent = () => {
   // Handle status change for a student
   const handleStatusChange = async (studentId, newStatus) => {
     try {
-      const response = await axios.put(`${apiUrl}/student_api.php`, {
-        id: studentId,
-        status: newStatus
-      });
+      const formData = new URLSearchParams();
+      formData.append('id', studentId);
+      formData.append('status', newStatus);
+
+      const response = await axios.put(
+        `https://studysir.m3xtrader.com/api/student_api.php`,
+        formData,
+        { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
+      );
 
       if (response.data.success) {
         setSnackbarMessage('Status updated successfully');

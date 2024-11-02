@@ -17,7 +17,8 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-  TextField
+  TextField,
+  Button
 } from '@mui/material';
 
 const PostComponent = () => {
@@ -72,7 +73,7 @@ const PostComponent = () => {
     try {
       const response = await axios.put(`${apiUrl}/studentpost_api.php`, {
         post_id: postId,
-        status: newStatus,  // 'active' or 'inactive'
+        status: newStatus
       });
 
       if (response.data.success) {
@@ -90,6 +91,31 @@ const PostComponent = () => {
     } catch (error) {
       console.error('Error updating post status:', error);
       setSnackbarMessage('Failed to update post status');
+      setSnackbarOpen(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle post deletion
+  const handleDeletePost = async (postId) => {
+    setLoading(true);
+    try {
+      const response = await axios.delete(`https://studysir.m3xtrader.com/api/studentpost_api.php`, {
+        params: { post_id: postId }
+      });
+
+      if (response.data.success) {
+        setSnackbarMessage('Post deleted successfully');
+        setSnackbarOpen(true);
+        setPosts((prevPosts) => prevPosts.filter((post) => post.post_id !== postId));
+      } else {
+        setSnackbarMessage(response.data.error || 'Failed to delete post');
+        setSnackbarOpen(true);
+      }
+    } catch (error) {
+      console.error('Error deleting post:', error);
+      setSnackbarMessage('Failed to delete post');
       setSnackbarOpen(true);
     } finally {
       setLoading(false);
@@ -127,7 +153,7 @@ const PostComponent = () => {
                   <TableCell>Job Title</TableCell>
                   <TableCell>Location</TableCell>
                   <TableCell>Status</TableCell>
-                  <TableCell>Action</TableCell>
+                  <TableCell>Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -138,17 +164,16 @@ const PostComponent = () => {
                     <TableCell>{post.location}</TableCell>
                     <TableCell>{post.status === 'active' ? 'Active' : 'Inactive'}</TableCell>
                     <TableCell>
-                      <FormControl fullWidth>
-                        <InputLabel>Status</InputLabel>
-                        <Select
-                          value={post.status}
-                          onChange={(e) => handleStatusChange(post.post_id, e.target.value)}
-                          label="Status"
+                      <Box display="flex" gap={1}>
+                        
+                        <Button
+                          variant="contained"
+                          color="error"
+                          onClick={() => handleDeletePost(post.post_id)}
                         >
-                          <MenuItem value="active">Active</MenuItem>
-                          <MenuItem value="inactive">Inactive</MenuItem>
-                        </Select>
-                      </FormControl>
+                          Delete
+                        </Button>
+                      </Box>
                     </TableCell>
                   </TableRow>
                 ))}

@@ -235,8 +235,8 @@ export default function JobCard({ post }) {
             alt="Profile Picture"
             className="rounded-full w-10 h-10 sm:w-12 sm:h-12"
           />
-          <div className="ml-2 sm:ml-4">
-            <h2 className="text-xs sm:text-sm font-bold">{post.name || 'Student'}</h2>
+          <div className=" sm:ml-4">
+            <h2 className="text-lg sm:text-lg font-bold">{post.name || 'Student'}</h2>
             <p className="text-gray-500 text-xs sm:text-sm flex items-center">
               <MdLocationOn className="mr-1" />
               {post.location || 'Location not provided'}
@@ -280,7 +280,7 @@ export default function JobCard({ post }) {
       </div>
 
       {/* Job Title and Description */}
-      <h3 className="mt-4 text-xs sm:text-sm font-bold">{post.job_title || 'Job Title not available'}</h3>
+      <h3 className=" text-lg sm:text-lg font-bold">{post.job_title || 'Job Title not available'}</h3>
       <p className="text-gray-700 text-xs sm:text-sm mt-2">
         {showFullDescription
           ? post.job_description || 'Job description not provided'
@@ -291,6 +291,7 @@ export default function JobCard({ post }) {
           </span>
         )}
       </p>
+      <hr></hr>
 
       {/* Job details with icons */}
       <div className="mt-4 space-y-2">

@@ -1,49 +1,105 @@
 'use client';
 
 import { useEffect, useState } from "react";
-import TeacherList from "@/app/components/Teachercard"; // Assuming Teachercard renders individual teacher
+import JobCard from "@/app/components/JobCard"; // Use JobCard to render each job post
+import { ThreeDots } from 'react-loader-spinner';
 
 export default function Page() {
-  const [randomTeachers, setRandomTeachers] = useState([]);
+  const [jobPosts, setJobPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-  // Helper function to shuffle an array (Fisher-Yates algorithm)
-  const shuffleArray = (array) => {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
+  const fetchJobData = async (query = '') => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const apiUrl = query 
+        ? `https://studysir.m3xtrader.com/api/searched_studentpost_api.php?query=${encodeURIComponent(query)}`
+        : `${baseUrl}/studentpost_api.php`;
+
+      const response = await fetch(apiUrl);
+      console.log("API response:", response);
+
+      if (!response.ok) throw new Error("Failed to fetch job data");
+
+      const responseData = await response.text();
+      console.log("Raw response data:", responseData);
+
+      const cleanData = responseData.replace(/<br\s*\/?>|<[^>]+>|Deprecated:.+/g, '').trim();
+      console.log("Cleaned data:", cleanData);
+
+      const jobData = JSON.parse(cleanData);
+      console.log("Parsed job data:", jobData);
+
+      setJobPosts(jobData);
+    } catch (error) {
+      console.error("Error fetching job data:", error);
+      setError("Could not load job data.");
+    } finally {
+      setLoading(false);
     }
-    return array;
   };
 
   useEffect(() => {
-    const fetchTeacherData = async () => {
-      try {
-        const response = await fetch(`${baseUrl}/teacher_api.php`);
-        const teachers = await response.json();
-
-        const uniqueTeachers = Array.from(
-          new Map(teachers.map((teacher) => [teacher.teacher_id, teacher])).values()
-        );
-
-        const shuffledTeachers = shuffleArray(uniqueTeachers);
-        setRandomTeachers(shuffledTeachers.slice(0, 5));
-      } catch (error) {
-        console.error("Error fetching teachers:", error);
-      }
-    };
-
-    fetchTeacherData();
+    fetchJobData();
   }, [baseUrl]);
 
+  const handleSearchInput = (e) => setSearchQuery(e.target.value);
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      fetchJobData(searchQuery.trim());
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <ThreeDots 
+          height="80" 
+          width="80" 
+          radius="9"
+          color="#3498db"
+          ariaLabel="three-dots-loading"
+          visible={true}
+        />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-red-500">{error}</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="container text-black mx-auto flex justify-center items-center flex-wrap">
-      {/* Render the random teachers */}
-      {randomTeachers.map((teacher) => (
-        <div key={teacher.teacher_id} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 mb-2 flex justify-center">
-          <TeacherList teacher={teacher} baseUrl={baseUrl} />
-        </div>
-      ))}
+    <div className="container mx-auto flex flex-col items-center text-black">
+      {/* Search Bar */}
+      <div className="w-full max-w-md my-4">
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={handleSearchInput}
+          onKeyPress={handleKeyPress}
+          placeholder="Search for job posts..."
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+        />
+      </div>
+
+      {/* Job Cards */}
+      <div className="w-full flex flex-col items-center">
+        {jobPosts.map((job) => (
+          <div key={job.post_id} className="w-full flex justify-center mb-4">
+            <JobCard post={job} baseUrl={baseUrl} /> {/* Render each item as a JobCard */}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

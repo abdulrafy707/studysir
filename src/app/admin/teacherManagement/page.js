@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import {
   Table,
@@ -21,7 +21,7 @@ import {
 
 const TeacherComponent = () => {
   const [teachers, setTeachers] = useState([]);
-  const [filteredTeachers, setFilteredTeachers] = useState([]); // Store the filtered teachers
+  const [filteredTeachers, setFilteredTeachers] = useState([]); // Ensure this is always an array
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -41,7 +41,7 @@ const TeacherComponent = () => {
   useEffect(() => {
     const fetchTeachers = async () => {
       try {
-        const response = await axios.get(`${apiUrl}/teacher_api.php`); // Call the API
+        const response = await axios.get(`https://studysir.m3xtrader.com/api/teacher_api.php`); // Call the API
         if (response.data.error) {
           setError(true);
           setSnackbarMessage(response.data.error);
@@ -78,8 +78,8 @@ const TeacherComponent = () => {
     setLoading(true);
     try {
       const response = await axios.put(`${apiUrl}/teacher_api.php`, {
-        id: teacherId, // Send the correct teacher ID
-        status: newStatus, // Use lowercase 'status' as expected by your API
+        id: teacherId,
+        status: newStatus,
       });
 
       if (response.data.success) {
@@ -130,31 +130,39 @@ const TeacherComponent = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {filteredTeachers.map((teacher) => (
-                <TableRow key={teacher.id}>
-                  <TableCell>{teacher.id}</TableCell>
-                  <TableCell>{teacher.username}</TableCell>
-                  <TableCell>{teacher.fullname}</TableCell>
-                  <TableCell>{teacher.current_coins}</TableCell>
-                  <TableCell>{teacher.gender}</TableCell>
-                  <TableCell>{teacher.city || 'N/A'}</TableCell>
-                  <TableCell>{teacher.country || 'N/A'}</TableCell>
-                  <TableCell>{teacher.status === 'active' ? 'Active' : 'Inactive'}</TableCell>
-                  <TableCell>
-                    <FormControl fullWidth>
-                      <InputLabel>Status</InputLabel>
-                      <Select
-                        value={teacher.status}
-                        onChange={(e) => handleStatusChange(teacher.id, e.target.value)}
-                        label="Status"
-                      >
-                        <MenuItem value="active">Active</MenuItem>
-                        <MenuItem value="inactive">Inactive</MenuItem>
-                      </Select>
-                    </FormControl>
+              {Array.isArray(filteredTeachers) && filteredTeachers.length > 0 ? (
+                filteredTeachers.map((teacher) => (
+                  <TableRow key={teacher.id}>
+                    <TableCell>{teacher.id}</TableCell>
+                    <TableCell>{teacher.username}</TableCell>
+                    <TableCell>{teacher.fullname}</TableCell>
+                    <TableCell>{teacher.current_coins}</TableCell>
+                    <TableCell>{teacher.gender}</TableCell>
+                    <TableCell>{teacher.city || 'N/A'}</TableCell>
+                    <TableCell>{teacher.country || 'N/A'}</TableCell>
+                    <TableCell>{teacher.status === 'active' ? 'Active' : 'Inactive'}</TableCell>
+                    <TableCell>
+                      <FormControl fullWidth>
+                        <InputLabel>Status</InputLabel>
+                        <Select
+                          value={teacher.status}
+                          onChange={(e) => handleStatusChange(teacher.id, e.target.value)}
+                          label="Status"
+                        >
+                          <MenuItem value="active">Active</MenuItem>
+                          <MenuItem value="inactive">Inactive</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={9} align="center">
+                    No teachers found.
                   </TableCell>
                 </TableRow>
-              ))}
+              )}
             </TableBody>
           </Table>
         </TableContainer>

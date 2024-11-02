@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { FaUser, FaPhone, FaVenusMars, FaCity, FaFlag, FaSave, FaEdit, FaTimesCircle, FaCamera, FaWallet } from 'react-icons/fa'; // Import icons
-
+import { ThreeDots } from 'react-loader-spinner'; // Import the spinner
 export default function StudentUpdateForm() {
   const [student, setStudent] = useState({
     id: '',

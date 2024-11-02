@@ -3,19 +3,20 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const RequestMoneyPage = () => {
-    const [rupees, setRupees] = useState(0); // Displays the rupees entered
-    const [money, setMoney] = useState(0); // Displays the converted money
-    const [receiptFile, setReceiptFile] = useState(null); // Holds the uploaded file
-    const [studentId, setStudentId] = useState(null); // Stores student ID from localStorage
-    const [purpose, setPurpose] = useState(''); // Holds the purpose for the request (e.g., books, courses)
-    const [snackbarMessage, setSnackbarMessage] = useState(''); // Holds snackbar message
-    const [snackbarVisible, setSnackbarVisible] = useState(false); // Controls snackbar visibility
+    const [rupees, setRupees] = useState(0);
+    const [money, setMoney] = useState(0);
+    const [receiptFile, setReceiptFile] = useState(null);
+    const [studentId, setStudentId] = useState(null);
+    const [purpose, setPurpose] = useState('');
+    const [paymentMethods, setPaymentMethods] = useState([]); // Holds fetched payment methods
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+    const [snackbarVisible, setSnackbarVisible] = useState(false);
 
     // Fetch student ID from localStorage
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'));
         if (user && user.role === 'student') {
-            setStudentId(user.id); // Set student ID if the user is a student
+            setStudentId(user.id);
         } else {
             setSnackbarMessage('Error: User not found or not a student.');
             setSnackbarVisible(true);
@@ -23,16 +24,37 @@ const RequestMoneyPage = () => {
         }
     }, []);
 
+    // Fetch payment methods
+    useEffect(() => {
+        const fetchPaymentMethods = async () => {
+            try {
+                const response = await axios.get(`https://studysir.m3xtrader.com/api/payment_methods_api.php`);
+                if (response.data && response.data.status === 'success') {
+                    setPaymentMethods(response.data.data);
+                } else {
+                    setSnackbarMessage('Failed to fetch payment methods.');
+                    setSnackbarVisible(true);
+                    setTimeout(() => setSnackbarVisible(false), 4000);
+                }
+            } catch (error) {
+                setSnackbarMessage('Error fetching payment methods.');
+                setSnackbarVisible(true);
+                setTimeout(() => setSnackbarVisible(false), 4000);
+            }
+        };
+        fetchPaymentMethods();
+    }, []);
+
     // Handle file upload
     const handleFileUpload = (e) => {
-        setReceiptFile(e.target.files[0]); // Set the selected file
+        setReceiptFile(e.target.files[0]);
     };
 
     // Handle rupees input and calculate money (1 rupee = 1 money)
     const handleRupeesChange = (e) => {
         const rupeesInput = parseFloat(e.target.value);
         setRupees(rupeesInput);
-        setMoney(rupeesInput); // 1 rupee = 1 money
+        setMoney(rupeesInput);
     };
 
     // Send request to the money request API
@@ -59,30 +81,28 @@ const RequestMoneyPage = () => {
         }
 
         const formData = new FormData();
-        formData.append('student_id', studentId); // Use actual student ID
-        formData.append('requested_amount', money); // Send the requested money amount
-        formData.append('purpose', purpose); // Send the purpose of the money request
-        formData.append('file', receiptFile); // Attach the receipt file
+        formData.append('student_id', studentId);
+        formData.append('requested_amount', money);
+        formData.append('purpose', purpose);
+        formData.append('file', receiptFile);
 
         try {
             const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/money_request_api.php`, formData, {
                 headers: {
-                    'Content-Type': 'multipart/form-data', // Required to handle file upload
+                    'Content-Type': 'multipart/form-data',
                 },
             });
 
             if (response.data && response.data.success) {
                 setSnackbarMessage('Money request sent successfully.');
-            } else if (response.data && response.data.error) {
-                setSnackbarMessage(response.data.error || 'Failed to send money request.');
             } else {
-                setSnackbarMessage('Unexpected response from server.');
+                setSnackbarMessage(response.data.error || 'Failed to send money request.');
             }
         } catch (error) {
             setSnackbarMessage('Error while sending money request.');
         } finally {
             setSnackbarVisible(true);
-            setTimeout(() => setSnackbarVisible(false), 4000); // Hide snackbar after 4 seconds
+            setTimeout(() => setSnackbarVisible(false), 4000);
         }
     };
 
@@ -126,6 +146,25 @@ const RequestMoneyPage = () => {
                     ></textarea>
                 </div>
 
+                {/* Payment Methods */}
+                <div className="mb-4">
+                    <label className="block mb-1 text-sm font-semibold">Payment Methods</label>
+                    <ul className="w-full p-2 border border-gray-300 rounded bg-gray-100">
+                        {paymentMethods.length ? (
+                            paymentMethods.map((method) => (
+                                <li key={method.id} className="mb-2">
+                                    {method.account_type} - {method.account_no}
+                                </li>
+                            ))
+                        ) : (
+                            <li className="text-gray-500">No payment methods available.</li>
+                        )}
+                    </ul>
+                    <p className="mt-2 text-sm text-gray-600">
+                        Please use any of the above payment methods to send the funds.
+                    </p>
+                </div>
+
                 {/* Upload Receipt */}
                 <div className="mb-4">
                     <label className="block mb-1 text-sm font-semibold">Upload Receipt</label>
@@ -135,6 +174,11 @@ const RequestMoneyPage = () => {
                         onChange={handleFileUpload}
                         className="w-full p-2 border border-gray-300 rounded"
                     />
+                    {receiptFile && (
+                        <p className="text-sm text-gray-600 mt-2">
+                            Uploaded file: {receiptFile.name}
+                        </p>
+                    )}
                 </div>
 
                 {/* Buttons */}

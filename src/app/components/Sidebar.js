@@ -204,10 +204,7 @@ const Sidebar = () => {
                         )} */}
                     </li>
 
-                    <li className="flex items-center space-x-3 p-2 rounded-md">
-                        <Image src="/setting.png" alt="Settings" width={24} height={24} />
-                        <span className="font-semibold">Settings</span>
-                    </li>
+                    
                     <li className="flex items-center space-x-3 cursor-pointer hover:bg-gray-200 p-2 rounded-md transition-colors" onClick={handleLogout}>
                         <Image src="/logout.png" alt="Logout" width={24} height={24} />
                         <span className="font-semibold">Logout</span>

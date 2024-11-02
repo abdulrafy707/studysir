@@ -1,8 +1,8 @@
 import React from 'react';
-
+import Link from 'next/link';
 export default function Banner() {
   return (
-    <div className="flex text-black justify-center items-center w-full bg-gray-100 py-10">
+    <div className="flex text-black bg-white justify-center items-center w-full bg-gray-100 py-10">
       <div className="flex items-center justify-between w-full max-w-6xl relative">
         {/* Left Image */}
         <div className="w-1/3 flex justify-center">
@@ -16,20 +16,20 @@ export default function Banner() {
             is the most powerful weapon which you can use to <span className="text-blue-400 font-bold">change the world.</span>
           </p>
           <p className="mt-2 text-gray-500">NELSON MANDELA</p>
-          <div className="mt-6">
-            <button className="px-6 py-2 bg-blue-600 text-white rounded-md shadow-md hover:bg-blue-700 transition">
+          <div className="mt-6 flex justify-center">
+            <Link href="/user/pages/login" className="inline-block px-6 py-2 bg-blue-600 text-white rounded-md shadow-md hover:bg-blue-700 transition">
               Find Your Tutor
-            </button>
-            <button className="px-6 py-2 ml-4 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-100 transition">
+            </Link>
+            <Link href="/user/pages/login" className="inline-block px-6 py-2 ml-4 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-100 transition">
               Become a Tutor
-            </button>
+            </Link>
           </div>
         </div>
         
         {/* Right Image Section */}
-        <div className="w-1/3 flex justify-center relative">
+        <div className="w-1/3 flex  justify-end relative">
           {/* Background Image */}
-          <img src="/carton2BG.png" alt="Carton 2 Background" className="absolute max-w-64 right-0 top-0 h-auto" style={{zIndex: 0}} />
+          {/* <img src="/carton2BG.png" alt="Carton 2 Background" className="absolute justify-end max-w-64 right-0 top-0 h-auto" style={{zIndex: 0}} /> */}
           
           {/* Foreground Image */}
           <img src="/carton2.png" alt="Carton 2" className="relative z-10 max-w-72 h-auto" />

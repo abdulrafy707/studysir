@@ -7,8 +7,7 @@ import {
   FaDollarSign, 
   FaClock, 
   FaRegThumbsUp, 
-  FaUserFriends,
-  FaEllipsisV 
+  FaUserFriends
 } from 'react-icons/fa';
 import { AiOutlineFileText } from 'react-icons/ai';
 import { BiUser } from 'react-icons/bi';
@@ -23,6 +22,9 @@ export default function CourseList({ course }) {
   const [isJoinRequestOpen, setIsJoinRequestOpen] = useState(false);
   const [joinRequestMessage, setJoinRequestMessage] = useState('');
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+  // Determine if user is logged in
+  const userLoggedIn = !!JSON.parse(localStorage.getItem('user'))?.id;
 
   useEffect(() => {
     const fetchTeacherInfo = async (teacherId) => {
@@ -56,7 +58,10 @@ export default function CourseList({ course }) {
     const userData = JSON.parse(localStorage.getItem('user'));
 
     if (!userData || !userData.id) {
-      toast.error('Please log in to like the course.');
+      toast.error('Please log in to like the course.', {
+        className: 'bg-red-500 text-white',
+        bodyClassName: 'text-sm',
+      });
       return;
     }
 
@@ -78,47 +83,89 @@ export default function CourseList({ course }) {
       const result = await response.json();
       if (result.liked) {
         setLikes(result.total_likes);
-        toast.success('Course liked successfully!');
+        toast.success('Course liked successfully!', {
+          className: 'bg-green-500 text-white',
+          bodyClassName: 'text-sm',
+        });
       } else {
-        toast.error(`Error liking course: ${result.error}`);
+        toast.error(`Error liking course: ${result.error}`, {
+          className: 'bg-red-500 text-white',
+          bodyClassName: 'text-sm',
+        });
       }
     } catch (error) {
       console.error('Error liking course:', error);
-      toast.error('An error occurred while liking the course.');
+      toast.error('An error occurred while liking the course.', {
+        className: 'bg-red-500 text-white',
+        bodyClassName: 'text-sm',
+      });
     }
+  };
+
+  const handleJoinRequestClick = () => {
+    const userData = JSON.parse(localStorage.getItem('user'));
+    console.log('Join Request Clicked. User Data:', userData); // Debugging line
+
+    // Check if user is logged in
+    if (!userData || !userData.id) {
+      toast.error('You need to log in to send a join request.', {
+        className: 'bg-red-500 text-white',
+        bodyClassName: 'text-sm',
+      });
+      return;
+    }
+
+    // Open the join request popup if user is logged in
+    handleOpenJoinRequestPopup();
   };
 
   const handleJoinRequest = async () => {
     const userData = JSON.parse(localStorage.getItem('user'));
 
-    // Validate userData
-    if (!userData || !userData.id || !userData.fullname || !userData.role) {
-      console.error('Missing user fields:', {
-        user_id: userData?.id,
-        fullname: userData?.fullname,
-        role: userData?.role
+    // Check if user is logged in
+    if (!userData) {
+      toast.error('You need to log in to send a join request.', {
+        className: 'bg-red-500 text-white',
+        bodyClassName: 'text-sm',
       });
-      toast.error('Required user fields are missing.');
       return;
     }
 
-    // Validate selectedPost fields
-    if (!course.teacher_id || !course.course_title) {
-      console.error('Missing course fields:', {
-        teacher_id: course?.teacher_id,
-        course_title: course?.course_title
+    // Check if essential user fields are present
+    const { id, fullname, role } = userData;
+    if (!id || !fullname || !role) {
+      toast.error('Incomplete user information. Please log in again.', {
+        className: 'bg-red-500 text-white',
+        bodyClassName: 'text-sm',
       });
-      toast.error('Required course fields are missing.');
+      return;
+    }
+
+    // Validate course fields
+    if (!course.teacher_id || !course.course_title) {
+      toast.error('Required course information is missing.', {
+        className: 'bg-red-500 text-white',
+        bodyClassName: 'text-sm',
+      });
+      return;
+    }
+
+    // Optional: Validate joinRequestMessage length
+    if (joinRequestMessage.length > 500) {
+      toast.error('Your message is too long. Please limit it to 500 characters.', {
+        className: 'bg-red-500 text-white',
+        bodyClassName: 'text-sm',
+      });
       return;
     }
 
     const postData = {
-      student_id: userData.id,
+      student_id: id,
       teacher_id: course.teacher_id,
       amount: 150,  // Adjust this value as needed
       course_title: course.course_title,
-      fullname: userData.fullname,
-      role: userData.role,
+      fullname: fullname,
+      role: role,
       message: joinRequestMessage,
     };
 
@@ -131,14 +178,23 @@ export default function CourseList({ course }) {
 
       const result = await response.json();
       if (result.success) {
-        toast.success('Join request sent to the teacher.');
+        toast.success('Join request sent to the teacher.', {
+          className: 'bg-green-500 text-white',
+          bodyClassName: 'text-sm',
+        });
       } else {
         console.error('Server error:', result.error);
-        toast.error(`Error: ${result.error}`);
+        toast.error(`Error: ${result.error}`, {
+          className: 'bg-red-500 text-white',
+          bodyClassName: 'text-sm',
+        });
       }
     } catch (error) {
       console.error('Error sending join request:', error);
-      toast.error('An error occurred while sending the join request.');
+      toast.error('An error occurred while sending the join request.', {
+        className: 'bg-red-500 text-white',
+        bodyClassName: 'text-sm',
+      });
     } finally {
       handleCloseJoinRequestPopup();
     }
@@ -158,7 +214,10 @@ export default function CourseList({ course }) {
 
     if (!userData || !userData.id) {
       console.error('User not logged in');
-      toast.error('User not logged in.');
+      toast.error('User not logged in.', {
+        className: 'bg-red-500 text-white',
+        bodyClassName: 'text-sm',
+      });
       return;
     }
 
@@ -200,14 +259,23 @@ export default function CourseList({ course }) {
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
       const result = await response.json();
       if (result.success) {
-        toast.success('Course saved successfully!');
+        toast.success('Course saved successfully!', {
+          className: 'bg-green-500 text-white',
+          bodyClassName: 'text-sm',
+        });
       } else {
         console.error('Error saving course:', result.error);
-        toast.error(`Error saving course: ${result.error}`);
+        toast.error(`Error saving course: ${result.error}`, {
+          className: 'bg-red-500 text-white',
+          bodyClassName: 'text-sm',
+        });
       }
     } catch (error) {
       console.error('Error in handleSaveCourse:', error);
-      toast.error('An error occurred while saving the course.');
+      toast.error('An error occurred while saving the course.', {
+        className: 'bg-red-500 text-white',
+        bodyClassName: 'text-sm',
+      });
     } finally {
       setDropdownOpen(false);  // Close the dropdown after saving
     }
@@ -271,7 +339,7 @@ export default function CourseList({ course }) {
               alt={teachers[course.teacher_id].fullname || 'Profile Picture'}
               className="rounded-full object-cover w-12 h-12 sm:w-16 sm:h-16" // Adjusted profile image size
             />
-            <div className="ml-4">
+            <div className="ml-1 mt-3">
               <h2 className="text-sm sm:text-lg font-bold">{teachers[course.teacher_id].fullname || 'Teacher Name'}</h2>
               <p className="text-xs sm:text-sm text-gray-500">{teachers[course.teacher_id].city}, {teachers[course.teacher_id].country}</p>
             </div>
@@ -293,7 +361,7 @@ export default function CourseList({ course }) {
 
       {/* Course Title */}
       <div className="flex items-start justify-between">
-        <h2 className="text-sm sm:text-lg font-bold">{course.course_title || 'Course Title'}</h2>
+        <h2 className="text-lg sm:text-lg font-bold">{course.course_title || 'Course Title'}</h2>
       </div>
 
       {/* Course Description */}
@@ -375,7 +443,10 @@ export default function CourseList({ course }) {
         <div className="flex items-center space-x-2 text-xs sm:text-sm">
           <FaRegThumbsUp size={16} className="text-blue-500" />
           <p className="font-bold">{likes || '0'}</p>
-          <button className="text-blue-500 text-xs sm:text-sm" onClick={handleLikeCourse}>
+          <button 
+            className="text-blue-500 text-xs sm:text-sm hover:underline"
+            onClick={handleLikeCourse}
+          >
             Like
           </button>
         </div>
@@ -384,8 +455,12 @@ export default function CourseList({ course }) {
         <div className="flex items-center space-x-2 text-xs sm:text-sm">
           <FaUserFriends size={14} className="text-blue-500" />
           <button 
-            className="font-bold text-blue-500 text-xs sm:text-sm"
-            onClick={handleOpenJoinRequestPopup}
+            className={`font-bold text-blue-500 text-xs sm:text-sm ${
+              !userLoggedIn ? 'opacity-50 cursor-not-allowed' : 'hover:underline'
+            }`}
+            onClick={handleJoinRequestClick}  // Updated onClick handler
+            disabled={!userLoggedIn} // Disable if not logged in
+            title={userLoggedIn ? 'Send Join Request' : 'Please log in to send a join request'}
           >
             Join Request
           </button>

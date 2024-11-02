@@ -5,38 +5,57 @@ import EbookCard from "@/app/components/EbookCard"; // Assuming EbookCard render
 
 export default function Page() {
   const [ebooks, setEbooks] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-  // Helper function to shuffle an array (Fisher-Yates algorithm)
-  const shuffleArray = (array) => {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
+  // Fetch ebook data, either all ebooks or based on a search query
+  const fetchEbookData = async (query = '') => {
+    try {
+      const apiUrl = query 
+        ? `https://studysir.m3xtrader.com/api/searched_ebook_api.php?query=${encodeURIComponent(query)}`
+        : `${baseUrl}/ebook_api.php`;
+
+      const response = await fetch(apiUrl);
+      const ebookData = await response.json();
+
+      console.log("Fetched Ebooks:", ebookData); // Check what the API returns
+      
+      setEbooks(ebookData);
+    } catch (error) {
+      console.error("Error fetching ebooks:", error);
     }
-    return array;
   };
 
+  // Initial fetch to load all ebooks
   useEffect(() => {
-    const fetchEbookData = async () => {
-      try {
-        // Fetch ebook data
-        const response = await fetch(`${baseUrl}/ebook_api.php`);
-        const ebookData = await response.json();
-  
-        console.log("Fetched Ebooks:", ebookData); // Check what the API returns
-  
-        setEbooks(ebookData); // Directly set fetched data without shuffling for testing
-      } catch (error) {
-        console.error("Error fetching ebooks:", error);
-      }
-    };
-  
     fetchEbookData();
   }, [baseUrl]);
-  
+
+  // Handle search input change and trigger fetch on Enter key press
+  const handleSearchInput = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      fetchEbookData(searchQuery.trim());
+    }
+  };
 
   return (
     <div className="container mx-auto p-8">
+      {/* Search Bar */}
+      <div className="flex justify-center mb-4">
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={handleSearchInput}
+          onKeyPress={handleKeyPress}
+          placeholder="Search for an ebook by title or description..."
+          className="w-[400px] px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+        />
+      </div>
+
       {/* Render the EbookCard component for each ebook */}
       {ebooks.length > 0 ? (
         ebooks.map((ebook, index) => (

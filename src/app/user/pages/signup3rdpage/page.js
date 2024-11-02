@@ -10,6 +10,7 @@ export default function SignupStep3() {
   const [country, setCountry] = useState('');
   const [address, setAddress] = useState('');
   const [phoneno, setPhoneno] = useState('');
+  const [designation, setDesignation] = useState(''); // New designation state
   const [image, setImage] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -24,7 +25,7 @@ export default function SignupStep3() {
   }, []);
 
   const handlePersonalDetails = async () => {
-    if (!fullname || !dob || !gender || !city || !country || !address || !phoneno) {
+    if (!fullname || !dob || !gender || !city || !country || !address || !phoneno || (role === 'teacher' && !designation)) {
       setError('All fields are required.');
       return;
     }
@@ -47,6 +48,9 @@ export default function SignupStep3() {
     formData.append('country', country);
     formData.append('address', address);
     formData.append('phoneno', phoneno);
+    if (role === 'teacher') {
+      formData.append('designation', designation);
+    }
     if (image) {
       formData.append('image', image);
     }
@@ -118,6 +122,25 @@ export default function SignupStep3() {
               <option value="Other">Other</option>
             </select>
           </div>
+
+          {/* Designation - Only show if role is teacher */}
+          {role === 'teacher' && (
+            <div>
+              <label className="block text-gray-700 mb-2">Designation</label>
+              <select
+                value={designation}
+                onChange={(e) => setDesignation(e.target.value)}
+                className="border border-gray-300 rounded-lg p-2 w-full focus:outline-none focus:border-blue-500"
+              >
+                <option value="">Select your designation</option>
+                <option value="Sir">Sir</option>
+                <option value="Ma'am">Ma'am</option>
+                <option value="Miss">Miss</option>
+                <option value="Qari">Qari</option>
+                <option value="Prof">Prof</option>
+              </select>
+            </div>
+          )}
 
           {/* City */}
           <div>

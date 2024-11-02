@@ -132,20 +132,20 @@ const EbookComponent = () => {
                     <TableCell>Seller Name</TableCell>
                     <TableCell>Downloads</TableCell>
                     <TableCell>Status</TableCell>
-                    <TableCell>Action</TableCell>
+                    {/* <TableCell>Action</TableCell> */}
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {filteredEbooks.map((ebook) => (
                     <TableRow key={ebook.ebook_id}>
-                      <TableCell>{ebook.ebook_id}</TableCell>
+                      <TableCell>{ebook.id}</TableCell>
                       <TableCell>{ebook.ebook_title}</TableCell>
                       <TableCell>{ebook.author_name}</TableCell>
                       <TableCell>Rs {ebook.price}</TableCell>
                       <TableCell>{ebook.seller_name}</TableCell>
                       <TableCell>{ebook.downloads}</TableCell>
                       <TableCell>{ebook.status === 'active' ? 'Active' : 'Inactive'}</TableCell>
-                      <TableCell>
+                      {/* <TableCell>
                         <FormControl fullWidth>
                           <InputLabel>Status</InputLabel>
                           <Select
@@ -157,7 +157,7 @@ const EbookComponent = () => {
                             <MenuItem value="inactive">Inactive</MenuItem>
                           </Select>
                         </FormControl>
-                      </TableCell>
+                      </TableCell> */}
                     </TableRow>
                   ))}
                 </TableBody>

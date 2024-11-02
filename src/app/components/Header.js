@@ -27,15 +27,9 @@ const Header = () => {
     }, []);
 
     const handleSearch = () => {
-        if (isAuthenticated) {
-            if (searchQuery.trim()) {
-                router.push(`/${userRole}/searched_courses?query=${encodeURIComponent(searchQuery)}`);
-            } else {
-                router.push(`/${userRole}`);
-            }
-        } else {
-            alert("User is not logged in");
-        }
+        const targetRolePath = isAuthenticated ? `/${userRole}` : '/user';
+        const searchPath = searchQuery.trim() ? `${targetRolePath}/searched_courses?query=${encodeURIComponent(searchQuery)}` : targetRolePath;
+        router.push(searchPath);
     };
 
     const handleMobileMenuClick = () => {
@@ -60,7 +54,7 @@ const Header = () => {
                         className="bg-transparent w-full text-gray-700 focus:outline-none"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && handleSearch()} // Trigger search on Enter key
+                        onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                     />
                     <button onClick={handleSearch}>
                         <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -82,25 +76,24 @@ const Header = () => {
             </div>
 
             <div className={`flex items-center ${isAuthenticated ? 'space-x-4' : 'space-x-8'} md:space-x-8 lg:space-x-20`}>
-    <Link href={isAuthenticated ? `/${userRole}` : '/user'}>
-        <Image src="/home.png" alt="Home Icon" width={20} height={20} className="w-5 h-5 md:w-7 md:h-7"/>
-    </Link>
-    <Link href={isAuthenticated ? `/${userRole}/student_posts` : '/user/student_posts'}>
-        <Image src="/studentposts.png" alt="Student Posts Icon" width={30} height={20} className="w-5 h-5 md:w-7 md:h-7"/>
-    </Link>
-    <Link href={isAuthenticated ? `/${userRole}/courses` : '/user/courses'}>
-        <Image src="/courses.png" alt="Courses Icon" width={20} height={20} className="w-5 h-5 md:w-7 md:h-7"/>
-    </Link>
-    <Link href={isAuthenticated ? `/${userRole}/ebooks` : '/user/ebooks'}>
-        <Image src="/digitalproducts.png" alt="Digital Products Icon" width={20} height={20} className="w-5 h-5 md:w-7 md:h-7"/>
-    </Link>
-    {(userRole === 'teacher' || userRole === 'student') && isAuthenticated && (
-        <Link href={`/${userRole}/chat`}>
-            <Image src="/sms.png" alt="SMS Icon" width={20} height={20} className="w-5 h-5 md:w-7 md:h-7"/>
-        </Link>
-    )}
-</div>
-
+                <Link href={isAuthenticated ? `/${userRole}` : '/user'}>
+                    <Image src="/home.png" alt="Home Icon" width={20} height={20} className="w-5 h-5 md:w-7 md:h-7"/>
+                </Link>
+                <Link href={isAuthenticated ? `/${userRole}/student_posts` : '/user/student_posts'}>
+                    <Image src="/studentposts.png" alt="Student Posts Icon" width={30} height={20} className="w-5 h-5 md:w-7 md:h-7"/>
+                </Link>
+                <Link href={isAuthenticated ? `/${userRole}/courses` : '/user/courses'}>
+                    <Image src="/courses.png" alt="Courses Icon" width={20} height={20} className="w-5 h-5 md:w-7 md:h-7"/>
+                </Link>
+                <Link href={isAuthenticated ? `/${userRole}/ebooks` : '/user/ebooks'}>
+                    <Image src="/digitalproducts.png" alt="Digital Products Icon" width={20} height={20} className="w-5 h-5 md:w-7 md:h-7"/>
+                </Link>
+                {(userRole === 'teacher' || userRole === 'student') && isAuthenticated && (
+                    <Link href={`/${userRole}/chat`}>
+                        <Image src="/sms.png" alt="SMS Icon" width={20} height={20} className="w-5 h-5 md:w-7 md:h-7"/>
+                    </Link>
+                )}
+            </div>
 
             <div className={`flex items-center ${isAuthenticated ? 'space-x-4' : 'space-x-8'} md:space-x-8`}>
                 {isAuthenticated ? (

@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { FaEdit, FaSave, FaTimes, FaCamera, FaPhoneAlt, FaUserAlt, FaEnvelope, FaMapMarkerAlt, FaUniversity, FaBook, FaMoneyBillAlt } from 'react-icons/fa'; // Importing icons
+import { FaEdit, FaSave, FaTimes, FaCamera, FaPhoneAlt, FaUserAlt, FaEnvelope, FaMapMarkerAlt, FaUniversity, FaBook, FaMoneyBillAlt, FaBookOpen } from 'react-icons/fa'; // Importing icons
 import { MdLanguage } from 'react-icons/md'; // Importing language icon
 
 export default function TeacherProfilePage() {
@@ -24,6 +24,8 @@ export default function TeacherProfilePage() {
     designation: '',
     description: '',
     fee: '', // New field for fee
+    current_coins: 0, // New field for current coins
+    current_money: 0, // New field for current money
   });
   const [isEditing, setIsEditing] = useState(false);
   const [message, setMessage] = useState('');
@@ -62,6 +64,8 @@ export default function TeacherProfilePage() {
                 designation: data.designation || '',
                 description: data.description || '',
                 fee: data.fee || '', // Set fee if available
+                current_coins: data.current_coins || 0, // Set current coins if available
+                current_money: data.current_money || 0, // Set current money if available
               });
             } else {
               setMessage(data.error || 'No data found for the user.');
@@ -211,7 +215,10 @@ export default function TeacherProfilePage() {
           <p><MdLanguage className="inline-block mr-2"/> <strong>Languages:</strong> {teacher.languages.join(', ')}</p>
           <p><FaBook className="inline-block mr-2"/> <strong>Subjects:</strong> {teacher.subjects.join(', ')}</p>
           <p><FaMoneyBillAlt className="inline-block mr-2"/> <strong>Fee:</strong> {teacher.fee}</p>
-          <p><strong>Description:</strong> {teacher.description}</p>
+          <p><FaBookOpen className="inline-block mr-2" /> <strong>Description:</strong> {teacher.description}</p>
+
+          <p><FaMoneyBillAlt className="inline-block mr-2"/> <strong>Current Coins:</strong> {teacher.current_coins}</p>
+          <p><FaMoneyBillAlt className="inline-block mr-2"/> <strong>Current Money:</strong> {teacher.current_money}</p>
           <button
             onClick={handleEditClick}
             className="col-span-1 md:col-span-2 bg-blue-600 text-white py-2 px-6 rounded-full hover:bg-blue-700 flex items-center justify-center"

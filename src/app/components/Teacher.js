@@ -82,7 +82,7 @@ export default function TeacherCard({ teacher, baseUrl }) {
 
   return (
     <div className="flex justify-center">
-      <div className="bg-white text-black border rounded-lg w-[300px] sm:w-[500px] md:w-[600px] shadow-lg p-4 mx-auto my-2">
+      <div className="bg-white text-black border rounded-lg shadow p-4 mx-auto w-full max-w-[600px]">
         <div className="flex items-start justify-between">
           <div className="flex items-center">
             <img
@@ -90,8 +90,8 @@ export default function TeacherCard({ teacher, baseUrl }) {
               alt="Profile Picture"
               className="rounded-full w-10 h-10 sm:w-12 sm:h-12"
             />
-            <div className=" ml-1">
-              <h2 className="text-lg sm:text-lg font-bold">{teacher.fullname || 'Teacher'}</h2>
+            <div className="ml-2 sm:ml-4">
+              <h2 className="text-xs sm:text-sm font-bold">{teacher.fullname || 'Teacher'}</h2>
               <p className="text-gray-500 text-xs sm:text-sm flex items-center">
                 <MdLocationOn className="mr-1" />
                 {teacher.city}, {teacher.country}
@@ -102,7 +102,7 @@ export default function TeacherCard({ teacher, baseUrl }) {
         </div>
 
         <h3 className="mt-4 text-xs sm:text-sm">{teacher.description || 'Teacher description not available'}</h3>
-         <hr></hr>
+
         <div className="mt-4 space-y-2">
           <div className="flex items-center space-x-2">
             <FaLanguage className="text-gray-700 text-xs sm:text-sm" />
