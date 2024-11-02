@@ -1,20 +1,20 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { ThreeDots } from 'react-loader-spinner'; // Import the spinner
+import { ThreeDots } from 'react-loader-spinner';
 
 export default function NotificationsPage() {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [isLoading, setIsLoading] = useState(true);
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   // Fetch the notifications when the component loads
   useEffect(() => {
     const fetchNotifications = async () => {
-      const userData = JSON.parse(localStorage.getItem('user')); // Assuming user data is stored in localStorage
+      const userData = JSON.parse(localStorage.getItem('user'));
 
       if (!userData || !userData.id) {
         console.error('User not logged in');
+        setLoading(false);
         return;
       }
 
@@ -37,7 +37,7 @@ export default function NotificationsPage() {
     fetchNotifications();
   }, [baseUrl]);
 
-  if (isLoading) {
+  if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
         <ThreeDots
@@ -56,7 +56,7 @@ export default function NotificationsPage() {
     <div className="h-screen text-black flex flex-col items-center justify-start bg-gray-100 py-4 px-4 sm:px-6 lg:px-8">
       <h1 className="text-2xl font-bold mb-6 w-full text-center">Notifications</h1>
       {notifications.length > 0 ? (
-        <div className="w-full space-y-4">  {/* Removed max-w-md to make it full width */}
+        <div className="w-full space-y-4">
           {notifications.map((notification) => (
             <div
               key={notification.notification_id}

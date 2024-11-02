@@ -14,10 +14,11 @@ import { AiOutlineFileText } from 'react-icons/ai';
 import { BiUser } from 'react-icons/bi';
 import { BsThreeDots } from 'react-icons/bs';
 import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css'; // Import react-toastify CSS
+import 'react-toastify/dist/ReactToastify.css';
 import { ThreeDots } from 'react-loader-spinner';
 
 const SearchCourses = () => {
+  const [query, setQuery] = useState('');
   const [courses, setCourses] = useState([]);
   const [teachers, setTeachers] = useState({});
   const [dropdownOpen, setDropdownOpen] = useState(null);
@@ -28,15 +29,12 @@ const SearchCourses = () => {
   const [showFullDescription, setShowFullDescription] = useState(false);
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-  const getQueryParam = () => {
-    if (typeof window !== 'undefined') {
-      const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get('query') || '';
-    }
-    return '';
-  };
-
-  const query = getQueryParam();
+  // Retrieve query parameter from window.location
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const queryParam = params.get('query') || '';
+    setQuery(queryParam);
+  }, []);
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -58,7 +56,7 @@ const SearchCourses = () => {
     };
 
     fetchCourses();
-  }, [query, baseUrl]);
+  }, [query, baseUrl]); // Trigger useEffect on query change
 
   const fetchTeacherInfo = async (teacherId) => {
     if (!teachers[teacherId]) {

@@ -288,7 +288,7 @@ export default function SavedPostsPage() {
                     height={50}
                     className="rounded-full"
                   />
-                  <div className="ml-4">
+                  <div className="ml-1 mt-3">
                     <h2 className="font-semibold text-base sm:text-lg">{post.name || 'Student'}</h2>
                     <p className="text-gray-500 flex items-center text-xs sm:text-sm">
                       <MdLocationOn className="mr-1" />
@@ -346,6 +346,7 @@ export default function SavedPostsPage() {
                   </span>
                 )}
               </p>
+              <hr></hr>
 
               {/* Job details with icons */}
               <div className="mt-4 space-y-2">
@@ -422,8 +423,8 @@ export default function SavedPostsPage() {
                     height={64}
                     className="rounded-full object-cover w-16 h-16 sm:w-24 sm:h-24"
                   />
-                  <div className="ml-4">
-                    <h2 className="text-base sm:text-lg font-semibold">{teachers[post.teacher_id]?.fullname || 'Teacher Name'}</h2>
+                  <div className="ml-1 mt-3">
+                    <h2 className="text-base sm:text-lg font-bold">{teachers[post.teacher_id]?.fullname || 'Teacher Name'}</h2>
                     <p className="text-gray-500 text-xs sm:text-sm">
                       {teachers[post.teacher_id]?.city || 'City not specified'}, {teachers[post.teacher_id]?.country || 'Country not specified'}
                     </p>

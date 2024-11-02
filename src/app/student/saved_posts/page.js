@@ -18,8 +18,6 @@ import { AiOutlineLike, AiOutlineFileText } from 'react-icons/ai';
 import { BsFillChatDotsFill, BsThreeDots } from 'react-icons/bs';
 import { MdLocationOn } from 'react-icons/md';
 import { BiShare } from 'react-icons/bi';
-import { ThreeDots } from 'react-loader-spinner'; // Import the spinner
-
 
 export default function SavedPostsPage() {
   const [savedPosts, setSavedPosts] = useState([]);
@@ -242,18 +240,10 @@ export default function SavedPostsPage() {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <ThreeDots
-          height="80"
-          width="80"
-          radius="9"
-          color="#3498db"
-          ariaLabel="three-dots-loading"
-          visible={true}
-        />
+        <Image src="/loading.gif" alt="Loading" width={50} height={50} />
       </div>
     );
   }
-  
 
   if (fetchError) {
     return (
@@ -270,15 +260,15 @@ export default function SavedPostsPage() {
 
   if (!Array.isArray(filteredPosts) || filteredPosts.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center mt-8">
+      <div className="flex text-black flex-col items-center justify-center mt-8">
         <Image src="/nopost.png" alt="No Posts Available" width={256} height={256} />
-        <p className="text-gray-500 mt-4">No saved posts available.</p>
+        <p className=" text-red-500 font-semibold mt-4">No saved posts available.</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-4 px-4 sm:px-6 lg:px-8 py-6">
+    <div className="space-y-4 text-black px-4 sm:px-6 lg:px-8 py-6">
       {filteredPosts.map((post, index) => {
         const postType = post.post_type;
 
@@ -298,7 +288,7 @@ export default function SavedPostsPage() {
                     height={50}
                     className="rounded-full"
                   />
-                  <div className="ml-4">
+                  <div className="ml-1 mt-3">
                     <h2 className="font-semibold text-base sm:text-lg">{post.name || 'Student'}</h2>
                     <p className="text-gray-500 flex items-center text-xs sm:text-sm">
                       <MdLocationOn className="mr-1" />
@@ -356,6 +346,7 @@ export default function SavedPostsPage() {
                   </span>
                 )}
               </p>
+              <hr></hr>
 
               {/* Job details with icons */}
               <div className="mt-4 space-y-2">
@@ -432,8 +423,8 @@ export default function SavedPostsPage() {
                     height={64}
                     className="rounded-full object-cover w-16 h-16 sm:w-24 sm:h-24"
                   />
-                  <div className="ml-4">
-                    <h2 className="text-base sm:text-lg font-semibold">{teachers[post.teacher_id]?.fullname || 'Teacher Name'}</h2>
+                  <div className="ml-1 mt-3">
+                    <h2 className="text-base sm:text-lg font-bold">{teachers[post.teacher_id]?.fullname || 'Teacher Name'}</h2>
                     <p className="text-gray-500 text-xs sm:text-sm">
                       {teachers[post.teacher_id]?.city || 'City not specified'}, {teachers[post.teacher_id]?.country || 'Country not specified'}
                     </p>
