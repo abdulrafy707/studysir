@@ -8,10 +8,12 @@ export default function AuthPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false); // Define loading state
   const router = useRouter();
 
   const handleSignIn = async (event) => {
     event.preventDefault();
+    setLoading(true); // Start loading on submit
 
     try {
       const response = await fetch('https://studysir.m3xtrader.com/api/login_api.php', {
