@@ -114,59 +114,46 @@ export default function AuthPage() {
         </div>
       </div>
 
-      {/* Desktop View */}
-{/* Desktop View */}
-<div className="hidden md:flex w-full max-w-6xl bg-white shadow-lg rounded-lg overflow-hidden h-[90vh]">
-  {/* Left side - Sign In Image */}
-  <div className="w-1/2 h-full relative">
-    <Image
-      src="/signin.png"
-      alt="Sign In Illustration"
-      layout="fill"
-      className="object-cover"
-    />
-  </div>
+ {/* Right side - Sign In Form */}
+<div className="w-1/2 h-full flex flex-col justify-center items-center">
+  <div className="w-3/4 flex flex-col justify-center">
+    <h2 className="text-4xl font-bold text-blue-600 text-center mb-8">Sign in</h2>
+    {errorMessage && <p className="text-red-500 text-center mb-4">{errorMessage}</p>}
 
-  {/* Right side - Sign In Form */}
-  <div className="w-1/2 h-full flex flex-col justify-center items-center">
-    <div className="w-3/4 flex flex-col justify-center">
-      <h2 className="text-4xl font-bold text-blue-600 text-center mb-8">Sign in</h2>
-      {errorMessage && <p className="text-red-500 text-center mb-4">{errorMessage}</p>}
+    <form onSubmit={handleSignIn} className="w-full">
+      <input
+        type="text"
+        placeholder="Email"
+        className="border border-blue-500 w-full py-3 px-5 mb-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        required
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        className="border border-blue-500 w-full py-3 px-5 mb-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        required
+      />
+      <button
+        type="submit"
+        className="bg-blue-500 text-white w-full py-3 rounded-md hover:bg-blue-600 transition duration-200"
+        disabled={loading} // Disable button when loading
+      >
+        {loading ? 'Loading...' : 'Sign in'}
+      </button>
+    </form>
 
-      <form onSubmit={handleSignIn} className="w-full">
-        <input
-          type="text"
-          placeholder="Email"
-          className="border border-blue-500 w-full py-3 px-5 mb-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          className="border border-blue-500 w-full py-3 px-5 mb-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <button
-          type="submit"
-          className="bg-blue-500 text-white w-full py-3 rounded-md hover:bg-blue-600 transition duration-200"
-        >
-          Sign in
-        </button>
-      </form>
-
-      {/* Forgot Password and Sign Up Links */}
-      <div className="mt-4 text-center">
-        <Link href="/user/pages/forgot-password" className="text-blue-500 hover:underline block mb-2">
-          Forgot your Email/Password?
-        </Link>
-        <Link href="/user/pages/signup" className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200 inline-block">
-          Sign up for new account
-        </Link>
-      </div>
+    {/* Forgot Password and Sign Up Links */}
+    <div className="mt-4 text-center">
+      <Link href="/user/pages/forgot-password" className="text-blue-500 hover:underline block mb-2">
+        Forgot your Email/Password?
+      </Link>
+      <Link href="/user/pages/signup" className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200 inline-block">
+        Sign up for new account
+      </Link>
     </div>
   </div>
 </div>

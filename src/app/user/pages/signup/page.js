@@ -133,64 +133,73 @@ export default function SignupStep1() {
       </div>
 
       {/* Desktop View */}
-      <div className="hidden md:flex w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden">
-        {/* Left Side with Image */}
-        <div className="relative w-1/2 overflow-hidden">
-          <Image
-            src="/image1.png"
-            alt="Signup Illustration"
-            layout="fill"
-            objectFit="cover"
-            className="object-cover"
-          />
-        </div>
+<div className="hidden md:flex w-full max-w-6xl bg-white shadow-lg rounded-lg overflow-hidden h-[90vh]">
+  {/* Left Side - Slanted Background */}
+  <div className="relative w-1/2 h-full overflow-hidden">
+    {/* Blue Slant with White Curve at the Bottom */}
+    <svg
+      viewBox="0 0 100 100"
+      preserveAspectRatio="none"
+      className="absolute inset-0 w-full h-full"
+    >
+      {/* Blue Background */}
+      <polygon points="0,0 100,0 80,100 0,100" fill="#1E90FF" />
+      
+      {/* White Curve Overlay */}
+      <polygon points="0,100 80,100 100,0 100,100" fill="white" />
+    </svg>
+  </div>
 
-        {/* Right Side Form */}
-        <div className="w-1/2 p-8 flex flex-col justify-center">
-          <h2 className="text-3xl font-bold text-blue-600 text-center mb-8">Sign Up (Step 1)</h2>
-          {error && <p className="text-red-500 mb-4">{error}</p>}
+  {/* Right Side - Sign Up Form */}
+  <div className="w-1/2 h-full flex flex-col justify-center items-center">
+    <div className="w-3/4 flex flex-col justify-center">
+      <h2 className="text-4xl font-bold text-blue-600 text-center mb-8">Sign Up (Step 1)</h2>
+      {error && <p className="text-red-500 text-center mb-4">{error}</p>}
 
-          <input
-            type="email"
-            placeholder="Enter email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="border border-blue-500 w-full py-2 px-4 mb-4 rounded-md"
-          />
-          <input
-            type="password"
-            placeholder="Enter password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="border border-blue-500 w-full py-2 px-4 mb-4 rounded-md"
-          />
-          <select
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-            className="border border-blue-500 w-full py-2 px-4 mb-4 rounded-md"
-          >
-            <option value="">Select Role</option>
-            <option value="student">Student</option>
-            <option value="teacher">Teacher</option>
-          </select>
+      <input
+        type="email"
+        placeholder="Enter email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        className="border border-blue-500 w-full py-2 px-4 mb-4 rounded-md"
+      />
+      <input
+        type="password"
+        placeholder="Enter password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        className="border border-blue-500 w-full py-2 px-4 mb-4 rounded-md"
+      />
+      <select
+        value={role}
+        onChange={(e) => setRole(e.target.value)}
+        className="border border-blue-500 w-full py-2 px-4 mb-4 rounded-md"
+      >
+        <option value="">Select Role</option>
+        <option value="student">Student</option>
+        <option value="teacher">Teacher</option>
+      </select>
 
-          <input
-            type="text"
-            value={referralCode}
-            onChange={(e) => setReferralCode(e.target.value)}
-            className="border border-blue-500 w-full py-2 px-4 mb-4 rounded-md"
-            placeholder="Referral Code"
-          />
+      <input
+        type="text"
+        value={referralCode}
+        onChange={(e) => setReferralCode(e.target.value)}
+        className="border border-blue-500 w-full py-2 px-4 mb-4 rounded-md"
+        placeholder="Referral Code"
+        readOnly // Make the referral code field non-editable
+      />
 
-          <button
-            onClick={handleSignup}
-            disabled={loading}
-            className="bg-blue-500 text-white w-full py-2 rounded-md hover:bg-blue-600 transition duration-200"
-          >
-            {loading ? 'Submitting...' : 'Submit'}
-          </button>
-        </div>
-      </div>
+      <button
+        onClick={handleSignup}
+        disabled={loading}
+        className="bg-blue-500 text-white w-full py-2 rounded-md hover:bg-blue-600 transition duration-200"
+      >
+        {loading ? 'Submitting...' : 'Submit'}
+      </button>
+    </div>
+  </div>
+</div>
+
     </div>
   );
 }

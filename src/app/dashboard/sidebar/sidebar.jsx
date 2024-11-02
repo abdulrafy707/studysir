@@ -77,6 +77,12 @@ const Sidebar = () => {
       roles: ["admin"],
     },
     {
+      title: "Payment Methods",
+      path: "/admin/payment_methods",
+      icon: <FaMoneyCheckAlt className="h-5 w-5" />,
+      roles: ["admin"], // Show this only to admin role
+    },
+    {
       title: "Account Management",
       path: "/admin/AdminList",
       icon: <FaUserTie className="h-5 w-5" />,
