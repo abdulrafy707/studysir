@@ -190,7 +190,7 @@ export default function JobCard({ post }) {
 
         if (chatroomResult.status === "success" || chatroomResult.status === "exists") {
           // Redirect to chat page with appropriate parameters
-          window.location.href = `/chat?teacher_id=${userData.id}&student_id=${post.student_id}&post_id=${post.post_id}`;
+          window.location.href = `/teacher/chat?teacher_id=${userData.id}&student_id=${post.student_id}&post_id=${post.post_id}`;
         } else {
           setErrorMessage(`Chatroom Error: ${chatroomResult.message}`);
         }

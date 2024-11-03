@@ -38,8 +38,12 @@ const AddTuitionPost = () => {
       ...formData,
       languages: formData.languages.split(',').map((item) => item.trim()),
       subjects: formData.subjects.split(',').map((item) => item.trim()),
+      status: 'active', // Ensure status is set to active
     };
-
+  
+    // Log the data being sent to the backend
+    console.log("Data being sent to backend:", updatedFormData);
+  
     try {
       const response = await fetch('https://studysir.m3xtrader.com/api/studentpost_api.php', {
         method: 'POST',
@@ -48,12 +52,15 @@ const AddTuitionPost = () => {
         },
         body: JSON.stringify(updatedFormData),
       });
-
+  
       const data = await response.json();
-
+  
+      // Log the response data from the backend
+      console.log("Response from backend:", data);
+  
       if (data.success) {
         toast.success('Tuition post added successfully!');
-
+  
         // Reset the form fields
         setFormData({
           student_id: formData.student_id, // Keep student ID intact
@@ -73,6 +80,7 @@ const AddTuitionPost = () => {
       toast.error('An error occurred while submitting the post.');
     }
   };
+  
 
   return (
     <div className="container text-black mx-auto p-4 max-h-[90vh] overflow-y-auto">
