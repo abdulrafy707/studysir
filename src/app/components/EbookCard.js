@@ -11,6 +11,8 @@ import {
   WhatsappIcon,
 } from 'next-share';
 import { FaStar } from 'react-icons/fa';
+import { AiOutlineLike } from 'react-icons/ai';
+import { BiShare } from 'react-icons/bi';
 
 export default function EbookCard({ ebook }) {
   const [showFullDescription, setShowFullDescription] = useState(false);
@@ -28,6 +30,10 @@ export default function EbookCard({ ebook }) {
   const [downloadSuccess, setDownloadSuccess] = useState(''); // Download success state
   const [shareDropdownOpen, setShareDropdownOpen] = useState(false); // Share dropdown state
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+  // const baseUrl='http://localhost/academy';
+
+
 
   // Retrieve user data from localStorage on component mount
   useEffect(() => {
@@ -164,48 +170,43 @@ export default function EbookCard({ ebook }) {
 
   // Handle the download process (Direct Download Approach)
   const handleDownload = () => {
-    // Check if the user is logged in
     if (!userData || !userData.id) {
       alert('User not logged in');
       return;
     }
-
-    // Ensure that the ebook prop contains seller_id (or teacher_id)
-    if (!ebook.teacher_id) { // Change to seller_id if that's the correct field
+  
+    if (!ebook.teacher_id) {
       alert('Seller ID not found for this ebook.');
       setShowDownloadConfirm(false);
       return;
     }
-
-    // Construct the file URL
-    const downloadLink = ebook.ebook_file_url; // Assuming this is the filename
+  
+    const downloadLink = ebook.ebook_file_url;
     if (downloadLink) {
       const fileUrl = `${baseUrl}/uploads/${encodeURIComponent(downloadLink)}`;
-      const fileName = downloadLink.split('/').pop();
-
-      // Initiate the download by opening the file in a new tab
-      window.open(fileUrl, '_blank');
-
-      // Optionally, you can increment the download count here by making an API call
-      // Example:
-      // incrementDownloadCount(ebook.id);
-
-      // Provide feedback to the user
+      
+      // Create a temporary anchor element to trigger the download
+      const link = document.createElement('a');
+      link.href = fileUrl;
+      link.download = downloadLink.split('/').pop(); // Sets the filename for the download
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+  
       setDownloadSuccess('Download initiated!');
     } else {
       setDownloadError('Download link not available.');
     }
-
-    // Close the confirmation modal
+  
     setShowDownloadConfirm(false);
   };
-
+  
   // Define the URL to share. This should point to the ebook's detail page.
   const shareUrl = `${baseUrl}/ebook/${encodeURIComponent(ebook.id)}`;
   const shareTitle = ebook.ebook_title || 'Check out this amazing ebook!';
 
   return (
-    <div className="bg-white shadow-lg text-black border rounded-lg shadow-lg p-4 w-[300px] md:w-[600px] mx-auto my-6">
+    <div className="bg-white  text-black border rounded-lg shadow-lg p-4 w-[300px] md:w-[600px] mx-auto my-3">
       <div className="flex flex-col md:flex-row justify-between space-x-4">
         <div className="w-full md:w-1/3 flex flex-col justify-between">
           <img
@@ -240,61 +241,64 @@ export default function EbookCard({ ebook }) {
       </div>
 
       <div className="mt-4 flex justify-between items-center border-t pt-2">
-        <div className="flex space-x-6">
-          <button
-            className={`flex items-center ${isLiked ? 'text-blue-600' : 'text-gray-500'} hover:text-blue-600`}
-            onClick={() => handleLikePost(ebook.id)}
-          >
-            <img src="/like.png" alt="Like Icon" width={16} height={16} />
-            <span className="ml-2 text-sm">{likes}</span>
-          </button>
-          <button className="flex items-center text-gray-500 hover:text-blue-600" onClick={() => toggleReviewSection(ebook.id)}>
-            <img src="/review1.png" alt="Review Icon" width={16} height={16} />
-            <span className="ml-2 text-sm">{reviews.length || 0}</span>
-          </button>
-          {/* Share Button with Dropdown */}
-          <div className="relative">
-            <button
-              className="flex items-center text-gray-500 hover:text-blue-500"
-              onClick={() => setShareDropdownOpen(!shareDropdownOpen)}
-            >
-              <img src="/share.png" alt="Share Icon" width={16} height={16} />
-              <span className="ml-2 text-sm">{ebook.shares || 0}</span>
-            </button>
+  <div className="flex space-x-4 justify-between w-full">
+    <button className="flex items-center text-gray-500 hover:text-blue-500 text-xs sm:text-sm" onClick={() => handleLikePost(ebook.id)}>
+      <AiOutlineLike className="mr-1 text-sm sm:text-base" />
+      <span className="text-xs sm:text-sm">{likes} Like{likes === 1 ? '' : 's'}</span>
+    </button>
 
-            {shareDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg p-2 z-20">
-                <FacebookShareButton url={shareUrl} quote={shareTitle} className="mx-2 my-1 flex items-center">
-                  <FacebookIcon size={32} round />
-                  <span className="ml-2 text-xs sm:text-sm">Facebook</span>
-                </FacebookShareButton>
+    <button className="flex items-center text-gray-500 hover:text-blue-500 text-xs sm:text-sm" onClick={() => toggleReviewSection(ebook.id)}>
+      <img src="/review1.png" alt="Review Icon" className="w-4 h-4 sm:w-5 sm:h-5" />
+      <span className="ml-1 text-xs sm:text-sm">{reviews.length || 0}</span>
+    </button>
 
-                <TwitterShareButton url={shareUrl} title={shareTitle} className="mx-2 my-1 flex items-center">
-                  <TwitterIcon size={32} round />
-                  <span className="ml-2 text-xs sm:text-sm">Twitter</span>
-                </TwitterShareButton>
+    {/* Share Button with Dropdown */}
+    <div className="relative">
+      <button
+        className="flex items-center text-gray-500 hover:text-blue-500 text-xs sm:text-sm"
+        onClick={() => setShareDropdownOpen(!shareDropdownOpen)}
+      >
+        <BiShare className="mr-1 text-sm sm:text-base" />
+        <span className="text-xs sm:text-sm">Share</span>
+      </button>
 
-                <LinkedinShareButton url={shareUrl} title={shareTitle} className="mx-2 my-1 flex items-center">
-                  <LinkedinIcon size={32} round />
-                  <span className="ml-2 text-xs sm:text-sm">LinkedIn</span>
-                </LinkedinShareButton>
+      {shareDropdownOpen && (
+        <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg p-2 z-20">
+          <FacebookShareButton url={shareUrl} quote={shareTitle} className="mx-2 my-1 flex items-center">
+            <FacebookIcon size={24} round />
+            <span className="ml-2 text-xs sm:text-sm">Facebook</span>
+          </FacebookShareButton>
 
-                <WhatsappShareButton url={shareUrl} title={shareTitle} className="mx-2 my-1 flex items-center">
-                  <WhatsappIcon size={32} round />
-                  <span className="ml-2 text-xs sm:text-sm">WhatsApp</span>
-                </WhatsappShareButton>
-              </div>
-            )}
-          </div>
+          <TwitterShareButton url={shareUrl} title={shareTitle} className="mx-2 my-1 flex items-center">
+            <TwitterIcon size={24} round />
+            <span className="ml-2 text-xs sm:text-sm">Twitter</span>
+          </TwitterShareButton>
+
+          <LinkedinShareButton url={shareUrl} title={shareTitle} className="mx-2 my-1 flex items-center">
+            <LinkedinIcon size={24} round />
+            <span className="ml-2 text-xs sm:text-sm">LinkedIn</span>
+          </LinkedinShareButton>
+
+          <WhatsappShareButton url={shareUrl} title={shareTitle} className="mx-2 my-1 flex items-center">
+            <WhatsappIcon size={24} round />
+            <span className="ml-2 text-xs sm:text-sm">WhatsApp</span>
+          </WhatsappShareButton>
         </div>
-        <button
-          className="flex items-center text-gray-500 hover:text-blue-600"
-          onClick={() => setShowDownloadConfirm(true)}
-        >
-          <img src="/download.png" alt="Download Icon" width={16} height={16} />
-          <span className="ml-2 text-sm">{ebook.downloads || 'Download'}</span>
-        </button>
-      </div>
+      )}
+    </div>
+
+    <button
+      className="flex items-center text-gray-500 hover:text-blue-500 text-xs sm:text-sm"
+      onClick={() => setShowDownloadConfirm(true)}
+    >
+      <img src="/download.png" alt="Download Icon" className="w-4 h-4 sm:w-5 sm:h-5" />
+      <span className="ml-1 text-xs sm:text-sm">Download</span>
+    </button>
+  </div>
+</div>
+
+
+
 
       {/* Confirmation Modal */}
       {showDownloadConfirm && (

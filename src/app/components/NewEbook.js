@@ -11,14 +11,18 @@ export default function NewEbook({ onCloseForm }) {
     rating: '',
     teacher_id: '',  // The teacher_id will be fetched from localStorage
     ebook_file: null, // Will hold the selected file (PDF, Word, ZIP, MP3, MP4)
-    cover_page_image: null, // Will hold the selected cover image
+    cover_page_image_url: null, // Will hold the selected cover image
     drive_link: ''    // Will hold the Google Drive link if provided
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
-  const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://studysir.m3xtrader.com/api';
+  // const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://studysir.m3xtrader.com/api';
+
+
+
+  const BASE_URL = 'http://localhost/academy';
 
   // Fetch teacher_id and seller_name from localStorage
   useEffect(() => {
@@ -50,9 +54,14 @@ export default function NewEbook({ onCloseForm }) {
   // Handle file selection for cover page image
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    setFormData({ ...formData, cover_page_image: file });
-    console.log('Selected Cover Page Image:', file);
-  };
+    if (!file) {
+        setError("No file selected for cover image.");
+        return;
+    }
+    setFormData({ ...formData, cover_page_image_url: file });
+    console.log('Selected Cover Page Image:', file); // Debugging
+};
+
 
   // Handle form submission
   const handleSubmit = async (e) => {
@@ -76,8 +85,8 @@ export default function NewEbook({ onCloseForm }) {
     }
 
     // Append cover page image if it's selected
-    if (formData.cover_page_image) {
-      formDataToSend.append('cover_page_image', formData.cover_page_image);
+    if (formData.cover_page_image_url) {
+      formDataToSend.append('cover_page_image', formData.cover_page_image_url);
     }
 
     // Append Google Drive link if provided

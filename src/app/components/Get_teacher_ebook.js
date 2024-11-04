@@ -36,6 +36,8 @@ export default function TeacherEbookCard() {
         // Parse the response as JSON
         const data = await response.json();
         console.log("Parsed Data:", data); // Log the parsed data
+        console.log('Image URL:', `${baseUrl}/uploads/${ebook.cover_page_image_url}`);
+
 
         if (Array.isArray(data) && data.length > 0) {
           setEbooks(data); // Store fetched ebooks in the state
@@ -143,6 +145,7 @@ export default function TeacherEbookCard() {
                 src={`${baseUrl}/uploads/${ebook.cover_page_image_url}`}
                 alt={ebook.ebook_title || 'Ebook Image'}
                 className="rounded-lg object-cover w-full h-48 mb-4"
+                
               />
               <p className="text-gray-800 font-bold text-lg md:text-xl">Rs {ebook.price || 'N/A'}</p>
             </div>
