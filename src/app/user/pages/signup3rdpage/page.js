@@ -48,9 +48,7 @@ export default function SignupStep3() {
     formData.append('country', country);
     formData.append('address', address);
     formData.append('phoneno', phoneno);
-    if (role === 'teacher') {
-      formData.append('designation', designation);
-    }
+    formData.append('designation', role === 'teacher' ? designation : 'NULL');
     if (image) {
       formData.append('image', image);
     }
@@ -85,7 +83,6 @@ export default function SignupStep3() {
         <h1 className="text-2xl font-bold mb-6 text-blue-600 text-center">Personal Details (Step 3)</h1>
         {error && <div className="text-red-500 mb-4 text-center">{error}</div>}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {/* Full Name */}
           <div>
             <label className="block text-gray-700 mb-2">Full Name</label>
             <input
@@ -97,7 +94,6 @@ export default function SignupStep3() {
             />
           </div>
 
-          {/* Date of Birth */}
           <div>
             <label className="block text-gray-700 mb-2">Date of Birth</label>
             <input
@@ -108,7 +104,6 @@ export default function SignupStep3() {
             />
           </div>
 
-          {/* Gender */}
           <div>
             <label className="block text-gray-700 mb-2">Gender</label>
             <select
@@ -123,7 +118,6 @@ export default function SignupStep3() {
             </select>
           </div>
 
-          {/* Designation - Only show if role is teacher */}
           {role === 'teacher' && (
             <div>
               <label className="block text-gray-700 mb-2">Designation</label>
@@ -134,15 +128,22 @@ export default function SignupStep3() {
               >
                 <option value="">Select your designation</option>
                 <option value="Sir">Sir</option>
-                <option value="Ma'am">Ma'am</option>
                 <option value="Miss">Miss</option>
-                <option value="Qari">Qari</option>
+                <option value="Mrs">Mrs</option>
+                <option value="Ma'am">Ma'am</option>
+                <option value="Mr.">Mr.</option>
                 <option value="Prof">Prof</option>
+                <option value="Dr">Dr</option>
+                <option value="Eng">Eng</option>
+                <option value="Qari">Qari</option>
+                <option value="Qaria">Qaria</option>
+                <option value="Rabbi">Rabbi</option>
+                <option value="Pastor">Pastor</option>
+                <option value="Rev">Rev</option>
               </select>
             </div>
           )}
 
-          {/* City */}
           <div>
             <label className="block text-gray-700 mb-2">City</label>
             <input
@@ -154,7 +155,6 @@ export default function SignupStep3() {
             />
           </div>
 
-          {/* Country */}
           <div>
             <label className="block text-gray-700 mb-2">Country</label>
             <input
@@ -166,7 +166,6 @@ export default function SignupStep3() {
             />
           </div>
 
-          {/* Address */}
           <div>
             <label className="block text-gray-700 mb-2">Address</label>
             <input
@@ -178,7 +177,6 @@ export default function SignupStep3() {
             />
           </div>
 
-          {/* Phone Number */}
           <div>
             <label className="block text-gray-700 mb-2">Phone Number</label>
             <input
@@ -190,7 +188,6 @@ export default function SignupStep3() {
             />
           </div>
 
-          {/* Profile Picture */}
           <div className="col-span-1 sm:col-span-2">
             <label className="block text-gray-700 mb-2">Profile Picture</label>
             <input
@@ -201,7 +198,6 @@ export default function SignupStep3() {
           </div>
         </div>
 
-        {/* Submit Button */}
         <div className="mt-6">
           <button
             onClick={handlePersonalDetails}
