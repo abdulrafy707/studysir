@@ -33,6 +33,8 @@ export default function JobCard({ post }) {
     }
   }, [post.likes]);
 
+  
+
   const handleSavePost = async () => {
     const userData = JSON.parse(localStorage.getItem('user'));
 
@@ -284,7 +286,7 @@ export default function JobCard({ post }) {
       <p className="text-gray-700 text-xs sm:text-sm mt-2">
         {showFullDescription
           ? post.job_description || 'Job description not provided'
-          : getTruncatedDescription(post.job_description || 'Job description not provided')}{' '}
+          : getTruncatedDescription(post.job_description || 'Job description not provided')}
         {post.job_description && post.job_description.split(' ').length > 100 && (
           <span className="text-blue-500 cursor-pointer" onClick={toggleDescription}>
             {showFullDescription ? 'See Less' : 'See More'}

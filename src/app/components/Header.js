@@ -10,6 +10,7 @@ const Header = () => {
     const [userImage, setUserImage] = useState('/default-profile.png');
     const [searchQuery, setSearchQuery] = useState('');
     const [userRole, setUserRole] = useState('');
+    const [activePage, setActivePage] = useState('home'); // State to track the active page
     const router = useRouter();
 
     useEffect(() => {
@@ -24,7 +25,13 @@ const Header = () => {
                 setUserRole(userData.role);
             }
         }
-    }, []);
+
+        if (router.asPath) {
+            // Use asPath instead of pathname
+            const path = router.asPath.split('/')[2] || 'home'; // Default to 'home' if no specific path
+            setActivePage(path);
+        }
+    }, [router.asPath]); // Use asPath in the dependency array
 
     const handleSearch = () => {
         const targetRolePath = isAuthenticated ? `/${userRole}` : '/user';
@@ -40,11 +47,19 @@ const Header = () => {
         }
     };
 
+    const handleClick = (page) => {
+        setActivePage(page); // Set the active page when a link is clicked
+    };
+
+    const getIconSrc = (page, defaultIcon, activeIcon) => (
+        activePage === page ? activeIcon : defaultIcon
+    );
+
     return (
         <header className="bg-white text-black flex items-center justify-between px-4 py-1 sm:py-2 shadow-md w-full fixed top-0 z-50">
             <div className="flex items-center space-x-4">
                 <Link href={userRole ? `/${userRole}` : '/'}>
-                    <span className="text-blue-500 text-2xl font-bold">S</span>
+                    <span className="text-blue-500 text-2xl font-bold" onClick={() => handleClick('home')}>S</span>
                 </Link>
 
                 <div className="hidden md:flex items-center bg-gray-100 px-4 py-1 rounded-full w-[150px] lg:w-[300px]">
@@ -77,20 +92,55 @@ const Header = () => {
 
             <div className={`flex items-center ${isAuthenticated ? 'space-x-4' : 'space-x-8'} md:space-x-8 lg:space-x-20`}>
                 <Link href={isAuthenticated ? `/${userRole}` : '/'}>
-                    <Image src="/home.png" alt="Home Icon" width={20} height={20} className="w-5 h-5 md:w-7 md:h-7"/>
+                    <Image
+                        src={getIconSrc('home', '/home1.png', '/home.png')}
+                        alt="Home Icon"
+                        width={20}
+                        height={20}
+                        className="w-5 h-5 md:w-7 md:h-7"
+                        onClick={() => handleClick('home')}
+                    />
                 </Link>
                 <Link href={isAuthenticated ? `/${userRole}/student_posts` : '/user/student_posts'}>
-                    <Image src="/studentposts.png" alt="Student Posts Icon" width={30} height={20} className="w-5 h-5 md:w-7 md:h-7"/>
+                    <Image
+                        src={getIconSrc('student_posts', '/studentposts.png', '/studentposts1.png')}
+                        alt="Student Posts Icon"
+                        width={30}
+                        height={20}
+                        className="w-5 h-5 md:w-7 md:h-7"
+                        onClick={() => handleClick('student_posts')}
+                    />
                 </Link>
                 <Link href={isAuthenticated ? `/${userRole}/courses` : '/user/courses'}>
-                    <Image src="/courses.png" alt="Courses Icon" width={20} height={20} className="w-5 h-5 md:w-7 md:h-7"/>
+                    <Image
+                        src={getIconSrc('courses', '/courses.png', '/courses1.png')}
+                        alt="Courses Icon"
+                        width={20}
+                        height={20}
+                        className="w-5 h-5 md:w-7 md:h-7"
+                        onClick={() => handleClick('courses')}
+                    />
                 </Link>
                 <Link href={isAuthenticated ? `/${userRole}/ebooks` : '/user/ebooks'}>
-                    <Image src="/digitalproducts.png" alt="Digital Products Icon" width={20} height={20} className="w-5 h-5 md:w-7 md:h-7"/>
+                    <Image
+                        src={getIconSrc('ebooks', '/digitalproducts.png', '/digitalproducts1.png')}
+                        alt="Digital Products Icon"
+                        width={20}
+                        height={20}
+                        className="w-5 h-5 md:w-7 md:h-7"
+                        onClick={() => handleClick('ebooks')}
+                    />
                 </Link>
                 {(userRole === 'teacher' || userRole === 'student') && isAuthenticated && (
                     <Link href={`/${userRole}/chat`}>
-                        <Image src="/sms.png" alt="SMS Icon" width={20} height={20} className="w-5 h-5 md:w-7 md:h-7"/>
+                        <Image
+                            src={getIconSrc('chat', '/sms.png', '/sms1.png')}
+                            alt="SMS Icon"
+                            width={20}
+                            height={20}
+                            className="w-5 h-5 md:w-7 md:h-7"
+                            onClick={() => handleClick('chat')}
+                        />
                     </Link>
                 )}
             </div>
@@ -100,11 +150,18 @@ const Header = () => {
                     <>
                         {(userRole === 'student' || userRole === 'teacher') && (
                             <Link href={`/${userRole}/NotificationsPage`}>
-                                <Image src="/notifications.png" alt="Notifications" width={20} height={20} className="w-5 h-5 md:w-7 md:h-7 cursor-pointer"/>
+                                <Image
+                                    src={getIconSrc('notifications', '/notifications.png', '/notifications1.png')}
+                                    alt="Notifications"
+                                    width={20}
+                                    height={20}
+                                    className="w-5 h-5 md:w-7 md:h-7 cursor-pointer"
+                                    onClick={() => handleClick('notifications')}
+                                />
                             </Link>
                         )}
                         <Link href={`/${userRole}/profile`}>
-                            <Image src={userImage} alt="User Avatar" width={30} height={30} className="w-8 h-8 md:w-9 md:h-9 rounded-full cursor-pointer"/>
+                            <Image src={userImage} alt="User Avatar" width={30} height={30} className="w-8 h-8 md:w-9 md:h-9 rounded-full cursor-pointer" />
                         </Link>
                     </>
                 ) : (
