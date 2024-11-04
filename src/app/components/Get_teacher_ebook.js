@@ -53,8 +53,14 @@ export default function TeacherEbookCard() {
     fetchTeacherEbooks();
   }, [baseUrl]);
 
-  // Handle delete ebook
   const handleDelete = async (ebookId) => {
+    // Ensure userData is defined
+    const userData = JSON.parse(localStorage.getItem('user'));
+    if (!userData || !userData.id) {
+      alert('User data is not available. Please log in again.');
+      return;
+    }
+  
     try {
       const response = await fetch(`${baseUrl}/get_teacher_ebooks.php`, {
         method: 'DELETE',
@@ -63,10 +69,17 @@ export default function TeacherEbookCard() {
         },
         body: new URLSearchParams({ ebook_id: ebookId, teacher_id: userData.id }),
       });
-
+  
+      // Check if response is OK
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
       const data = await response.json();
       if (data.success) {
         alert('Ebook deleted successfully.');
+        // Optionally, remove the deleted ebook from the state
+        setEbooks((prevEbooks) => prevEbooks.filter((ebook) => ebook.id !== ebookId));
       } else {
         alert(data.error || 'Failed to delete ebook.');
       }
@@ -75,6 +88,7 @@ export default function TeacherEbookCard() {
       alert('Error deleting ebook.');
     }
   };
+  
 
   // Handle update ebook
   const handleUpdate = async () => {
