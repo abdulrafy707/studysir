@@ -77,58 +77,57 @@ export default function ChatInterface() {
     fetchAllChatRooms();
   }, [baseUrl, userData]);
 
-  // Fetch messages whenever selectedChatroom changes
-  useEffect(() => {
-    const fetchMessages = async (roomid) => {
-      if (!roomid) {
-        console.error("No room ID provided for fetching messages.");
-        return;
+ // Fetch messages whenever selectedChatroom changes and set up polling
+useEffect(() => {
+  let pollingInterval = null;
+
+  const fetchMessages = async (roomid) => {
+    if (!roomid) return;
+
+    const formData = new FormData();
+    formData.append('roomid', roomid);
+
+    try {
+      console.log(`Fetching messages for room ID: ${roomid}`); // Debugging
+      const response = await fetch(`${baseUrl}/fetch_msg_api.php`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      const text = await response.text();
+      console.log("Raw response from fetch_msg_api.php:", text);
+
+      const lastBraceIndex = text.lastIndexOf('}');
+      if (lastBraceIndex === -1) {
+        throw new Error("Invalid JSON response: No closing brace found.");
       }
 
-      setMessages([]); // Clear existing messages
+      const jsonString = text.substring(0, lastBraceIndex + 1);
+      const result = JSON.parse(jsonString);
 
-      const formData = new FormData();
-      formData.append('roomid', roomid);
-
-      try {
-        console.log(`Fetching messages for room ID: ${roomid}`); // Debugging
-        const response = await fetch(`${baseUrl}/fetch_msg_api.php`, {
-          method: 'POST',
-          body: formData,
-        });
-
-        // Get the raw text response
-        const text = await response.text();
-        console.log("Raw response from fetch_msg_api.php:", text);
-
-        // Sanitize the JSON response by trimming up to the last closing brace
-        const lastBraceIndex = text.lastIndexOf('}');
-        if (lastBraceIndex === -1) {
-          throw new Error("Invalid JSON response: No closing brace found.");
-        }
-
-        const jsonString = text.substring(0, lastBraceIndex + 1);
-        console.log("Sanitized JSON string:", jsonString);
-
-        // Parse the sanitized JSON
-        const result = JSON.parse(jsonString);
-        console.log("Parsed messages:", result);
-
-        if (result.status === "success") {
-          setMessages(result.all_chats || []);
-        } else {
-          setError(result.message || "Failed to fetch messages.");
-        }
-      } catch (err) {
-        console.error("Error fetching messages:", err);
-        setError("Failed to fetch messages.");
+      if (result.status === "success") {
+        setMessages(result.all_chats || []);
+      } else {
+        setError(result.message || "Failed to fetch messages.");
       }
-    };
-
-    if (selectedChatroom) {
-      fetchMessages(selectedChatroom.room_id);
+    } catch (err) {
+      console.error("Error fetching messages:", err);
+      setError("Failed to fetch messages.");
     }
-  }, [selectedChatroom, baseUrl]);
+  };
+
+  if (selectedChatroom) {
+    fetchMessages(selectedChatroom.room_id);
+    pollingInterval = setInterval(() => {
+      fetchMessages(selectedChatroom.room_id);
+    }, 4000); // Poll every 4 seconds
+  }
+
+  return () => {
+    if (pollingInterval) clearInterval(pollingInterval);
+  };
+}, [selectedChatroom, baseUrl]);
+
 
   const handleChatroomSelect = (chatroom) => {
     console.log("Selected chatroom:", chatroom); // Debugging
