@@ -151,7 +151,7 @@ const Header = () => {
                         {(userRole === 'student' || userRole === 'teacher') && (
                             <Link href={`/${userRole}/NotificationsPage`}>
                                 <Image
-                                    src={getIconSrc('notifications', '/notifications.png', '/notifications1.png')}
+                                    src={getIconSrc('notifications', '/notifications.png', '/notifications.png')}
                                     alt="Notifications"
                                     width={20}
                                     height={20}

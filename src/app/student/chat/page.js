@@ -472,7 +472,7 @@ export default function ChatInterface() {
               <button onClick={handleHireTeacher} className="bg-blue-500 text-white px-4 py-2 rounded-lg flex-1">Hire Teacher</button>
               <button onClick={handleRejectTeacher} className="bg-red-500 text-white px-4 py-2 rounded-lg flex-1">Reject</button>
               <button onClick={handleBlockTeacher} className="bg-red-500 text-white px-4 py-2 rounded-lg flex-1">Block</button>
-              <button className="bg-red-400 text-white px-4 py-2 rounded-lg flex-1">Report</button>
+              
             </div>
           </div>
         )}
