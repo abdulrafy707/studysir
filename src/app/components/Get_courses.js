@@ -9,10 +9,22 @@ import {
   FaRegThumbsUp, 
   FaUserFriends
 } from 'react-icons/fa';
+
+import {
+  FacebookShareButton,
+  TwitterShareButton,
+  LinkedinShareButton,
+  WhatsappShareButton,
+  FacebookIcon,
+  TwitterIcon,
+  LinkedinIcon,
+  WhatsappIcon,
+} from 'next-share';
 import { AiOutlineFileText } from 'react-icons/ai';
-import { BiUser } from 'react-icons/bi';
+import { BiShare, BiUser } from 'react-icons/bi';
 import { BsThreeDots } from 'react-icons/bs';
 import { toast } from 'react-toastify';
+import { useRef } from 'react'; // Add useRef
 
 export default function CourseList({ course }) {
   const [teachers, setTeachers] = useState({});
@@ -21,10 +33,37 @@ export default function CourseList({ course }) {
   const [likes, setLikes] = useState(0);
   const [isJoinRequestOpen, setIsJoinRequestOpen] = useState(false);
   const [joinRequestMessage, setJoinRequestMessage] = useState('');
+  const [shareDropdownOpen, setShareDropdownOpen] = useState(false);
+
+  
+  const shareRef = useRef(null);
+  const dropdownRef = useRef(null);
+
+  
+
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+
+  const shareUrl = `${baseUrl}/courses/${course.course_id}`;
+  const shareTitle = course.course_title || 'Check out this course!';
 
   // Determine if user is logged in
   const userLoggedIn = !!JSON.parse(localStorage.getItem('user'))?.id;
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (shareRef.current && !shareRef.current.contains(event.target)) {
+        setShareDropdownOpen(false);
+      }
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     const fetchTeacherInfo = async (teacherId) => {
@@ -50,6 +89,8 @@ export default function CourseList({ course }) {
       setLikes(course.likes);
     }
   }, [baseUrl, course.teacher_id, course.likes]);
+  const toggleShareDropdown = () => setShareDropdownOpen(!shareDropdownOpen);
+
 
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
   const toggleDescription = () => setShowFullDescription(!showFullDescription);
@@ -313,22 +354,22 @@ export default function CourseList({ course }) {
       )}
 
       {/* Dropdown Menu */}
-      <div className="absolute z-10 top-4 right-4 flex justify-end">
-        <BsThreeDots
-          className="cursor-pointer text-gray-600 hover:text-gray-800 ml-2 text-xs sm:text-sm"
-          onClick={toggleDropdown}
-        />
-        {dropdownOpen && (
-          <div className="absolute right-0 bg-white shadow-md rounded-lg py-2 mt-2">
-            <button
-              onClick={handleSaveCourse}
-              className="block px-4 py-2 text-gray-700 hover:bg-gray-100 w-full text-left"
-            >
-              Save Course
-            </button>
-          </div>
-        )}
-      </div>
+      <div className="absolute z-10 top-4 right-4 flex justify-end" ref={dropdownRef}>
+  <BsThreeDots
+    className="cursor-pointer text-gray-600 hover:text-gray-800 ml-2 text-xs sm:text-sm"
+    onClick={toggleDropdown}
+  />
+  {dropdownOpen && (
+    <div className="absolute right-0 bg-white shadow-md rounded-lg py-2 mt-2">
+      <button
+        onClick={handleSaveCourse}
+        className="block px-4 py-2 text-gray-700 hover:bg-gray-100 w-full text-left"
+      >
+        Save Course
+      </button>
+    </div>
+  )}
+</div>
 
       {/* Teacher Info */}
       {teachers[course.teacher_id] && (
@@ -439,33 +480,70 @@ export default function CourseList({ course }) {
 
       {/* Action Buttons */}
       <div className="mt-4 flex flex-col sm:flex-row justify-around items-center border-t pt-2 space-y-4 sm:space-y-0">
-        {/* Like Button */}
-        <div className="flex items-center space-x-2 text-xs sm:text-sm">
-          <FaRegThumbsUp size={16} className="text-blue-500" />
-          <p className="font-bold">{likes || '0'}</p>
-          <button 
-            className="text-blue-500 text-xs sm:text-sm hover:underline"
-            onClick={handleLikeCourse}
-          >
-            Like
-          </button>
-        </div>
+  {/* Like Button */}
+  <div className="flex items-center space-x-2 text-xs sm:text-sm">
+    <FaRegThumbsUp size={16} className="text-blue-500" />
+    <p className="font-bold">{likes || '0'}</p>
+    <button 
+      className="text-blue-500 text-xs sm:text-sm hover:underline"
+      onClick={handleLikeCourse}
+    >
+      Like
+    </button>
+  </div>
 
-        {/* Join Request Button */}
-        <div className="flex items-center space-x-2 text-xs sm:text-sm">
-          <FaUserFriends size={14} className="text-blue-500" />
-          <button 
-            className={`font-bold text-blue-500 text-xs sm:text-sm ${
-              !userLoggedIn ? 'opacity-50 cursor-not-allowed' : 'hover:underline'
-            }`}
-            onClick={handleJoinRequestClick}  // Updated onClick handler
-            disabled={!userLoggedIn} // Disable if not logged in
-            title={userLoggedIn ? 'Send Join Request' : 'Please log in to send a join request'}
-          >
-            Join Request
-          </button>
-        </div>
-      </div>
+  {/* Join Request Button */}
+  <div className="flex items-center space-x-2 text-xs sm:text-sm">
+    <FaUserFriends size={14} className="text-blue-500" />
+    <button 
+      className={`font-bold text-blue-500 text-xs sm:text-sm ${
+        !userLoggedIn ? 'opacity-50 cursor-not-allowed' : 'hover:underline'
+      }`}
+      onClick={handleJoinRequestClick}
+      disabled={!userLoggedIn}
+      title={userLoggedIn ? 'Send Join Request' : 'Please log in to send a join request'}
+    >
+      Join Request
+    </button>
+  </div>
+
+  {/* Share Button with Dropdown */}
+  <div className="relative flex items-center space-x-2 text-xs sm:text-sm" ref={shareRef}>
+  <BiShare size={16} className="text-blue-500" />
+  <button
+    className="text-blue-500 text-xs sm:text-sm hover:underline"
+    onClick={toggleShareDropdown}
+  >
+    Share
+  </button>
+
+  {shareDropdownOpen && (
+    <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg p-2 z-50">
+      {/* Share Buttons */}
+      <FacebookShareButton url={shareUrl} quote={shareTitle} className="mx-2 my-1 flex items-center">
+          <FacebookIcon size={32} round />
+          <span className="ml-2 text-xs sm:text-sm">Facebook</span>
+        </FacebookShareButton>
+
+        <TwitterShareButton url={shareUrl} title={shareTitle} className="mx-2 my-1 flex items-center">
+          <TwitterIcon size={32} round />
+          <span className="ml-2 text-xs sm:text-sm">Twitter</span>
+        </TwitterShareButton>
+
+        <LinkedinShareButton url={shareUrl} title={shareTitle} className="mx-2 my-1 flex items-center">
+          <LinkedinIcon size={32} round />
+          <span className="ml-2 text-xs sm:text-sm">LinkedIn</span>
+        </LinkedinShareButton>
+
+        <WhatsappShareButton url={shareUrl} title={shareTitle} className="mx-2 my-1 flex items-center">
+          <WhatsappIcon size={32} round />
+          <span className="ml-2 text-xs sm:text-sm">WhatsApp</span>
+        </WhatsappShareButton>
+    </div>
+  )}
+</div>
+</div>
+
     </div>
   );
 }
