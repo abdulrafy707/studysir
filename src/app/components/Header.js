@@ -76,7 +76,7 @@ const Header = () => {
             </div>
 
             <div className={`flex items-center ${isAuthenticated ? 'space-x-4' : 'space-x-8'} md:space-x-8 lg:space-x-20`}>
-                <Link href={isAuthenticated ? `/${userRole}` : '/user'}>
+                <Link href={isAuthenticated ? `/${userRole}` : '/'}>
                     <Image src="/home.png" alt="Home Icon" width={20} height={20} className="w-5 h-5 md:w-7 md:h-7"/>
                 </Link>
                 <Link href={isAuthenticated ? `/${userRole}/student_posts` : '/user/student_posts'}>
