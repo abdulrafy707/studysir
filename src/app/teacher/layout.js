@@ -9,9 +9,9 @@ export default function Layout({ children }) {
       <Header />
 
       {/* Flexbox layout to split the sidebar and content */}
-      <div className="flex pt-16 bg-[#F0F2F5] min-h-screen"> {/* Apply background color here */}
+      <div className="flex pt-16 bg-[#F0F2F5] min-h-screen">
         {/* Sidebar on the left, hidden on small screens */}
-        <div className="hidden md:block w-1/4">
+        <div className="hidden md:block w-1/4 sticky top-16 h-screen overflow-y-auto">
           <TeacherSideBar />
         </div>
 

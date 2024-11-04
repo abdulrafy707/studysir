@@ -23,7 +23,7 @@ const PostTuitionBox = () => {
   };
 
   return (
-    <div className="relative text-black w-full max-w-[600px] mx-auto">
+    <div className="relative bg-white shadow-lg text-black w-full max-w-[600px] mx-auto">
       <div className="flex items-center shadow-lg justify-between w-full p-4 border-2 hover:border-blue-200 rounded-lg">
         {/* Profile Image fetched from localStorage */}
         <div className="flex-shrink-0">
@@ -37,7 +37,7 @@ const PostTuitionBox = () => {
         </div>
 
         {/* Message Box */}
-        <div className="flex-grow ml-4">
+        <div className="flex-grow ml-4 ">
           <div
             className="bg-gray-100 px-4 py-2 rounded-full cursor-pointer text-gray-700"
             onClick={handleOpenPostPage}

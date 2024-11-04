@@ -140,13 +140,13 @@ const TeacherSideBar = () => {
             </div>
 
             {/* Sidebar for Desktop and Mobile */}
-            <div className={`fixed text-black inset-y-0 left-0 bg-gray-100 w-64 p-5 transition-transform transform md:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:block h-screen`}>
+            <div className={`fixed text-black inset-y-0 left-0 bg-gray-100 w-64 pt-3 p-5 transition-transform transform md:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:block h-screen`}>
                 {/* Close button for mobile */}
                 <div className="md:hidden flex justify-end mb-4">
                     <FaTimes className="text-2xl cursor-pointer" onClick={() => setIsSidebarOpen(false)} />
                 </div>
                 
-                <ul className="space-y-6">
+                <ul className="space-y-3">
                     {/* User Profile */}
                     <li className="flex items-center space-x-3">
                         <img

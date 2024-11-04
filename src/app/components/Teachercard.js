@@ -82,7 +82,7 @@ export default function TeacherCard({ teacher, baseUrl }) {
 
   return (
     <div className="flex justify-center">
-      <div className="bg-white text-black border rounded-lg w-[300px] sm:w-[500px] md:w-[600px] shadow-lg p-4 mx-auto my-2">
+      <div className="bg-white shadow-lg text-black border rounded-lg w-[300px] sm:w-[500px] md:w-[600px] shadow-lg p-4 mx-auto my-2">
         <div className="flex items-start justify-between">
           <div className="flex items-center">
             <img
