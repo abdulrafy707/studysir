@@ -121,7 +121,7 @@ export default function CourseTeacherId() {
        <h1 className="text-2xl font-bold mb-4 text-start">Your Courses</h1>
       {courses.length > 0 ? (
         courses.map((course) => (
-          <div key={course.course_id} className="bg-white border w-full md:w-[600px] rounded-lg shadow-lg p-4 my-4 relative text-sm sm:text-base">
+          <div key={course.course_id} className="bg-white border w-full md:w-[600px] rounded-lg shadow-lg p-4 my-3 relative text-sm sm:text-base">
             <h2 className="text-base sm:text-lg font-bold">{course.course_title || 'Course Title'}</h2>
             <p className="text-gray-700 mt-2 text-xs sm:text-sm">{course.description || 'No description available.'}</p>
             <div className="mt-4">

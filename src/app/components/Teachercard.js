@@ -83,23 +83,25 @@ export default function TeacherCard({ teacher, baseUrl }) {
   return (
     <div className="flex justify-center">
       <div className="bg-white shadow-lg text-black border rounded-lg w-[300px] sm:w-[500px] md:w-[600px] shadow-lg p-4 mx-auto my-3">
-        <div className="flex items-start justify-between">
-          <div className="flex items-center">
-            <img
-              src={teacher.image ? `${baseUrl}/uploads/${teacher.image}` : '/default-profile.png'}
-              alt="Profile Picture"
-              className="rounded-full w-10 h-10 sm:w-12 sm:h-12"
-            />
-            <div className=" ml-1">
-              <h2 className="text-lg sm:text-lg font-bold">{teacher.fullname || 'Teacher'}</h2>
-              <p className="text-gray-500 text-xs sm:text-sm flex items-center">
-                <MdLocationOn className="mr-1" />
-                {teacher.city}, {teacher.country}
-              </p>
-            </div>
-          </div>
-          <BsThreeDots className="cursor-pointer text-gray-600 hover:text-gray-800 text-xs sm:text-sm" />
-        </div>
+      <div className="flex items-center">
+  <img
+    src={teacher.image ? `${baseUrl}/uploads/${teacher.image}` : '/default-profile.png'}
+    alt="Profile Picture"
+    className="rounded-full w-10 h-10 sm:w-12 sm:h-12"
+  />
+  <div className="ml-1">
+    {/* Display the designation before the name */}
+    <p className="text-gray-500 text-xs sm:text-sm font-medium">
+      {teacher.designation || 'Designation not provided'}
+    </p>
+    <h2 className="text-lg sm:text-lg font-bold">{teacher.fullname || 'Teacher'}</h2>
+    <p className="text-gray-500 text-xs sm:text-sm flex items-center">
+      <MdLocationOn className="mr-1" />
+      {teacher.city}, {teacher.country}
+    </p>
+  </div>
+</div>
+
 
         <h3 className="mt-4 text-xs sm:text-sm">{teacher.description || 'Teacher description not available'}</h3>
          <hr></hr>

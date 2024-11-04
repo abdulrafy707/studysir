@@ -18,11 +18,11 @@ export default function NewEbook({ onCloseForm }) {
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
-  // const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://studysir.m3xtrader.com/api';
+  const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://studysir.m3xtrader.com/api';
 
 
 
-  const BASE_URL = 'http://localhost/academy';
+  // const BASE_URL = 'http://localhost/academy';
 
   // Fetch teacher_id and seller_name from localStorage
   useEffect(() => {

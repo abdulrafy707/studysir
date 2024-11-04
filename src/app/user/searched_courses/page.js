@@ -187,12 +187,12 @@ const SearchCourses = () => {
         pauseOnHover
         theme="colored"
       />
-      <div className="flex flex-wrap justify-center gap-6 text-black">
+      <div className="flex flex-wrap justify-center gap-3 text-black">
         {courses.length === 0 ? (
           <p>No courses found for "{query}"</p>
         ) : (
           courses.map((course) => (
-            <div key={course.course_id} className="bg-white border z-10 rounded-lg w-[300px] sm:w-[300px] md:w-[600px] shadow-lg p-4 my-8 relative mx-auto">
+            <div key={course.course_id} className="bg-white border z-10 rounded-lg w-[300px] sm:w-[300px] md:w-[600px] shadow-lg p-4 my-3 relative mx-auto">
               {/* Join Request Popup */}
               {isJoinRequestOpen === course.course_id && (
                 <div className="absolute right-0 bottom-4 mt-2 w-80 bg-white p-6 rounded-lg shadow-lg z-50">

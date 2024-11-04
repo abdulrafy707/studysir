@@ -36,7 +36,7 @@ export default function TeacherEbookCard() {
         // Parse the response as JSON
         const data = await response.json();
         console.log("Parsed Data:", data); // Log the parsed data
-        console.log('Image URL:', `${baseUrl}/uploads/${ebook.cover_page_image_url}`);
+        // console.log('Image URL:', `${baseUrl}/uploads/${ebook.cover_page_image_url}`);
 
 
         if (Array.isArray(data) && data.length > 0) {
@@ -137,7 +137,7 @@ export default function TeacherEbookCard() {
   return (
     <div className="container text-black mx-auto p-4">
       {ebooks.map((ebook) => (
-        <div key={ebook.id} className="bg-white border rounded-lg shadow-lg p-6 w-full md:w-[600px] my-6">
+        <div key={ebook.id} className="bg-white border rounded-lg shadow-lg p-6 w-full md:w-[600px] my-3">
           <div className="flex flex-col md:flex-row justify-between space-y-6 md:space-y-0 md:space-x-6">
             {/* Left: Ebook Image and Price */}
             <div className="w-full md:w-1/3 flex flex-col justify-between">
