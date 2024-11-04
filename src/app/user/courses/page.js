@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import CourseList from "@/app/components/Get_courses"; // Assuming Get_courses renders individual courses
+import Header from "@/app/components/Header";
 
 export default function Page() {
   const [courses, setCourses] = useState([]);
@@ -60,8 +61,8 @@ export default function Page() {
 
   return (
     <div className="container mx-auto p-0 flex flex-col items-center min-h-screen">
-      {/* Search Bar */}
-      <div className="flex justify-center  w-full  sm:px-0">
+      <Header/>
+      <div className="flex justify-center pt-16  w-full  sm:px-0">
         <input
           type="text"
           value={searchQuery}

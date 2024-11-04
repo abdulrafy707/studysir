@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import JobCard from "@/app/components/JobCard"; // Use JobCard to render each job post
 import { ThreeDots } from 'react-loader-spinner';
+import Header from "@/app/components/Header";
 
 export default function Page() {
   const [jobPosts, setJobPosts] = useState([]);
@@ -80,8 +81,8 @@ export default function Page() {
 
   return (
     <div className="container mx-auto flex flex-col items-center text-black">
-      {/* Search Bar */}
-      <div className="w-full max-w-md my-4">
+      <Header/>
+      <div className="w-full pt-16 max-w-md my-4">
         <input
           type="text"
           value={searchQuery}
@@ -95,7 +96,7 @@ export default function Page() {
       {/* Job Cards */}
       <div className="w-full flex flex-col items-center">
         {jobPosts.map((job) => (
-          <div key={job.post_id} className="w-full flex justify-center mb-4">
+          <div key={job.post_id} className="w-full flex justify-center mb-1">
             <JobCard post={job} baseUrl={baseUrl} /> {/* Render each item as a JobCard */}
           </div>
         ))}

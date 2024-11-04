@@ -54,7 +54,8 @@ export default function AuthPage() {
     <div className="min-h-screen flex justify-center items-center bg-gray-100">
       {/* Mobile View */}
       <div className="block md:hidden w-full max-w-sm p-8 mx-auto bg-white shadow-lg rounded-lg relative">
-        <div className="absolute top-0 left-0 w-full flex justify-between">
+      <div className="absolute inset-0 w-full flex justify-between">
+
           <Image src="/left.png" alt="Left Wave" width={160} height={100} className="h-[150px]" />
           <Image src="/right.png" alt="Right Wave" width={160} height={100} className="h-[150px]" />
         </div>
