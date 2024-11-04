@@ -312,7 +312,7 @@ export default function ChatInterface() {
   };
 
   const showToast = (message, type) => (
-    <div className={`fixed top-4 right-4 bg-${type === "success" ? "green" : "red"}-500 text-white px-4 py-2 rounded shadow flex items-center`}>
+    <div className={`fixed top-4 right-4 bg-${type === "success" ? "green" : "red"}-500 text-white px-4 py-2 rounded shadow flex items-center z-50`}>
       <span>{message}</span>
       <button onClick={() => setToast(null)} className="ml-2 text-white font-bold">&times;</button>
     </div>
