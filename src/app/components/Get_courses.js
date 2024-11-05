@@ -479,14 +479,14 @@ export default function CourseList({ course }) {
         </div>
       </div>
 
-      {/* Action Buttons */}
-      <div className="mt-4 flex flex-col sm:flex-row justify-around items-center border-t pt-2 space-y-4 sm:space-y-0">
+{/* Action Buttons */}
+<div className="mt-4 flex flex-row justify-around items-center border-t pt-2 space-y-0 sm:space-y-0 sm:space-x-4">
   {/* Like Button */}
-  <div className="flex items-center space-x-2 text-xs sm:text-sm">
-    <FaRegThumbsUp size={16} className="text-blue-500" />
+  <div className="flex items-center space-x-1 text-[10px] sm:text-sm">
+    <FaRegThumbsUp size={12} className="text-blue-500" />
     <p className="font-bold">{likes || '0'}</p>
     <button 
-      className="text-blue-500 text-xs sm:text-sm hover:underline"
+      className="text-blue-500 hover:underline"
       onClick={handleLikeCourse}
     >
       Like
@@ -494,10 +494,10 @@ export default function CourseList({ course }) {
   </div>
 
   {/* Join Request Button */}
-  <div className="flex items-center space-x-2 text-xs sm:text-sm">
-    <FaUserFriends size={14} className="text-blue-500" />
+  <div className="flex items-center space-x-1 text-[10px] sm:text-sm">
+    <FaUserFriends size={12} className="text-blue-500" />
     <button 
-      className={`font-bold text-blue-500 text-xs sm:text-sm ${
+      className={`font-bold text-blue-500 ${
         !userLoggedIn ? 'opacity-50 cursor-not-allowed' : 'hover:underline'
       }`}
       onClick={handleJoinRequestClick}
@@ -508,42 +508,44 @@ export default function CourseList({ course }) {
     </button>
   </div>
 
-  {/* Share Button with Dropdown */}
-  <div className="relative flex items-center space-x-2 text-xs sm:text-sm" ref={shareRef}>
-  <BiShare size={16} className="text-blue-500" />
-  <button
-    className="text-blue-500 text-xs sm:text-sm hover:underline"
-    onClick={toggleShareDropdown}
-  >
-    Share
-  </button>
+  {/* Share Button */}
+  <div className="relative flex items-center space-x-1 text-[10px] sm:text-sm" ref={shareRef}>
+    <BiShare size={12} className="text-blue-500" />
+    <button
+      className="text-blue-500 hover:underline"
+      onClick={toggleShareDropdown}
+    >
+      Share
+    </button>
 
-  {shareDropdownOpen && (
-    <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg p-2 z-50">
-      {/* Share Buttons */}
-      <FacebookShareButton url={shareUrl} quote={shareTitle} className="mx-2 my-1 flex items-center">
+    {shareDropdownOpen && (
+      <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg p-2 z-50">
+        {/* Share Buttons */}
+        <FacebookShareButton url={shareUrl} quote={shareTitle} className="mx-2 my-1 flex items-center">
           <FacebookIcon size={32} round />
-          <span className="ml-2 text-xs sm:text-sm">Facebook</span>
+          <span className="ml-2 text-[10px] sm:text-sm">Facebook</span>
         </FacebookShareButton>
 
         <TwitterShareButton url={shareUrl} title={shareTitle} className="mx-2 my-1 flex items-center">
           <TwitterIcon size={32} round />
-          <span className="ml-2 text-xs sm:text-sm">Twitter</span>
+          <span className="ml-2 text-[10px] sm:text-sm">Twitter</span>
         </TwitterShareButton>
 
         <LinkedinShareButton url={shareUrl} title={shareTitle} className="mx-2 my-1 flex items-center">
           <LinkedinIcon size={32} round />
-          <span className="ml-2 text-xs sm:text-sm">LinkedIn</span>
+          <span className="ml-2 text-[10px] sm:text-sm">LinkedIn</span>
         </LinkedinShareButton>
 
         <WhatsappShareButton url={shareUrl} title={shareTitle} className="mx-2 my-1 flex items-center">
           <WhatsappIcon size={32} round />
-          <span className="ml-2 text-xs sm:text-sm">WhatsApp</span>
+          <span className="ml-2 text-[10px] sm:text-sm">WhatsApp</span>
         </WhatsappShareButton>
-    </div>
-  )}
+      </div>
+    )}
+  </div>
 </div>
-</div>
+
+
 
     </div>
   );

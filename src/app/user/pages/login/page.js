@@ -67,40 +67,42 @@ export default function AuthPage() {
         <h2 className="text-center text-blue-500 font-semibold text-2xl mt-8">Sign In</h2>
         {errorMessage && <p className="text-red-500 text-center mb-4">{errorMessage}</p>}
 
-        <form onSubmit={handleSignIn} className="mt-8 space-y-6">
-          <input
-            type="text"
-            placeholder="Username"
-            className="w-full px-4 py-3 border border-blue-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            className="w-full px-4 py-3 border border-blue-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <button
-            type="submit"
-            className="bg-blue-500 text-white px-6 py-3 rounded-lg w-full hover:bg-blue-600 transition duration-200"
-            disabled={loading}
-          >
-            {loading ? 'Loading...' : 'Sign In'}
-          </button>
-        </form>
+        <form onSubmit={handleSignIn} className="mt-8 space-y-6 relative z-10">
+  <input
+    type="text"
+    placeholder="Username"
+    className="w-full px-4 py-3 border border-blue-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+    value={username}
+    onChange={(e) => setUsername(e.target.value)}
+    required
+  />
+  <input
+    type="password"
+    placeholder="Password"
+    className="w-full px-4 py-3 border border-blue-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+    value={password}
+    onChange={(e) => setPassword(e.target.value)}
+    required
+  />
+  <button
+    type="submit"
+    className="bg-blue-500 text-white px-6 py-3 rounded-lg w-full hover:bg-blue-600 transition duration-200"
+    disabled={loading}
+  >
+    {loading ? 'Loading...' : 'Sign In'}
+  </button>
+</form>
 
-        <div className="mt-4 flex justify-between">
-          <Link href="/user/pages/forgot-password" className="text-blue-500 hover:underline">
-            Forgot Password?
-          </Link>
-          <Link href="/user/pages/signup" className="text-blue-500 hover:underline">
-            Sign up for a new account
-          </Link>
-        </div>
+
+<div className="mt-4 flex justify-between relative z-10">
+  <Link href="/user/pages/forgot-password" className="text-blue-500 hover:underline">
+    Forgot Password?
+  </Link>
+  <Link href="/user/pages/signup" className="text-blue-500 hover:underline">
+    Sign up for a new account
+  </Link>
+</div>
+
 
         <div className="mt-8 flex justify-center">
           <Image src="/login.png" alt="Sign Up Bottom Image" width={150} height={150} className="w-[200px] h-[200px]" />
