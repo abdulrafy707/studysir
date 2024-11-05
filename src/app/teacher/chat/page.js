@@ -1,4 +1,4 @@
-'use client';
+'use client'
 import { useState, useEffect, useRef } from 'react';
 
 export default function ChatInterface() {
@@ -11,12 +11,6 @@ export default function ChatInterface() {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const [userData, setUserData] = useState(null);
   const messagesEndRef = useRef(null);
-
-  const scrollToBottom = () => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
@@ -81,7 +75,6 @@ export default function ChatInterface() {
 
         if (result.status === "success") {
           setMessages(result.all_chats || []);
-          scrollToBottom();
         } else {
           setError(result.message || "Failed to fetch messages.");
         }
@@ -103,7 +96,9 @@ export default function ChatInterface() {
   }, [selectedChatroom, baseUrl]);
 
   useEffect(() => {
-    scrollToBottom();
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   }, [messages]);
 
   const handleChatroomSelect = (chatroom) => {
@@ -139,7 +134,6 @@ export default function ChatInterface() {
           sent_at: new Date().toISOString(),
         };
         setMessages((prevMessages) => [...prevMessages, newMsg]);
-        scrollToBottom();
       } else {
         setError(result.message || "Failed to send message.");
       }
@@ -241,7 +235,7 @@ export default function ChatInterface() {
             ) : (
               <p className="text-gray-500">No messages in this chat yet.</p>
             )}
-            <div ref={messagesEndRef} /> {/* For automatic scrolling */}
+            <div ref={messagesEndRef} /> {/* Add this line */}
           </div>
 
           <div className="sticky bottom-0 bg-gray-100 px-4 py-2 border-t">

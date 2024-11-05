@@ -59,9 +59,9 @@ export default function Page() {
   };
 
   return (
-    <div className="container mx-auto p-0">
+    <div className="min-h-screen flex flex-col items-center justify-center px-4">
       {/* Search Bar */}
-      <div className="w-full max-w-md flex justify-center">
+      <div className="w-full sm:max-w-md lg:max-w-lg xl:max-w-xl flex justify-center mb-4">
         <input
           type="text"
           value={searchQuery}
@@ -73,7 +73,7 @@ export default function Page() {
       </div>
 
       {/* Render the CourseList component for each course */}
-      <div className="flex flex-col items-center w-full max-w-md ">
+      <div className="w-full sm:max-w-md lg:max-w-lg xl:max-w-xl">
         {courses.length > 0 ? (
           courses.map((course, index) => (
             <CourseList key={index} course={course} /> // Pass the course data to each CourseList component

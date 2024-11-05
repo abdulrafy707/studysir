@@ -112,7 +112,7 @@ const fetchTeacherData = async (query = '') => {
           onChange={handleSearchInput}
           onKeyPress={handleKeyPress}
           placeholder="Search for a teacher by description or subject..."
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+          className="w-[300px] sm:w-[600px] px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
         />
       </div>
 

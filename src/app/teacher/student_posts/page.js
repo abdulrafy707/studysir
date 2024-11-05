@@ -79,9 +79,9 @@ export default function Page() {
   }
 
   return (
-    <div className="container mx-auto p-0">
+    <div className="min-h-screen flex flex-col items-center justify-center px-4">
       {/* Search Bar */}
-      <div className="w-full max-w-md my-0">
+      <div className="w-full max-w-md flex justify-center mb-4">
         <input
           type="text"
           value={searchQuery}
