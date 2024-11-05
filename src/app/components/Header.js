@@ -102,15 +102,20 @@ const Header = () => {
                     />
                 </Link>
                 <Link href={isAuthenticated ? `/${userRole}/student_posts` : '/user/student_posts'}>
-                    <Image
-                        src={getIconSrc('student_posts', '/studentposts.png', '/studentposts1.png')}
-                        alt="Student Posts Icon"
-                        width={30}
-                        height={20}
-                        className="w-5 h-5 md:w-7 md:h-7"
-                        onClick={() => handleClick('student_posts')}
-                    />
-                </Link>
+    <Image
+        src={getIconSrc(
+            'student_posts',
+            userRole === 'teacher' ? '/new-student.png' : '/studentposts.png',
+            userRole === 'teacher' ? '/new-student1.png' : '/studentposts1.png'
+        )}
+        alt="Student Posts Icon"
+        width={30}
+        height={20}
+        className="w-5 h-5 md:w-7 md:h-7"
+        onClick={() => handleClick('student_posts')}
+    />
+</Link>
+
                 <Link href={isAuthenticated ? `/${userRole}/courses` : '/user/courses'}>
                     <Image
                         src={getIconSrc('courses', '/courses.png', '/courses1.png')}
