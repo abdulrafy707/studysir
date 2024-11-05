@@ -14,7 +14,7 @@ export default function AuthPage() {
   const handleSignIn = async (event) => {
     event.preventDefault();
     setLoading(true);
-
+  
     try {
       const response = await fetch('https://studysir.m3xtrader.com/api/login_api.php', {
         method: 'POST',
@@ -26,9 +26,9 @@ export default function AuthPage() {
           password,
         }),
       });
-
+  
       const data = await response.json();
-
+  
       if (data.success) {
         localStorage.setItem('user', JSON.stringify({
           id: data.user.id,
@@ -38,8 +38,15 @@ export default function AuthPage() {
           image: data.user.image,
           isAuthenticated: true,
         }));
-
-        router.push(data.user.role === 'student' ? '/student' : '/teacher');
+  
+        // Redirect based on user role
+        if (data.user.role === 'student') {
+          router.push('/student');
+        } else if (data.user.role === 'teacher') {
+          router.push('/teacher');
+        } else if (data.user.role === 'admin') {
+          router.push('/admin/coin_requests');
+        }
       } else {
         setErrorMessage(data.error || 'Login failed, please try again.');
       }
@@ -49,6 +56,7 @@ export default function AuthPage() {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="min-h-screen flex justify-center items-center bg-gray-100">
