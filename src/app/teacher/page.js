@@ -93,8 +93,8 @@ export default function Home() {
       <ToastContainer position="top-right" autoClose={3000} hideProgressBar closeOnClick pauseOnHover draggable />
       
       <div className="flex justify-center">
-        <div className="w-full md:w-4/5 flex flex-col items-center md:items-start justify-start space-y-4 mt-4">
-          <div className="w-full space-y-4">
+        <div className="w-full md:w-4/5 flex flex-col items-center md:items-start justify-start space-y-4 mt-0 sm:mt-4">
+          <div className="w-full space-y-3">
             {combinedRecords.map((record, index) => {
               console.log("Rendering record:", record);
               if (record.type === 'job') return <JobCard key={index} post={record} className="mx-auto" />;

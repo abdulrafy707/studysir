@@ -43,7 +43,7 @@ export default function Page() {
   };
 
   return (
-    <div className="container mx-auto p-8">
+    <div className="container mx-auto p-0">
       {/* Search Bar */}
       <div className="flex justify-center mb-4">
         <input

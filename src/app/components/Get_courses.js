@@ -327,6 +327,9 @@ export default function CourseList({ course }) {
   };
 
   return (
+    <div className="flex justify-center items-center min-h-screen">
+
+    
     <div className="bg-white text-black border rounded-lg w-[300px] sm:w-[500px] md:w-[600px] p-4 my-3 relative mx-auto" style={{ boxShadow: '-1px 1px 10px 0px #00000040' }}>
 
       
@@ -569,6 +572,7 @@ export default function CourseList({ course }) {
 </div>
 
 
+    </div>
     </div>
   );
 }

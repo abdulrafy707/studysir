@@ -128,7 +128,7 @@ export default function NotificationsPage() {
   }
 
   return (
-    <div className="container text-black mx-auto mt-8">
+    <div className="container text-black mx-auto ">
       {notifications.length > 0 ? (
         <div className="space-y-4">
           {notifications.map((notification) => (

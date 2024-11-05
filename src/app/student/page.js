@@ -8,6 +8,7 @@ import CourseCard from "../components/Get_courses";
 import EbookCard from "../components/EbookCard";
 import TeacherCard from "../components/Teachercard";
 import { ThreeDots } from 'react-loader-spinner';
+import CourseList from "../components/Get_courses";
 
 export default function Home() {
   const [combinedRecords, setCombinedRecords] = useState([]);
@@ -88,23 +89,25 @@ export default function Home() {
     return <p className="text-red-500 text-center mt-4">{error}</p>;
   }
 
-  return (
-    <div className="flex">
-      <div className="w-4/5 flex flex-col items-start justify-start space-y-4 mt-4">
-        <div className="w-full">
-          <PostTuition />
-        </div>
-        <div className="w-full space-y-4">
-          {combinedRecords.map((record, index) => {
-            console.log("Rendering record:", record);
-            if (record.type === 'job') return <JobCard key={index} post={record} />;
-            if (record.type === 'course') return <CourseCard key={index} course={record} />;
-            if (record.type === 'ebook') return <EbookCard key={index} ebook={record} />;
-            if (record.type === 'teacher') return <TeacherCard key={index} teacher={record} baseUrl={baseUrl} />;
-            return null;
-          })}
+  
+    return (
+      <div className="flex justify-center items-center min-h-screen"> {/* Centering content */}
+        <div className="w-full max-w-4xl flex flex-col items-center space-y-4 mt-4"> {/* Ensure the content is centered and responsive */}
+          <div className="w-full">
+            <PostTuition />
+          </div>
+          <div className="w-full space-y-3">
+            {combinedRecords.map((record, index) => {
+              console.log("Rendering record:", record);
+              if (record.type === 'job') return <JobCard key={index} post={record} className="mx-auto" />;
+              if (record.type === 'course') return <CourseList key={index} course={record} className="mx-auto" />;
+              if (record.type === 'ebook') return <EbookCard key={index} ebook={record} className="mx-auto" />;
+              if (record.type === 'teacher') return <TeacherCard key={index} teacher={record} baseUrl={baseUrl} className="mx-auto" />;
+              return null;
+            })}
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+    
 }

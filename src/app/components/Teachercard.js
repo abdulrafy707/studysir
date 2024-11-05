@@ -90,17 +90,18 @@ export default function TeacherCard({ teacher, baseUrl }) {
     className="rounded-full w-10 h-10 sm:w-12 sm:h-12"
   />
   <div className="ml-1">
-    {/* Display the designation before the name */}
-    <p className="text-gray-500 text-xs sm:text-sm font-medium">
-      {teacher.designation || 'Designation not provided'}
-    </p>
-    <h2 className="text-lg sm:text-lg font-bold">{teacher.fullname || 'Teacher'}</h2>
-    <p className="text-gray-500 text-xs sm:text-sm flex items-center">
-      <MdLocationOn className="mr-1" />
-      {teacher.city}, {teacher.country}
-    </p>
-  </div>
+  <h2 className="text-lg sm:text-lg font-bold">
+    {teacher.designation ? `${teacher.designation} ` : ''}
+    {teacher.fullname || 'Teacher'}
+  </h2>
+  <p className="text-gray-500 text-xs sm:text-sm flex items-center">
+    <MdLocationOn className="mr-1" />
+    {teacher.city}, {teacher.country}
+  </p>
 </div>
+
+</div>
+
 
 
         <h3 className="mt-4 text-xs sm:text-sm">{teacher.description || 'Teacher description not available'}</h3>

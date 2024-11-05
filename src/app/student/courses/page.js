@@ -59,21 +59,21 @@ export default function Page() {
   };
 
   return (
-    <div className="container mx-auto p-0 flex flex-col items-center min-h-screen">
+    <div className="container mx-auto p-0">
       {/* Search Bar */}
-      <div className="flex justify-center  w-full  sm:px-0">
+      <div className="w-full max-w-md flex justify-center">
         <input
           type="text"
           value={searchQuery}
           onChange={handleSearchInput}
           onKeyPress={handleKeyPress}
           placeholder="Search for a course by title or description..."
-          className="w-full max-w-md px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
         />
       </div>
 
       {/* Render the CourseList component for each course */}
-      <div className="flex flex-col items-center w-full px-4">
+      <div className="flex flex-col items-center w-full max-w-md ">
         {courses.length > 0 ? (
           courses.map((course, index) => (
             <CourseList key={index} course={course} /> // Pass the course data to each CourseList component
