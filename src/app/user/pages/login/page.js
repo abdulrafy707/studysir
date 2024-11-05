@@ -51,7 +51,7 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-center bg-gray-100">
+    <div className="min-h-screen flex text-black justify-center items-center bg-gray-100">
       {/* Mobile View */}
       <div className="block md:hidden w-full max-w-sm p-8 mx-auto bg-white shadow-lg rounded-lg relative">
       <div className="absolute inset-0 w-full flex justify-between">

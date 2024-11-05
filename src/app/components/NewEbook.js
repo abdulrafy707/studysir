@@ -63,69 +63,76 @@ export default function NewEbook({ onCloseForm }) {
 };
 
 
-  // Handle form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError('');
-    setSuccessMessage('');
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setIsLoading(true);
+  setError('');
+  setSuccessMessage('');
 
-    const formDataToSend = new FormData();
-    formDataToSend.append('ebook_title', formData.ebook_title);
-    formDataToSend.append('author_name', formData.author_name);
-    formDataToSend.append('description', formData.description);
-    formDataToSend.append('price', formData.price);
-    formDataToSend.append('seller_name', formData.seller_name);
-    formDataToSend.append('rating', formData.rating);
-    formDataToSend.append('teacher_id', formData.teacher_id);
+  // Validation: Ensure at least one of ebook_file or drive_link is provided
+  if (!formData.ebook_file && !formData.drive_link) {
+    setError('You must provide either an Ebook file or a Google Drive link.');
+    setIsLoading(false);
+    return;
+  }
 
-    // Append ebook file if it's selected
-    if (formData.ebook_file) {
-      formDataToSend.append('ebook_file', formData.ebook_file);
-    }
+  const formDataToSend = new FormData();
+  formDataToSend.append('ebook_title', formData.ebook_title);
+  formDataToSend.append('author_name', formData.author_name);
+  formDataToSend.append('description', formData.description);
+  formDataToSend.append('price', formData.price);
+  formDataToSend.append('seller_name', formData.seller_name);
+  formDataToSend.append('rating', formData.rating);
+  formDataToSend.append('teacher_id', formData.teacher_id);
 
-    // Append cover page image if it's selected
-    if (formData.cover_page_image_url) {
-      formDataToSend.append('cover_page_image', formData.cover_page_image_url);
-    }
+  // Append ebook file if selected
+  if (formData.ebook_file) {
+    formDataToSend.append('ebook_file', formData.ebook_file);
+  }
 
-    // Append Google Drive link if provided
-    if (formData.drive_link) {
-      formDataToSend.append('drive_link', formData.drive_link);
-    }
+  // Append cover page image if selected
+  if (formData.cover_page_image_url) {
+    formDataToSend.append('cover_page_image', formData.cover_page_image_url);
+  }
+
+  // Append Google Drive link if provided
+  if (formData.drive_link) {
+    formDataToSend.append('drive_link', formData.drive_link);
+  }
+
+  try {
+    console.log('Submitting formData to:', `${BASE_URL}/ebook_post_api.php`);
+    const response = await fetch(`${BASE_URL}/ebook_post_api.php`, {
+      method: 'POST',
+      body: formDataToSend,
+    });
+
+    const responseText = await response.text();
 
     try {
-      console.log('Submitting formData to:', `${BASE_URL}/ebook_post_api.php`);
-      const response = await fetch(`${BASE_URL}/ebook_post_api.php`, {
-        method: 'POST',
-        body: formDataToSend,
-      });
-    
-      const responseText = await response.text();
-    
-      try {
-        const data = JSON.parse(responseText);
-    
-        if (data.success) {
-          setSuccessMessage('Ebook added successfully!');
-          // Reset form data...
-        } else {
-          console.log('Error from API:', data.error);
-          setError(data.error || 'An error occurred while adding the ebook.');
-        }
-      } catch (parseError) {
-        // The response was not JSON
-        console.error('Server returned invalid JSON:', responseText);
-        setError('An unexpected server error occurred.');
+      const data = JSON.parse(responseText);
+
+      if (data.success) {
+        setSuccessMessage('Ebook added successfully!');
+        // Reset form data...
+      } else {
+        console.log('Error from API:', data.error);
+        setError(data.error || 'An error occurred while adding the ebook.');
       }
-    } catch (error) {
-      console.error('Failed to connect to the server:', error);
-      setError('Failed to connect to the server.');
-    } finally {
-      setIsLoading(false);
+    } catch (parseError) {
+      // The response was not JSON
+      console.error('Server returned invalid JSON:', responseText);
+      setError('An unexpected server error occurred.');
     }
-    
-  };
+  } catch (error) {
+    console.error('Failed to connect to the server:', error);
+    setError('Failed to connect to the server.');
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+
 
   return (
     <div className="bg-white text-black p-6 rounded-lg shadow-lg relative">
@@ -177,7 +184,7 @@ export default function NewEbook({ onCloseForm }) {
 
         {/* Price */}
         <div className="mb-4">
-          <label className="block text-gray-700 mb-2">Price</label>
+          <label className="block text-gray-700 mb-2">Price in PKR</label>
           <input
             type="number"
             name="price"
@@ -219,13 +226,13 @@ export default function NewEbook({ onCloseForm }) {
 
         {/* Ebook File */}
         <div className="mb-4">
-          <label className="block text-gray-700 mb-2">Ebook File (PDF, Word, ZIP, MP3, MP4)</label>
+          <label className="block text-gray-700 mb-2">Ebook File (PDF, Word )</label>
           <input
             type="file"
             name="ebook_file"
             onChange={handleFileChange}
             className="w-full border p-2 rounded-lg"
-            accept=".pdf,.doc,.docx,.zip,.mp3,.mp4"
+            accept=".pdf,.doc,.docx"
           />
         </div>
 

@@ -480,13 +480,14 @@ export default function CourseList({ course }) {
       </div>
 
 {/* Action Buttons */}
+{/* Action Buttons */}
 <div className="mt-4 flex flex-row justify-around items-center border-t pt-2 space-y-0 sm:space-y-0 sm:space-x-4">
   {/* Like Button */}
   <div className="flex items-center space-x-1 text-[10px] sm:text-sm">
-    <FaRegThumbsUp size={12} className="text-blue-500" />
+    <FaRegThumbsUp size={12} className="text-black" />
     <p className="font-bold">{likes || '0'}</p>
     <button 
-      className="text-blue-500 hover:underline"
+      className="text-black hover:underline"
       onClick={handleLikeCourse}
     >
       Like
@@ -495,9 +496,9 @@ export default function CourseList({ course }) {
 
   {/* Join Request Button */}
   <div className="flex items-center space-x-1 text-[10px] sm:text-sm">
-    <FaUserFriends size={12} className="text-blue-500" />
+    <FaUserFriends size={12} className="text-black" />
     <button 
-      className={`font-bold text-blue-500 ${
+      className={`font-bold text-black ${
         !userLoggedIn ? 'opacity-50 cursor-not-allowed' : 'hover:underline'
       }`}
       onClick={handleJoinRequestClick}
@@ -510,9 +511,9 @@ export default function CourseList({ course }) {
 
   {/* Share Button */}
   <div className="relative flex items-center space-x-1 text-[10px] sm:text-sm" ref={shareRef}>
-    <BiShare size={12} className="text-blue-500" />
+    <BiShare size={12} className="text-black" />
     <button
-      className="text-blue-500 hover:underline"
+      className="text-black hover:underline"
       onClick={toggleShareDropdown}
     >
       Share
@@ -544,7 +545,6 @@ export default function CourseList({ course }) {
     )}
   </div>
 </div>
-
 
 
     </div>

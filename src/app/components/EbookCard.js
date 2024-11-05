@@ -167,40 +167,111 @@ export default function EbookCard({ ebook }) {
     const words = description.split(' ');
     return words.length > 30 ? words.slice(0, 30).join(' ') + '...' : description;
   };
-
-  // Handle the download process (Direct Download Approach)
   const handleDownload = () => {
     if (!userData || !userData.id) {
       alert('User not logged in');
       return;
     }
   
+    setShowDownloadConfirm(true); // Show confirmation for all downloads (including Drive links)
+  };
+  
+
+  
+  const confirmDownload = async () => {
     if (!ebook.teacher_id) {
       alert('Seller ID not found for this ebook.');
       setShowDownloadConfirm(false);
       return;
     }
   
-    const downloadLink = ebook.ebook_file_url;
-    if (downloadLink) {
-      const fileUrl = `${baseUrl}/uploads/${encodeURIComponent(downloadLink)}`;
-      
-      // Create a temporary anchor element to trigger the download
-      const link = document.createElement('a');
-      link.href = fileUrl;
-      link.download = downloadLink.split('/').pop(); // Sets the filename for the download
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+    setLoading(true);
+    setDownloadError('');
+    setDownloadSuccess('');
   
-      setDownloadSuccess('Download initiated!');
-    } else {
-      setDownloadError('Download link not available.');
+    const payload = {
+      posterid: ebook.teacher_id,   // Seller ID
+      postid: ebook.id,            // Ebook ID
+      buyerid: userData.id,        // Buyer ID
+      amount: parseFloat(ebook.price), // Ebook price
+    };
+  
+    try {
+      const response = await fetch(`${baseUrl}/download_api.php`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams(payload),
+      });
+  
+      const result = await response.json();
+  
+      if (result.success) {
+        setDownloadSuccess('Download successful!');
+        
+        if (result.drive_link) {
+          window.open(result.drive_link, '_blank'); // Redirect to Google Drive
+        } else if (result.ebook_file_url) {
+          const fileUrl = `${baseUrl}/uploads/${encodeURIComponent(result.ebook_file_url)}`;
+          const link = document.createElement('a');
+          link.href = fileUrl;
+          link.download = result.ebook_file_url.split('/').pop(); // Filename for download
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          setDownloadSuccess('Download initiated!');
+        } else {
+          setDownloadError('Download link not available.');
+        }
+      } else {
+        setDownloadError(result.error || 'Failed to download ebook.');
+      }
+    } catch (error) {
+      console.error('Error during download:', error);
+      setDownloadError('An error occurred while downloading the ebook.');
+    } finally {
+      setLoading(false);
+      setShowDownloadConfirm(false);
     }
-  
-    setShowDownloadConfirm(false);
   };
   
+  
+  
+  const handleFileDownload = async (downloadLink) => {
+    if (!downloadLink) {
+      setDownloadError('Download link not available.');
+      return;
+    }
+  
+    const fileName = downloadLink.split('/').pop();
+    const fileUrl = downloadLink.includes('http') ? downloadLink : `${baseUrl}/uploads/${downloadLink}`;
+  
+    try {
+      const fileResponse = await fetch(fileUrl);
+      if (!fileResponse.ok) {
+        throw new Error('Failed to fetch the ebook file.');
+      }
+  
+      const blob = await fileResponse.blob();
+      const url = window.URL.createObjectURL(new Blob([blob]));
+  
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', fileName); // Set file name
+      document.body.appendChild(link);
+      link.click();
+  
+      link.parentNode.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      setDownloadError('An error occurred while downloading the file.');
+    }
+  };
+  
+
+
+
   // Define the URL to share. This should point to the ebook's detail page.
   const shareUrl = `${baseUrl}/ebook/${encodeURIComponent(ebook.id)}`;
   const shareTitle = ebook.ebook_title || 'Check out this amazing ebook!';
@@ -290,54 +361,60 @@ export default function EbookCard({ ebook }) {
     </div>
 
     <button
-      className="flex items-center text-gray-500 hover:text-blue-500 text-xs sm:text-sm"
-      onClick={() => setShowDownloadConfirm(true)}
-    >
-      <img src="/download.png" alt="Download Icon" className="w-4 h-4 sm:w-5 sm:h-5" />
-      <span className="ml-1 text-xs sm:text-sm">Download</span>
-    </button>
+  className="flex items-center text-gray-500 hover:text-blue-500 text-xs sm:text-sm"
+  onClick={handleDownload}
+>
+  <img src="/download.png" alt="Download Icon" className="w-4 h-4 sm:w-5 sm:h-5" />
+  <span className="ml-1 text-xs sm:text-sm">Download</span>
+</button>
   </div>
 </div>
 
 
 
 
-      {/* Confirmation Modal */}
-      {showDownloadConfirm && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white rounded-lg p-6 w-11/12 max-w-md">
-            <h3 className="text-lg font-bold mb-4">Confirm Download</h3>
-            <p className="mb-4">Are you sure you want to download this ebook?</p>
-            {downloadError && (
-              <div className="bg-red-100 text-red-700 p-2 rounded mb-4">
-                {downloadError}
-              </div>
-            )}
-            {downloadSuccess && (
-              <div className="bg-green-100 text-green-700 p-2 rounded mb-4">
-                {downloadSuccess}
-              </div>
-            )}
-            <div className="flex justify-end space-x-4">
-              <button
-                className="px-4 py-2 bg-gray-200 text-gray-800 rounded"
-                onClick={() => setShowDownloadConfirm(false)}
-              >
-                Cancel
-              </button>
-              <button
-                className={`px-4 py-2 bg-blue-500 text-white rounded ${
-                  loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'
-                }`}
-                onClick={handleDownload}
-                disabled={loading}
-              >
-                {loading ? 'Downloading...' : 'Confirm'}
-              </button>
-            </div>
-          </div>
+{showDownloadConfirm && (
+  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div className="bg-white rounded-lg p-6 w-11/12 max-w-md">
+      <h3 className="text-lg font-bold mb-4">Confirm Download</h3>
+      <p className="mb-4">
+        Are you sure you want to download this ebook?
+        {ebook.drive_link && (
+          <span className="block text-gray-600 mt-2">
+            You will be redirected to Google Drive.
+          </span>
+        )}
+      </p>
+      {downloadError && (
+        <div className="bg-red-100 text-red-700 p-2 rounded mb-4">
+          {downloadError}
         </div>
       )}
+      {downloadSuccess && (
+        <div className="bg-green-100 text-green-700 p-2 rounded mb-4">
+          {downloadSuccess}
+        </div>
+      )}
+      <div className="flex justify-end space-x-4">
+        <button
+          className="px-4 py-2 bg-gray-200 text-gray-800 rounded"
+          onClick={() => setShowDownloadConfirm(false)}
+        >
+          Cancel
+        </button>
+        <button
+  className={`px-4 py-2 bg-blue-500 text-white rounded ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'}`}
+  onClick={confirmDownload}
+  disabled={loading}
+>
+  {loading ? 'Processing...' : 'Confirm'}
+</button>
+
+
+      </div>
+    </div>
+  </div>
+)}
 
       {/* Review Section */}
       {showReviewSection && (

@@ -227,7 +227,7 @@ export default function NewCourse({ onCloseForm }) {
         </div>
 
         <div className="mb-4">
-          <label className="block text-gray-700 mb-2">Fee</label>
+          <label className="block text-gray-700 mb-2">Fee in USD</label>
           <input
             type="number"
             name="fee"

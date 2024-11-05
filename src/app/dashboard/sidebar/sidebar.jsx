@@ -29,7 +29,7 @@ const Sidebar = () => {
 
   const handleLogout = () => {
     // Perform any additional actions on logout if needed
-    window.location.href = '/';
+    window.location.href = '/admin-login';
   };
 
   useEffect(() => {
@@ -82,12 +82,7 @@ const Sidebar = () => {
       icon: <FaMoneyCheckAlt className="h-5 w-5" />,
       roles: ["admin"], // Show this only to admin role
     },
-    {
-      title: "Account Management",
-      path: "/admin/AdminList",
-      icon: <FaUserTie className="h-5 w-5" />,
-      roles: ["admin"],
-    },
+    
     
   ];
 

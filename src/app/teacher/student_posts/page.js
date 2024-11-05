@@ -79,7 +79,7 @@ export default function Page() {
   }
 
   return (
-    <div className="container mx-auto flex flex-col items-center text-black">
+    <div className="container mx-auto p-0 flex flex-col items-center text-black">
       {/* Search Bar */}
       <div className="w-full max-w-md my-4">
         <input
