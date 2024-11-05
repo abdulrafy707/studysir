@@ -53,33 +53,42 @@ const AddTuitionPost = () => {
         body: JSON.stringify(updatedFormData),
       });
   
-      const data = await response.json();
+      const responseText = await response.text(); // Get raw text response
+      console.log("Raw response text from backend:", responseText);
   
-      // Log the response data from the backend
-      console.log("Response from backend:", data);
+      try {
+        const data = JSON.parse(responseText); // Attempt to parse JSON
   
-      if (data.success) {
-        toast.success('Tuition post added successfully!');
+        // Log the response data from the backend
+        console.log("Parsed response from backend:", data);
   
-        // Reset the form fields
-        setFormData({
-          student_id: formData.student_id, // Keep student ID intact
-          job_title: '',
-          job_description: '',
-          required_gender: '',
-          time_availability: '',
-          fee_budget: '',
-          languages: '',
-          subjects: '',
-        });
-      } else {
-        toast.error(`Error: ${data.error}`);
+        if (data.success) {
+          toast.success('Tuition post added successfully!');
+  
+          // Reset the form fields
+          setFormData({
+            student_id: formData.student_id, // Keep student ID intact
+            job_title: '',
+            job_description: '',
+            required_gender: '',
+            time_availability: '',
+            fee_budget: '',
+            languages: '',
+            subjects: '',
+          });
+        } else {
+          toast.error(`Error: ${data.error || 'Unexpected error occurred.'}`);
+        }
+      } catch (jsonError) {
+        console.error("Failed to parse JSON response:", responseText);
+        toast.error('Invalid response format from the server.');
       }
-    } catch (error) {
-      console.error('Error submitting post:', error);
-      toast.error('An error occurred while submitting the post.');
+    } catch (networkError) {
+      console.error('Network error while submitting post:', networkError);
+      toast.error('Network error occurred while submitting the post.');
     }
   };
+  
   
 
   return (
