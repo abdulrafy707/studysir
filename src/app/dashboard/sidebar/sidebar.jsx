@@ -53,7 +53,7 @@ const Sidebar = () => {
       roles: ["admin", "sub admin"],
       dropdown: [
         { title: "Student Posts", path: "/admin/studentPosts" },
-        { title: "Teacher Posts", path: "/admin/teacherPosts" },
+        
         { title: "Digital Products", path: "/admin/digitalProducts" },
         { title: "Courses", path: "/admin/courses" },
       ],
@@ -88,12 +88,7 @@ const Sidebar = () => {
       icon: <FaUserTie className="h-5 w-5" />,
       roles: ["admin"],
     },
-    {
-      title: "System Settings",
-      path: "/admin/settings",
-      icon: <FaCog className="h-5 w-5" />,
-      roles: ["admin"],
-    },
+    
   ];
 
   return (

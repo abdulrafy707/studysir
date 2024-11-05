@@ -1,5 +1,5 @@
-'use client';
-import { useState, useEffect } from 'react';
+'use client'
+import { useState, useEffect, useRef } from 'react';
 
 export default function ChatInterface() {
   const [conversations, setConversations] = useState([]);
@@ -10,6 +10,7 @@ export default function ChatInterface() {
   const [teacherDetails, setTeacherDetails] = useState(null);
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const [userData, setUserData] = useState(null);
+  const messagesEndRef = useRef(null);
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
@@ -94,6 +95,12 @@ export default function ChatInterface() {
     };
   }, [selectedChatroom, baseUrl]);
 
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages]);
+
   const handleChatroomSelect = (chatroom) => {
     setSelectedChatroom(chatroom);
     setTeacherDetails({ fullname: chatroom.fullname, image: chatroom.image });
@@ -143,7 +150,7 @@ export default function ChatInterface() {
   };
 
   return (
-    <div className="min-h-screen text-black bg-gray-100 flex flex-col md:flex-row">
+    <div className="h-screen text-black bg-gray-100 flex flex-col md:flex-row">
       {error && (
         <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded shadow z-50 flex items-center">
           <span>{error}</span>
@@ -228,6 +235,7 @@ export default function ChatInterface() {
             ) : (
               <p className="text-gray-500">No messages in this chat yet.</p>
             )}
+            <div ref={messagesEndRef} /> {/* Add this line */}
           </div>
 
           <div className="sticky bottom-0 bg-gray-100 px-4 py-2 border-t">
@@ -238,14 +246,25 @@ export default function ChatInterface() {
                 onChange={(e) => setNewMessage(e.target.value)}
                 placeholder="Write your message"
                 className="flex-grow px-4 py-2 rounded-full border"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault(); // Prevents the default action (e.g., new line in a textarea)
+                    handleSendMessage(); // Call the function to send the message
+                  }
+                }}
               />
               <button
                 onClick={handleSendMessage}
                 className="bg-blue-500 text-white px-4 py-2 rounded-full disabled:opacity-50"
                 disabled={!newMessage.trim()}
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path d="M2.94 15.61l2.804-1.001A8.146 8.146 0 005.5 11c0-.774.106-1.523.308-2.224L2.94 7.775a.5.5 0 00-.94.218v6.797c0 .373.421.605.76.42zM10.897 3.071a8.004 8.004 0 014.868 3.246l-3.32 1.187a.5.5 0 00-.25.253L9.5 10l3.322 1.817a.5.5 0 00.25.253l3.32 1.187a8.004 8.004 0 01-4.868 3.246A7.999 7.999 0 013.224 4.897a7.998 7.998 0 017.673-1.826z" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 transform rotate-90"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.429a1 1 0 001.169-1.409l-7-14z" />
                 </svg>
               </button>
             </div>

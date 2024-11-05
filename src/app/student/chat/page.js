@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect,useRef } from 'react';
 import Image from 'next/image';
 
 export default function ChatInterface() {
@@ -12,6 +12,20 @@ export default function ChatInterface() {
   const [toast, setToast] = useState(null); // State for toast notifications
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const [userData, setUserData] = useState(null); // Manage userData as state
+  const messagesEndRef = useRef(null); // Add this line
+
+
+
+  const scrollToBottom = () => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  useEffect(() => {
+    scrollToBottom(); // Call this to scroll when messages update
+  }, [messages]);
+  
 
   // Initialize userData inside useEffect to ensure it's available on the client
   useEffect(() => {
@@ -409,26 +423,28 @@ useEffect(() => {
         {/* Messages List */}
         {selectedChatroom ? (
           <div className="flex-1 p-4 space-y-4 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300">
-            {messages.length > 0 ? (
-              messages.map((message) => (
+          {messages.length > 0 ? (
+            messages.map((message) => (
+              <div
+                key={message.chat_id} // Unique key for each message
+                className={`flex ${message.sender_id === userData.id ? 'justify-end' : 'justify-start'}`}
+              >
                 <div
-                  key={message.chat_id} // Use unique identifier
-                  className={`flex ${message.sender_id === userData.id ? 'justify-end' : 'justify-start'}`}
+                  className={`p-2 rounded-lg max-w-[75%] ${
+                    message.sender_id === userData.id ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'
+                  }`}
                 >
-                  <div
-                    className={`p-2 rounded-lg max-w-[75%] ${
-                      message.sender_id === userData.id ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'
-                    }`}
-                  >
-                    <p>{message.message}</p>
-                    <p className="text-xs mt-1 text-right">{new Date(message.sent_at).toLocaleString()}</p>
-                  </div>
+                  <p>{message.message}</p>
+                  <p className="text-xs mt-1 text-right">{new Date(message.sent_at).toLocaleString()}</p>
                 </div>
-              ))
-            ) : (
-              <p className="text-gray-500">No messages in this chat yet.</p>
-            )}
-          </div>
+              </div>
+            ))
+          ) : (
+            <p className="text-gray-500">No messages in this chat yet.</p>
+          )}
+          <div ref={messagesEndRef} /> {/* Add this div for automatic scrolling */}
+        </div>
+        
         ) : (
           // Placeholder when no chatroom is selected (for desktop)
           <div className="flex-1 flex items-center justify-center">
@@ -441,13 +457,20 @@ useEffect(() => {
           <div className="sticky bottom-0 bg-gray-100 px-4 py-2 z-10">
             {/* Input Field */}
             <div className="flex items-center space-x-2">
-              <input
-                type="text"
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                placeholder="Write your message"
-                className="flex-grow px-4 py-2 rounded-full border focus:outline-none"
-              />
+            <input
+  type="text"
+  value={newMessage}
+  onChange={(e) => setNewMessage(e.target.value)}
+  placeholder="Write your message"
+  className="flex-grow px-4 py-2 rounded-full border"
+  onKeyDown={(e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault(); // Prevents the default action (e.g., new line in a textarea)
+      handleSendMessage(); // Call the function to send the message
+    }
+  }}
+/>
+
               <button
                 onClick={handleSendMessage}
                 className={`bg-blue-500 text-white px-4 py-2 rounded-full flex items-center justify-center ${

@@ -210,11 +210,12 @@ export default function EbookCard({ ebook }) {
 
       <div className="flex flex-col md:flex-row justify-between space-x-4">
         <div className="w-full md:w-1/3 flex flex-col justify-between">
-          <img
-            src={`${baseUrl}/uploads/${encodeURIComponent(ebook.cover_page_image_url)}`}
-            alt={ebook.ebook_title || 'Ebook Image'}
-            className="rounded-lg object-cover w-full h-40 mb-2"
-          />
+        <img
+  src={`${baseUrl}/uploads/${encodeURIComponent(ebook.cover_page_image_url)}`}
+  alt={ebook.ebook_title || 'Ebook Image'}
+  className="rounded-lg object-cover w-full h-60 sm:h-40 mb-2"
+/>
+
           <p className="text-gray-800 font-bold text-base">Rs {ebook.price || 'N/A'}</p>
         </div>
         <div className="flex-1">

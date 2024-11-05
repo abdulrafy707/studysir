@@ -238,7 +238,7 @@ export default function JobCard({ post }) {
             alt="Profile Picture"
             className="rounded-full w-10 h-10 sm:w-12 sm:h-12"
           />
-          <div className=" sm:ml-4">
+          <div className="ml-2 sm:ml-4">
             <h2 className="text-lg sm:text-lg font-bold">{post.name || 'Student'}</h2>
             <p className="text-gray-500 text-xs sm:text-sm flex items-center">
               <MdLocationOn className="mr-1" />
