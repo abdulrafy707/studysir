@@ -137,7 +137,7 @@ export default function TeacherEbookCard() {
   return (
     <div className="container text-black mx-auto p-4">
       {ebooks.map((ebook) => (
-        <div key={ebook.id} className="bg-white border rounded-lg shadow-lg p-6 w-full md:w-[600px] my-3">
+        <div key={ebook.id} className= "bg-white border rounded-lg  p-6 w-full md:w-[600px] my-3"style={{ boxShadow: '-1px 1px 10px 0px #00000040' }}>
           <div className="flex flex-col md:flex-row justify-between space-y-6 md:space-y-0 md:space-x-6">
             {/* Left: Ebook Image and Price */}
             <div className="w-full md:w-1/3 flex flex-col justify-between">

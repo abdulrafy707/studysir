@@ -206,7 +206,8 @@ export default function EbookCard({ ebook }) {
   const shareTitle = ebook.ebook_title || 'Check out this amazing ebook!';
 
   return (
-    <div className="bg-white  text-black border rounded-lg shadow-lg p-4 w-[300px] md:w-[600px] mx-auto my-3">
+    <div className="bg-white text-black border rounded-lg w-[300px] sm:w-[500px] md:w-[600px] p-4 my-3 relative mx-auto" style={{ boxShadow: '-1px 1px 10px 0px #00000040' }}>
+
       <div className="flex flex-col md:flex-row justify-between space-x-4">
         <div className="w-full md:w-1/3 flex flex-col justify-between">
           <img

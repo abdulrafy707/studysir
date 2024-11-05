@@ -192,7 +192,7 @@ const SearchCourses = () => {
           <p>No courses found for "{query}"</p>
         ) : (
           courses.map((course) => (
-            <div key={course.course_id} className="bg-white border z-10 rounded-lg w-[300px] sm:w-[300px] md:w-[600px] shadow-lg p-4 my-8 relative mx-auto">
+            <div key={course.course_id} className="bg-white border z-10 rounded-lg w-[300px] sm:w-[300px] md:w-[600px]  p-4 my-8 relative mx-auto" style={{ boxShadow: '-1px 1px 10px 0px #00000040' }}>
               {/* Join Request Popup */}
               {isJoinRequestOpen === course.course_id && (
                 <div className="absolute right-0 bottom-4 mt-2 w-80 bg-white p-6 rounded-lg shadow-lg z-50">

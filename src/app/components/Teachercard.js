@@ -82,7 +82,7 @@ export default function TeacherCard({ teacher, baseUrl }) {
 
   return (
     <div className="flex justify-center">
-      <div className="bg-white shadow-lg text-black border rounded-lg w-[300px] sm:w-[500px] md:w-[600px] shadow-lg p-4 mx-auto my-3">
+      <div className="bg-white text-black border rounded-lg w-[300px] sm:w-[500px] md:w-[600px] p-4 mx-auto my-3" style={{ boxShadow: '-1px 1px 10px 0px #00000040' }}>
       <div className="flex items-center">
   <img
     src={teacher.image ? `${baseUrl}/uploads/${teacher.image}` : '/default-profile.png'}
