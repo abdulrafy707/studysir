@@ -54,7 +54,7 @@ const TeacherSideBar = () => {
 
     const goToCoursesPage = () => {
         if (user && user.id) {
-            router.push(`/teacher/courses`); // Navigate to courses page with teacher_id
+            router.push(`/teacher/my-courses`); // Navigate to courses page with teacher_id
         } else {
             console.error('User data not found.');
         }
@@ -62,7 +62,7 @@ const TeacherSideBar = () => {
 
     const goToEbookPage = () => {
         if (user && user.id) {
-            router.push(`/teacher/ebooks`); // Navigate to ebook page with teacher_id
+            router.push(`/teacher/my-ebooks`); // Navigate to ebook page with teacher_id
         } else {
             console.error('User data not found.');
         }
