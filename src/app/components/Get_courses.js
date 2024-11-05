@@ -38,14 +38,18 @@ export default function CourseList({ course }) {
   
   const shareRef = useRef(null);
   const dropdownRef = useRef(null);
-
+  function truncateDescriptionForShare(description, maxLength = 100) {
+    if (!description) return '';
+    return description.length > maxLength ? `${description.slice(0, maxLength)}...` : description;
+  }
   
 
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 
-  const shareUrl = `${baseUrl}/courses/${course.course_id}`;
+  const shareUrl = 'https://studysir.com'; // Static link for StudySir
   const shareTitle = course.course_title || 'Check out this course!';
+  const shareDescription = truncateDescriptionForShare(course.description);
 
   // Determine if user is logged in
   const userLoggedIn = !!JSON.parse(localStorage.getItem('user'))?.id;
@@ -522,25 +526,43 @@ export default function CourseList({ course }) {
     {shareDropdownOpen && (
       <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg p-2 z-50">
         {/* Share Buttons */}
-        <FacebookShareButton url={shareUrl} quote={shareTitle} className="mx-2 my-1 flex items-center">
-          <FacebookIcon size={32} round />
-          <span className="ml-2 text-[10px] sm:text-sm">Facebook</span>
-        </FacebookShareButton>
+        <FacebookShareButton 
+  url={shareUrl} 
+  quote={`${shareTitle} - ${shareDescription}`} 
+  className="mx-2 my-1 flex items-center"
+>
+  <FacebookIcon size={32} round />
+  <span className="ml-2 text-[10px] sm:text-sm">Facebook</span>
+</FacebookShareButton>
 
-        <TwitterShareButton url={shareUrl} title={shareTitle} className="mx-2 my-1 flex items-center">
-          <TwitterIcon size={32} round />
-          <span className="ml-2 text-[10px] sm:text-sm">Twitter</span>
-        </TwitterShareButton>
+<TwitterShareButton 
+  url={shareUrl} 
+  title={`${shareTitle} - ${shareDescription}`} 
+  className="mx-2 my-1 flex items-center"
+>
+  <TwitterIcon size={32} round />
+  <span className="ml-2 text-[10px] sm:text-sm">Twitter</span>
+</TwitterShareButton>
 
-        <LinkedinShareButton url={shareUrl} title={shareTitle} className="mx-2 my-1 flex items-center">
-          <LinkedinIcon size={32} round />
-          <span className="ml-2 text-[10px] sm:text-sm">LinkedIn</span>
-        </LinkedinShareButton>
+<LinkedinShareButton 
+  url={shareUrl} 
+  title={shareTitle} 
+  summary={shareDescription} 
+  source="StudySir" 
+  className="mx-2 my-1 flex items-center"
+>
+  <LinkedinIcon size={32} round />
+  <span className="ml-2 text-[10px] sm:text-sm">LinkedIn</span>
+</LinkedinShareButton>
 
-        <WhatsappShareButton url={shareUrl} title={shareTitle} className="mx-2 my-1 flex items-center">
-          <WhatsappIcon size={32} round />
-          <span className="ml-2 text-[10px] sm:text-sm">WhatsApp</span>
-        </WhatsappShareButton>
+<WhatsappShareButton 
+  url={shareUrl} 
+  title={`${shareTitle} - ${shareDescription}`} 
+  className="mx-2 my-1 flex items-center"
+>
+  <WhatsappIcon size={32} round />
+  <span className="ml-2 text-[10px] sm:text-sm">WhatsApp</span>
+</WhatsappShareButton>
       </div>
     )}
   </div>

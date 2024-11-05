@@ -121,7 +121,7 @@ const AddTuitionPost = () => {
       <input
         type="text"
         name="fee_budget"
-        placeholder="Fee Budget"
+        placeholder="Fee Budget in USD"
         value={formData.fee_budget}
         onChange={handleInputChange}
         className="w-full mb-4 p-2 border rounded"

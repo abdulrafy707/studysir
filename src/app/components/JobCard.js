@@ -217,15 +217,23 @@ export default function JobCard({ post }) {
   const toggleDescription = () => {
     setShowFullDescription(!showFullDescription);
   };
-
-  const getTruncatedDescription = (description) => {
+  const getTruncatedDescription = (description, wordLimit = 100) => {
+    if (!description) return '';
     const words = description.split(' ');
-    return words.length > 100 ? words.slice(0, 100).join(' ') : description;
+    return words.length > wordLimit ? words.slice(0, wordLimit).join(' ') + '...' : description;
   };
 
-  // Define the URL to share. This could be dynamic based on the post.
-  const shareUrl = `${baseUrl}/job-post/${post.post_id}`;
-  const shareTitle = post.job_title || 'Check out this job opportunity!';
+ // Truncate description for sharing
+const getTruncatedDescriptionForShare = (description, maxLength = 100) => {
+  if (!description) return '';
+  return description.length > maxLength ? `${description.slice(0, maxLength)}...` : description;
+};
+
+// Define sharing text
+const shareTitle = post.job_title || 'Job Opportunity';
+const shareDescription = getTruncatedDescriptionForShare(post.job_description);
+const shareUrl = 'https://studysir.com'; // Static link to studysir.com
+
 
   return (
     <div className="bg-white text-black border rounded-lg w-[300px] sm:w-[500px] md:w-[600px] p-4 my-3 relative mx-auto" style={{ boxShadow: '-1px 1px 10px 0px #00000040' }}>
@@ -348,40 +356,59 @@ export default function JobCard({ post }) {
             </span>
           </button>
 
-          {/* Share Button with Dropdown */}
           <div className="relative">
-            <button
-              className="flex items-center text-gray-500 hover:text-blue-500"
-              onClick={() => setDropdownOpen(!dropdownOpen)}
-            >
-              <BiShare className="mr-1 text-xs sm:text-sm" />
-              <span className="text-xs sm:text-sm">Share</span>
-            </button>
+  <button
+    className="flex items-center text-gray-500 hover:text-blue-500"
+    onClick={() => setDropdownOpen(!dropdownOpen)}
+  >
+    <BiShare className="mr-1 text-xs sm:text-sm" />
+    <span className="text-xs sm:text-sm">Share</span>
+  </button>
 
-            {dropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg p-2 z-20">
-                <FacebookShareButton url={shareUrl} quote={shareTitle} className="mx-2 my-1">
-                  <FacebookIcon size={32} round />
-                  <span className="ml-2 text-xs sm:text-sm">Facebook</span>
-                </FacebookShareButton>
+  {dropdownOpen && (
+    <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg p-2 z-20">
+      <FacebookShareButton
+        url={shareUrl}
+        quote={`${shareTitle} - ${shareDescription}`}
+        className="mx-2 my-1"
+      >
+        <FacebookIcon size={32} round />
+        <span className="ml-2 text-xs sm:text-sm">Facebook</span>
+      </FacebookShareButton>
 
-                <TwitterShareButton url={shareUrl} title={shareTitle} className="mx-2 my-1">
-                  <TwitterIcon size={32} round />
-                  <span className="ml-2 text-xs sm:text-sm">Twitter</span>
-                </TwitterShareButton>
+      <TwitterShareButton
+        url={shareUrl}
+        title={`${shareTitle} - ${shareDescription}`}
+        className="mx-2 my-1"
+      >
+        <TwitterIcon size={32} round />
+        <span className="ml-2 text-xs sm:text-sm">Twitter</span>
+      </TwitterShareButton>
 
-                <LinkedinShareButton url={shareUrl} title={shareTitle} className="mx-2 my-1">
-                  <LinkedinIcon size={32} round />
-                  <span className="ml-2 text-xs sm:text-sm">LinkedIn</span>
-                </LinkedinShareButton>
+      <LinkedinShareButton
+        url={shareUrl}
+        title={shareTitle}
+        summary={shareDescription}
+        source={shareUrl}
+        className="mx-2 my-1"
+      >
+        <LinkedinIcon size={32} round />
+        <span className="ml-2 text-xs sm:text-sm">LinkedIn</span>
+      </LinkedinShareButton>
 
-                <WhatsappShareButton url={shareUrl} title={shareTitle} className="mx-2 my-1">
-                  <WhatsappIcon size={32} round />
-                  <span className="ml-2 text-xs sm:text-sm">WhatsApp</span>
-                </WhatsappShareButton>
-              </div>
-            )}
-          </div>
+      <WhatsappShareButton
+        url={shareUrl}
+        title={`${shareTitle} - ${shareDescription}`}
+        className="mx-2 my-1"
+      >
+        <WhatsappIcon size={32} round />
+        <span className="ml-2 text-xs sm:text-sm">WhatsApp</span>
+      </WhatsappShareButton>
+    </div>
+  )}
+</div>
+
+            
         </div>
 
         <button
