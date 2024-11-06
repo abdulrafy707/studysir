@@ -3,15 +3,16 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 const Header = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [userImage, setUserImage] = useState('/default-profile.png');
     const [searchQuery, setSearchQuery] = useState('');
     const [userRole, setUserRole] = useState('');
-    const [activePage, setActivePage] = useState('home'); // State to track the active page
+    const [activePage, setActivePage] = useState('home');
     const router = useRouter();
+    const pathname = usePathname();
 
     useEffect(() => {
         const user = localStorage.getItem('user');
@@ -25,13 +26,12 @@ const Header = () => {
                 setUserRole(userData.role);
             }
         }
+    }, []);
 
-        if (router.asPath) {
-            // Use asPath instead of pathname
-            const path = router.asPath.split('/')[2] || 'home'; // Default to 'home' if no specific path
-            setActivePage(path);
-        }
-    }, [router.asPath]); // Use asPath in the dependency array
+    useEffect(() => {
+        const path = pathname.split('/')[2] || 'home';
+        setActivePage(path);
+    }, [pathname]);
 
     const handleSearch = () => {
         const targetRolePath = isAuthenticated ? `/${userRole}` : '/user';
@@ -48,7 +48,7 @@ const Header = () => {
     };
 
     const handleClick = (page) => {
-        setActivePage(page); // Set the active page when a link is clicked
+        setActivePage(page);
     };
 
     const getIconSrc = (page, defaultIcon, activeIcon) => (
@@ -59,11 +59,9 @@ const Header = () => {
         <header className="bg-white text-black flex items-center justify-between px-4 py-1 sm:py-2 shadow-md w-full fixed top-0 z-50">
             <div className="flex items-center space-x-4">
                 <Link href={userRole ? `/${userRole}` : '/'}>
-                    <span className="text-blue-500 text-2xl font-bold" onClick={() => handleClick('home')}><svg width="30" height="35" viewBox="0 0 30 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg width="30" height="35" viewBox="0 0 30 35" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M0.929688 8.68164C0.929688 7.13542 1.31217 5.72754 2.07715 4.45801C2.8584 3.18848 3.90007 2.17936 5.20215 1.43066C6.52051 0.66569 7.96908 0.283203 9.54785 0.283203H27.5166V5.41016H9.54785C8.60384 5.41016 7.79004 5.74382 7.10645 6.41113C6.42285 7.07845 6.08105 7.88411 6.08105 8.82812V11.2207C6.08105 12.0833 6.42285 12.8239 7.10645 13.4424C7.79004 14.0609 8.60384 14.3701 9.54785 14.3701H20.6074C22.2025 14.3701 23.651 14.7526 24.9531 15.5176C26.2552 16.2663 27.2887 17.2835 28.0537 18.5693C28.835 19.8389 29.2256 21.2467 29.2256 22.793V26.5771C29.2256 28.1234 28.835 29.5394 28.0537 30.8252C27.2887 32.0947 26.2552 33.112 24.9531 33.877C23.651 34.6257 22.2025 35 20.6074 35H0.954102V29.8486H20.6074C21.5677 29.8486 22.3815 29.5312 23.0488 28.8965C23.7324 28.2454 24.0742 27.4642 24.0742 26.5527V22.8174C24.0742 21.9059 23.7324 21.1247 23.0488 20.4736C22.3815 19.8226 21.5677 19.4971 20.6074 19.4971H9.54785C7.96908 19.4971 6.52051 19.1309 5.20215 18.3984C3.90007 17.6497 2.8584 16.6488 2.07715 15.3955C1.31217 14.1423 0.929688 12.7588 0.929688 11.2451V8.68164Z" fill="#0866FF"/>
-</svg>
-</span>
-                </Link>
+</svg>                </Link>
 
                 <div className="hidden md:flex items-center bg-gray-100 px-4 py-1 rounded-full w-[150px] lg:w-[300px]">
                     <input
@@ -105,19 +103,15 @@ const Header = () => {
                     />
                 </Link>
                 <Link href={isAuthenticated ? `/${userRole}/student_posts` : '/user/student_posts'}>
-    <Image
-        src={getIconSrc(
-            'student_posts',
-            userRole === 'teacher' ? '/new-student.png' : '/studentposts.png',
-            userRole === 'teacher' ? '/new-student1.png' : '/studentposts1.png'
-        )}
-        alt="Student Posts Icon"
-        width={30}
-        height={20}
-        className="w-5 h-5 md:w-7 md:h-7"
-        onClick={() => handleClick('student_posts')}
-    />
-</Link>
+                    <Image
+                        src={getIconSrc('student_posts', '/studentposts.png', '/studentposts1.png')}
+                        alt="Student Posts Icon"
+                        width={30}
+                        height={20}
+                        className="w-5 h-5 md:w-7 md:h-7"
+                        onClick={() => handleClick('student_posts')}
+                    />
+                </Link>
 
                 <Link href={isAuthenticated ? `/${userRole}/courses` : '/user/courses'}>
                     <Image
@@ -139,18 +133,18 @@ const Header = () => {
                         onClick={() => handleClick('ebooks')}
                     />
                 </Link>
-                {(userRole === 'teacher' || userRole === 'student') && isAuthenticated && (
-                    <Link href={`/${userRole}/chat`}>
-                        <Image
-                            src={getIconSrc('chat', '/sms.png', '/sms1.png')}
-                            alt="SMS Icon"
-                            width={20}
-                            height={20}
-                            className="w-5 h-5 md:w-7 md:h-7"
-                            onClick={() => handleClick('chat')}
-                        />
-                    </Link>
-                )}
+
+                {/* Chat icon always visible */}
+                <Link href={isAuthenticated ? `/${userRole}/chat` : '/user/chat'}>
+                    <Image
+                        src={getIconSrc('chat', '/sms.png', '/sms1.png')}
+                        alt="Chat Icon"
+                        width={20}
+                        height={20}
+                        className="w-5 h-5 md:w-7 md:h-7"
+                        onClick={() => handleClick('chat')}
+                    />
+                </Link>
             </div>
 
             <div className={`flex items-center ${isAuthenticated ? 'space-x-4' : 'space-x-8'} md:space-x-8`}>

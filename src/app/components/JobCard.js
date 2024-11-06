@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   FacebookShareButton,
   TwitterShareButton,
@@ -17,15 +17,21 @@ import { MdLocationOn } from 'react-icons/md';
 import { BiShare } from 'react-icons/bi';
 
 export default function JobCard({ post }) {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  // Separate state variables for each dropdown
+  const [saveDropdownOpen, setSaveDropdownOpen] = useState(false);
+  const [shareDropdownOpen, setShareDropdownOpen] = useState(false);
   const [showFullDescription, setShowFullDescription] = useState(false);
   const [likes, setLikes] = useState(0);
   const [showChatPopup, setShowChatPopup] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [deductionMessage, setDeductionMessage] = useState('');
-  const [coinsToDeduct, setCoinsToDeduct] = useState(0); // Calculate coins to deduct
-  const [remainingCoins, setRemainingCoins] = useState(null); // To display remaining coins
+  const [coinsToDeduct, setCoinsToDeduct] = useState(0);
+  const [remainingCoins, setRemainingCoins] = useState(null);
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+  // Separate refs for each dropdown
+  const shareDropdownRef = useRef(null);
+  const saveDropdownRef = useRef(null);
 
   useEffect(() => {
     if (post.likes) {
@@ -33,13 +39,28 @@ export default function JobCard({ post }) {
     }
   }, [post.likes]);
 
-  
+  useEffect(() => {
+    // Close dropdowns if clicked outside
+    const handleClickOutside = (event) => {
+      if (saveDropdownRef.current && !saveDropdownRef.current.contains(event.target)) {
+        setSaveDropdownOpen(false);
+      }
+      if (shareDropdownRef.current && !shareDropdownRef.current.contains(event.target)) {
+        setShareDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const handleSavePost = async () => {
     const userData = JSON.parse(localStorage.getItem('user'));
 
     if (!userData || !userData.id) {
       console.error('User not logged in');
+      alert('You need to be logged in to save posts.');
       return;
     }
 
@@ -61,12 +82,13 @@ export default function JobCard({ post }) {
       const result = await response.json();
       if (result.success) {
         alert('Post saved successfully!');
-        setDropdownOpen(false); // Close the dropdown after saving
+        setSaveDropdownOpen(false);
       } else {
         alert(`Error saving post: ${result.error}`);
       }
     } catch (error) {
       console.error('Error saving post:', error);
+      alert('An unexpected error occurred while saving the post.');
     }
   };
 
@@ -75,6 +97,7 @@ export default function JobCard({ post }) {
 
     if (!userData || !userData.id) {
       console.error('User not logged in');
+      alert('You need to be logged in to like posts.');
       return;
     }
 
@@ -101,6 +124,7 @@ export default function JobCard({ post }) {
       }
     } catch (error) {
       console.error('Error liking post:', error);
+      alert('An unexpected error occurred while liking the post.');
     }
   };
 
@@ -109,6 +133,7 @@ export default function JobCard({ post }) {
 
     if (!userData || !userData.id) {
       console.error('User not logged in');
+      alert('You need to be logged in to start a live chat.');
       return;
     }
 
@@ -123,7 +148,6 @@ export default function JobCard({ post }) {
         return;
       }
 
-      // Show confirmation popup
       const feeBudget = post.fee_budget ? parseFloat(post.fee_budget) : 0;
       const coins = feeBudget < 5 ? 50 : feeBudget * 10;
       setCoinsToDeduct(coins);
@@ -143,23 +167,18 @@ export default function JobCard({ post }) {
       return;
     }
 
-    // Coin deduction data
     const coinDeductData = {
       teacher_id: userData.id,
       post_id: post.post_id,
     };
-    console.log("Coin Deduct Data:", coinDeductData);
 
     try {
-      // Step 1: Deduct Coins
       const coinResponse = await fetch(`${baseUrl}/coin_deduct_api.php`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(coinDeductData),
       });
       const coinResult = await coinResponse.json();
-
-      console.log("Coin Deduct Response:", coinResult);
 
       if (!coinResult.success) {
         setErrorMessage(`Coin Deduction Error: ${coinResult.error}`);
@@ -169,29 +188,23 @@ export default function JobCard({ post }) {
       setDeductionMessage(`Coins deducted successfully. Remaining coins: ${coinResult.remaining_coins}`);
       setRemainingCoins(coinResult.remaining_coins);
 
-      // Step 2: Create or Fetch Chatroom using FormData
       const chatroomData = new FormData();
       chatroomData.append('teacher_id', userData.id);
       chatroomData.append('student_id', post.student_id);
       chatroomData.append('post_id', post.post_id);
-      chatroomData.append('type', userData.role === 'teacher' ? 1 : 0); // 1 for teacher, 0 for student
+      chatroomData.append('type', userData.role === 'teacher' ? 1 : 0);
       chatroomData.append('status', 1);
       chatroomData.append('last_message', "Chat started");
 
       const chatroomResponse = await fetch(`${baseUrl}/chatroom_api.php`, {
         method: 'POST',
-        body: chatroomData, // Sending as FormData
+        body: chatroomData,
       });
 
       const chatroomText = await chatroomResponse.text();
-      console.log("Raw Chatroom API Response:", chatroomText);
-
       try {
         const chatroomResult = JSON.parse(chatroomText);
-        console.log("Parsed Chatroom API Response:", chatroomResult);
-
         if (chatroomResult.status === "success" || chatroomResult.status === "exists") {
-          // Redirect to chat page with appropriate parameters
           window.location.href = `/teacher/chat?teacher_id=${userData.id}&student_id=${post.student_id}&post_id=${post.post_id}`;
         } else {
           setErrorMessage(`Chatroom Error: ${chatroomResult.message}`);
@@ -210,34 +223,36 @@ export default function JobCard({ post }) {
     setShowChatPopup(false);
   };
 
-  const toggleDropdown = () => {
-    setDropdownOpen(!dropdownOpen);
+  // Toggle functions for each dropdown
+  const toggleSaveDropdown = () => {
+    setSaveDropdownOpen((prev) => !prev);
+    setShareDropdownOpen(false); // Close share dropdown when toggling save dropdown
+  };
+
+  const toggleShareDropdown = () => {
+    setShareDropdownOpen((prev) => !prev);
+    setSaveDropdownOpen(false); // Close save dropdown when toggling share dropdown
   };
 
   const toggleDescription = () => {
     setShowFullDescription(!showFullDescription);
   };
+
   const getTruncatedDescription = (description, wordLimit = 100) => {
     if (!description) return '';
     const words = description.split(' ');
     return words.length > wordLimit ? words.slice(0, wordLimit).join(' ') + '...' : description;
   };
 
- // Truncate description for sharing
-const getTruncatedDescriptionForShare = (description, maxLength = 100) => {
-  if (!description) return '';
-  return description.length > maxLength ? `${description.slice(0, maxLength)}...` : description;
-};
-
-// Define sharing text
-const shareTitle = post.job_title || 'Job Opportunity';
-const shareDescription = getTruncatedDescriptionForShare(post.job_description);
-const shareUrl = 'https://studysir.com'; // Static link to studysir.com
-
+  const shareTitle = post.job_title || 'Job Opportunity';
+  const shareDescription = getTruncatedDescription(post.job_description, 100);
+  const shareUrl = 'https://studysir.com';
 
   return (
-    <div className="bg-white text-black border rounded-lg w-[300px] sm:w-[500px] md:w-[600px] p-4 my-3 relative mx-auto" style={{ boxShadow: '-1px 1px 10px 0px #00000040' }}>
-
+    <div
+      className="bg-white text-black border rounded-lg w-[300px] sm:w-[500px] md:w-[600px] p-4 my-3 relative mx-auto"
+      style={{ boxShadow: '-1px 1px 10px 0px #00000040' }}
+    >
       {/* Header with student profile, name, location, and status */}
       <div className="flex items-start justify-between relative">
         <div className="flex items-center">
@@ -257,10 +272,26 @@ const shareUrl = 'https://studysir.com'; // Static link to studysir.com
 
         <div className="flex flex-col items-end space-y-1">
           {/* Three Dots Menu */}
-          <BsThreeDots
-            className="cursor-pointer text-gray-600 hover:text-gray-800 ml-2 text-xs sm:text-sm"
-            onClick={toggleDropdown}
-          />
+          <div ref={saveDropdownRef} className="relative">
+            <BsThreeDots
+              className="cursor-pointer text-gray-600 hover:text-gray-800 ml-2 text-xs sm:text-sm"
+              onClick={toggleSaveDropdown}
+            />
+            {/* Save Post Dropdown */}
+            {saveDropdownOpen && (
+              <div className="absolute right-0 top-6 bg-white shadow-lg rounded-lg w-32 z-10">
+                <ul className="py-2">
+                  <li
+                    className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer"
+                    onClick={handleSavePost}
+                  >
+                    Save Post
+                  </li>
+                </ul>
+              </div>
+            )}
+          </div>
+
           {/* Posted Time */}
           <div className="text-xs text-gray-500">
             {post.posted_time ? new Date(post.posted_time).toLocaleDateString() : 'Date not available'}
@@ -274,35 +305,22 @@ const shareUrl = 'https://studysir.com'; // Static link to studysir.com
           >
             {post.status || 'Inactive'}
           </div>
-
-          {dropdownOpen && (
-            <div className="absolute right-0 top-8 bg-white shadow-lg rounded-lg w-32 z-10">
-              <ul className="py-2">
-                <li
-                  className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer"
-                  onClick={handleSavePost}
-                >
-                  Save Post
-                </li>
-              </ul>
-            </div>
-          )}
         </div>
       </div>
 
       {/* Job Title and Description */}
-      <h3 className=" text-lg sm:text-lg font-bold">{post.job_title || 'Job Title not available'}</h3>
+      <h3 className="text-lg sm:text-lg font-bold">{post.job_title || 'Job Title not available'}</h3>
       <p className="text-gray-700 text-xs sm:text-sm mt-2">
         {showFullDescription
           ? post.job_description || 'Job description not provided'
           : getTruncatedDescription(post.job_description || 'Job description not provided')}
         {post.job_description && post.job_description.split(' ').length > 100 && (
           <span className="text-blue-500 cursor-pointer" onClick={toggleDescription}>
-            {showFullDescription ? 'See Less' : 'See More'}
+            {showFullDescription ? ' See Less' : ' See More'}
           </span>
         )}
       </p>
-      <hr></hr>
+      <hr />
 
       {/* Job details with icons */}
       <div className="mt-4 space-y-2">
@@ -356,59 +374,59 @@ const shareUrl = 'https://studysir.com'; // Static link to studysir.com
             </span>
           </button>
 
-          <div className="relative">
-  <button
-    className="flex items-center text-gray-500 hover:text-blue-500"
-    onClick={() => setDropdownOpen(!dropdownOpen)}
-  >
-    <BiShare className="mr-1 text-xs sm:text-sm" />
-    <span className="text-xs sm:text-sm">Share</span>
-  </button>
+          {/* Share Button and Dropdown */}
+          <div ref={shareDropdownRef} className="relative">
+            <button className="flex items-center text-gray-500 hover:text-blue-500" onClick={toggleShareDropdown}>
+              <BiShare className="mr-1 text-xs sm:text-sm" />
+              <span className="text-xs sm:text-sm">Share</span>
+            </button>
 
-  {dropdownOpen && (
-    <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg p-2 z-20">
-      <FacebookShareButton
-        url={shareUrl}
-        quote={`${shareTitle} - ${shareDescription}`}
-        className="mx-2 my-1"
-      >
-        <FacebookIcon size={32} round />
-        <span className="ml-2 text-xs sm:text-sm">Facebook</span>
-      </FacebookShareButton>
+            {shareDropdownOpen && (
+              <div
+                className="absolute bottom-full left-0 mt-2 w-48 bg-white border rounded-lg shadow-lg p-2 z-20"
+              >
+                <div className="grid grid-cols-2 gap-2">
+                  <FacebookShareButton
+                    url={shareUrl}
+                    quote={`${shareTitle} - ${shareDescription}`}
+                    className="flex items-center p-1"
+                  >
+                    <FacebookIcon size={32} round />
+                    <span className="ml-2 text-xs sm:text-sm">Facebook</span>
+                  </FacebookShareButton>
 
-      <TwitterShareButton
-        url={shareUrl}
-        title={`${shareTitle} - ${shareDescription}`}
-        className="mx-2 my-1"
-      >
-        <TwitterIcon size={32} round />
-        <span className="ml-2 text-xs sm:text-sm">Twitter</span>
-      </TwitterShareButton>
+                  <TwitterShareButton
+                    url={shareUrl}
+                    title={`${shareTitle} - ${shareDescription}`}
+                    className="flex items-center p-1"
+                  >
+                    <TwitterIcon size={32} round />
+                    <span className="ml-2 text-xs sm:text-sm">Twitter</span>
+                  </TwitterShareButton>
 
-      <LinkedinShareButton
-        url={shareUrl}
-        title={shareTitle}
-        summary={shareDescription}
-        source={shareUrl}
-        className="mx-2 my-1"
-      >
-        <LinkedinIcon size={32} round />
-        <span className="ml-2 text-xs sm:text-sm">LinkedIn</span>
-      </LinkedinShareButton>
+                  <LinkedinShareButton
+                    url={shareUrl}
+                    title={shareTitle}
+                    summary={shareDescription}
+                    source={shareUrl}
+                    className="flex items-center p-1"
+                  >
+                    <LinkedinIcon size={32} round />
+                    <span className="ml-2 text-xs sm:text-sm">LinkedIn</span>
+                  </LinkedinShareButton>
 
-      <WhatsappShareButton
-        url={shareUrl}
-        title={`${shareTitle} - ${shareDescription}`}
-        className="mx-2 my-1"
-      >
-        <WhatsappIcon size={32} round />
-        <span className="ml-2 text-xs sm:text-sm">WhatsApp</span>
-      </WhatsappShareButton>
-    </div>
-  )}
-</div>
-
-            
+                  <WhatsappShareButton
+                    url={shareUrl}
+                    title={`${shareTitle} - ${shareDescription}`}
+                    className="flex items-center p-1"
+                  >
+                    <WhatsappIcon size={32} round />
+                    <span className="ml-2 text-xs sm:text-sm">WhatsApp</span>
+                  </WhatsappShareButton>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         <button

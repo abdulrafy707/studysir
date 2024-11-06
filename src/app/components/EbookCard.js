@@ -336,7 +336,7 @@ export default function EbookCard({ ebook }) {
       </button>
 
       {shareDropdownOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg p-2 z-20">
+        <div className="absolute right-0 mt-2 w-48 bottom-5 bg-white border rounded-lg shadow-lg p-2 z-20">
           <FacebookShareButton url={shareUrl} quote={shareTitle} className="mx-2 my-1 flex items-center">
             <FacebookIcon size={24} round />
             <span className="ml-2 text-xs sm:text-sm">Facebook</span>
