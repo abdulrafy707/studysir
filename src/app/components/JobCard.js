@@ -264,7 +264,7 @@ export default function JobCard({ post }) {
           <div className="ml-2 sm:ml-4">
             <h2 className="text-lg sm:text-lg font-bold">{post.name || 'Student'}</h2>
             <p className="text-gray-500 text-xs sm:text-sm flex items-center">
-              <MdLocationOn className="mr-1" />
+              
               {post.location || 'Location not provided'}
             </p>
           </div>
