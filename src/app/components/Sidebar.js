@@ -92,7 +92,7 @@ const Sidebar = () => {
     const handleAffiliateProgram = () => {
         const userData = JSON.parse(localStorage.getItem('user'));
         if (userData && userData.id) {
-            const referralLink = `http://localhost:3000/user/pages/signup?ref=${userData.id}`;
+            const referralLink = `https://studysir.com/user/pages/signup?ref=${userData.id}`;
             setReferralLink(referralLink); // Set the referral link
             setShowReferralPopup(true); // Show the popup
         } else {

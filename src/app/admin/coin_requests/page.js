@@ -17,21 +17,25 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  Dialog,
+  DialogContent,
 } from '@mui/material';
 
 const CoinRequestsComponent = () => {
-  const [coinRequests, setCoinRequests] = useState([]);  // Store all coin requests
-  const [loading, setLoading] = useState(true);          // Loading state
-  const [error, setError] = useState(false);             // Error state
-  const [snackbarOpen, setSnackbarOpen] = useState(false); // Snackbar for success/error messages
-  const [snackbarMessage, setSnackbarMessage] = useState(''); // Message for snackbar
-  const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;   // Fetch base URL from .env file
+  const [coinRequests, setCoinRequests] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [openImageDialog, setOpenImageDialog] = useState(false); // To open/close the image dialog
+  const [selectedImage, setSelectedImage] = useState(''); // Store the selected image URL
+  const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   // Fetch the list of coin requests when the component mounts
   useEffect(() => {
     const fetchCoinRequests = async () => {
       try {
-        const response = await axios.get(`${apiUrl}/coin_request_api.php`); // Call the API to fetch coin requests
+        const response = await axios.get(`${apiUrl}/coin_request_api.php`);
         if (response.data.error) {
           setError(true);
           setSnackbarMessage(response.data.error);
@@ -55,7 +59,7 @@ const CoinRequestsComponent = () => {
     setLoading(true);
     try {
       const response = await axios.put(`${apiUrl}/coin_request_api.php`, {
-        id,  // Send 'id'
+        id,
         request_status: newStatus,
       });
 
@@ -78,6 +82,12 @@ const CoinRequestsComponent = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Open the dialog with the selected image
+  const handleImageClick = (imageUrl) => {
+    setSelectedImage(imageUrl);
+    setOpenImageDialog(true);
   };
 
   return (
@@ -116,7 +126,8 @@ const CoinRequestsComponent = () => {
                         <img
                           src={`${apiUrl}/uploads/${request.bank_receipt_url}`}
                           alt="Receipt"
-                          style={{ width: '100px', height: '100px' }}
+                          style={{ width: '100px', height: '100px', cursor: 'pointer' }}
+                          onClick={() => handleImageClick(`${apiUrl}/uploads/${request.bank_receipt_url}`)}
                         />
                       </TableCell>
                       <TableCell>{request.request_status === 'approved' ? 'Approved' : 'Pending'}</TableCell>
@@ -146,6 +157,17 @@ const CoinRequestsComponent = () => {
               </TableBody>
             </Table>
           </TableContainer>
+
+          {/* Dialog to show full image on click */}
+          <Dialog open={openImageDialog} onClose={() => setOpenImageDialog(false)}>
+            <DialogContent>
+              <img
+                src={selectedImage}
+                alt="Full Receipt"
+                style={{ width: '100%', height: 'auto' }}
+              />
+            </DialogContent>
+          </Dialog>
         </>
       )}
 

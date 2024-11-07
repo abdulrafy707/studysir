@@ -54,6 +54,12 @@ export default function NewCourse({ onCloseForm }) {
       formPayload.append(key, formData[key]);
     });
   
+    // Log the FormData contents for debugging
+    console.log("FormData being sent:");
+    for (let [key, value] of formPayload.entries()) {
+      console.log(`${key}:`, value); // This will log the file details as well as other fields
+    }
+  
     try {
       const response = await fetch('https://studysir.m3xtrader.com/api/courses_api.php', {
         method: 'POST',
