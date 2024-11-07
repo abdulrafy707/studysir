@@ -4,14 +4,14 @@ import { useEffect, useState } from "react";
 import CourseList from "@/app/components/Get_courses"; // Assuming Get_courses renders individual courses
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 export default function Page() {
   const [courses, setCourses] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   const router = useRouter();
-  const searchParams = useSearchParams();
+  const [initialLoad, setInitialLoad] = useState(true); // Track if it's the first load
 
   // Helper function to shuffle an array (Fisher-Yates algorithm)
   const shuffleArray = (array) => {
@@ -48,12 +48,16 @@ export default function Page() {
     }
   };
 
-  // Fetch data on the initial load using URL search params
+  // Fetch data on the initial load using URL search params, and set initial load flag to false after
   useEffect(() => {
-    const initialQuery = searchParams.get('query') || '';
-    setSearchQuery(initialQuery);
-    fetchCourseData(initialQuery);
-  }, [baseUrl, searchParams]);
+    if (initialLoad) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const initialQuery = urlParams.get('query') || '';
+      setSearchQuery(initialQuery);
+      fetchCourseData(initialQuery);
+      setInitialLoad(false);
+    }
+  }, [baseUrl, initialLoad]);
 
   // Handle search input change and trigger fetch on Enter key press
   const handleSearchInput = (e) => {
@@ -62,7 +66,8 @@ export default function Page() {
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
-      router.replace(`?query=${encodeURIComponent(searchQuery.trim())}`);
+      const newUrl = `?query=${encodeURIComponent(searchQuery.trim())}`;
+      window.history.replaceState(null, '', newUrl);
       fetchCourseData(searchQuery.trim());
     }
   };
