@@ -12,25 +12,25 @@ import {
   CircularProgress,
   Box,
   Snackbar,
-  Alert
+  Alert,
+  Typography
 } from '@mui/material';
 
 const MoneyHistoryPage = () => {
-  const [history, setHistory] = useState([]); // State to hold money history, defaulting to an empty array
-  const [loading, setLoading] = useState(true); // State for loading spinner
-  const [error, setError] = useState(false); // State for error handling
-  const [snackbarOpen, setSnackbarOpen] = useState(false); // Snackbar to show error/success messages
-  const [snackbarMessage, setSnackbarMessage] = useState(''); // Snackbar message
-  const [studentId, setStudentId] = useState(null); // State to hold student ID
+  const [history, setHistory] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [studentId, setStudentId] = useState(null);
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL; // Fetch base URL from .env file
+  const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-  // Check if code is running on the client side
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const user = JSON.parse(localStorage.getItem('user'));
       if (user && user.id) {
-        setStudentId(user.id); // Set student ID from localStorage
+        setStudentId(user.id);
       } else {
         setError(true);
         setSnackbarMessage('Failed to retrieve user information.');
@@ -40,42 +40,40 @@ const MoneyHistoryPage = () => {
     }
   }, []);
 
-  // Fetch the money history when the studentId is set
   useEffect(() => {
     const fetchMoneyHistory = async () => {
       if (!studentId) return;
-  
+
       try {
         const response = await axios.get(`${apiUrl}/money_history_api.php?student_id=${studentId}`);
-  
-        console.log('API response:', response.data); // Check the API response in the console
-  
+        console.log('API response:', response.data);
+
         if (response.data.error) {
           setError(true);
           setSnackbarMessage(response.data.error);
           setSnackbarOpen(true);
-          setHistory([]); // Set to empty array in case of error
+          setHistory([]);
         } else {
-          setHistory(Array.isArray(response.data) ? response.data : []); // Ensure it's always an array
+          setHistory(Array.isArray(response.data) ? response.data : []);
         }
       } catch (err) {
         console.error('Error fetching money history:', err);
         setError(true);
         setSnackbarMessage('Failed to fetch money history');
         setSnackbarOpen(true);
-        setHistory([]); // Set to empty array in case of error
+        setHistory([]);
       } finally {
         setLoading(false);
       }
     };
-  
+
     fetchMoneyHistory();
   }, [apiUrl, studentId]);
 
   return (
-    <Box sx={{ padding: 3 }}>
+    <Box sx={{ p: 0 }}>
       {loading ? (
-        <Box display="flex" justifyContent="center" alignItems="center">
+        <Box display="flex" justifyContent="center" alignItems="center" minHeight="50vh">
           <CircularProgress />
         </Box>
       ) : error ? (
@@ -83,11 +81,20 @@ const MoneyHistoryPage = () => {
           <Alert severity="error">{snackbarMessage}</Alert>
         </Snackbar>
       ) : history.length === 0 ? (
-        <Box display="flex" justifyContent="center" alignItems="center">
-          <p>No money history available for this student.</p>
+        <Box display="flex" justifyContent="center" alignItems="center" minHeight="50vh">
+          <Typography variant="h6" component="p" sx={{ fontWeight: 'bold', color: 'black' }}>
+            No money history available for this student.
+          </Typography>
         </Box>
       ) : (
-        <TableContainer component={Paper}>
+        <TableContainer
+          component={Paper}
+          sx={{
+            width: { xs: '110vw', md: '80%' },
+            mx: 'auto',
+            overflowX: 'auto', // Ensure table is scrollable on mobile
+          }}
+        >
           <Table>
             <TableHead>
               <TableRow>
@@ -115,7 +122,6 @@ const MoneyHistoryPage = () => {
         </TableContainer>
       )}
 
-      {/* Success/Error Snackbar */}
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={4000}

@@ -82,7 +82,7 @@ const TeacherSidebar = () => {
     return (
         <div>
             {/* Sidebar for Desktop */}
-            <div className={`hidden md:block pt-20 text-black fixed inset-y-0 left-0 bg-gray-100 w-64 p-5 pt-6 h-screen overflow-y-auto`}>
+            <div className={`hidden md:block pt-20 text-black fixed inset-y-0 left-0 bg-gray-100 w-64 p-5  h-screen overflow-y-auto`}>
                 <ul className="space-y-3">
                     {/* User Profile */}
                     <li className="flex items-center space-x-3">
@@ -105,7 +105,7 @@ const TeacherSidebar = () => {
                         <Image src="/digital.png" alt="Digital Products" width={24} height={24} />
                         <span className="font-semibold">Digital Products</span>
                     </li>
-                    <li className="flex items-center space-x-3 cursor-pointer hover:bg-gray-200 p-2 rounded-md transition-colors" onClick={() => setShowBuyCoinsModal(true)}>
+                    <li className="flex items-center space-x-3 cursor-pointer hover:bg-gray-200 p-2 rounded-md transition-colors" onClick={() => navigateToPage('buy_coin')}>
                         <Image src="/coins.png" alt="Buy Coins" width={24} height={24} />
                         <span className="font-semibold">Buy Coins</span>
                     </li>
