@@ -273,7 +273,7 @@ export default function EbookCard({ ebook }) {
 
 
   // Define the URL to share. This should point to the ebook's detail page.
-  const shareUrl = `${baseUrl}/ebook/${encodeURIComponent(ebook.id)}`;
+  const shareUrl = 'https://studysir.com';
   const shareTitle = ebook.ebook_title || 'Check out this amazing ebook!';
 
   return (
@@ -326,39 +326,41 @@ export default function EbookCard({ ebook }) {
     </button>
 
     {/* Share Button with Dropdown */}
-    <div className="relative">
-      <button
-        className="flex items-center text-gray-500 hover:text-blue-500 text-xs sm:text-sm"
-        onClick={() => setShareDropdownOpen(!shareDropdownOpen)}
-      >
-        <BiShare className="mr-1 text-sm sm:text-base" />
-        <span className="text-xs sm:text-sm">Share</span>
-      </button>
+    {/* Share Button with Dropdown */}
+<div className="relative">
+  <button
+    className="flex items-center text-gray-500 hover:text-blue-500 text-xs sm:text-sm"
+    onClick={() => setShareDropdownOpen(!shareDropdownOpen)}
+  >
+    <BiShare className="mr-1 text-sm sm:text-base" />
+    <span className="text-xs sm:text-sm">Share</span>
+  </button>
 
-      {shareDropdownOpen && (
-        <div className="absolute right-0 mt-2 w-48 bottom-5 bg-white border rounded-lg shadow-lg p-2 z-20">
-          <FacebookShareButton url={shareUrl} quote={shareTitle} className="mx-2 my-1 flex items-center">
-            <FacebookIcon size={24} round />
-            <span className="ml-2 text-xs sm:text-sm">Facebook</span>
-          </FacebookShareButton>
+  {shareDropdownOpen && (
+    <div className="absolute right-0 mt-2 w-48 bottom-5 bg-white border rounded-lg shadow-lg p-2 z-20">
+      <FacebookShareButton url={shareUrl} quote={shareTitle} className="mx-2 my-1 flex items-center">
+        <FacebookIcon size={24} round />
+        <span className="ml-2 text-xs sm:text-sm">Facebook</span>
+      </FacebookShareButton>
 
-          <TwitterShareButton url={shareUrl} title={shareTitle} className="mx-2 my-1 flex items-center">
-            <TwitterIcon size={24} round />
-            <span className="ml-2 text-xs sm:text-sm">Twitter</span>
-          </TwitterShareButton>
+      <TwitterShareButton url={shareUrl} title={shareTitle} className="mx-2 my-1 flex items-center">
+        <TwitterIcon size={24} round />
+        <span className="ml-2 text-xs sm:text-sm">Twitter</span>
+      </TwitterShareButton>
 
-          <LinkedinShareButton url={shareUrl} title={shareTitle} className="mx-2 my-1 flex items-center">
-            <LinkedinIcon size={24} round />
-            <span className="ml-2 text-xs sm:text-sm">LinkedIn</span>
-          </LinkedinShareButton>
+      <LinkedinShareButton url={shareUrl} title={shareTitle} className="mx-2 my-1 flex items-center">
+        <LinkedinIcon size={24} round />
+        <span className="ml-2 text-xs sm:text-sm">LinkedIn</span>
+      </LinkedinShareButton>
 
-          <WhatsappShareButton url={shareUrl} title={shareTitle} className="mx-2 my-1 flex items-center">
-            <WhatsappIcon size={24} round />
-            <span className="ml-2 text-xs sm:text-sm">WhatsApp</span>
-          </WhatsappShareButton>
-        </div>
-      )}
+      <WhatsappShareButton url={shareUrl} title={shareTitle} className="mx-2 my-1 flex items-center">
+        <WhatsappIcon size={24} round />
+        <span className="ml-2 text-xs sm:text-sm">WhatsApp</span>
+      </WhatsappShareButton>
     </div>
+  )}
+</div>
+
 
     <button
   className="flex items-center text-gray-500 hover:text-blue-500 text-xs sm:text-sm"

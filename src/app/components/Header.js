@@ -35,10 +35,16 @@ const Header = () => {
 
     const handleSearch = () => {
         const targetRolePath = isAuthenticated ? `/${userRole}` : '/user';
-        const searchPath = searchQuery.trim() ? `${targetRolePath}/searched_courses?query=${encodeURIComponent(searchQuery)}` : targetRolePath;
-        router.push(searchPath);
+        const searchPath = `${targetRolePath}/searched_courses?query=${encodeURIComponent(searchQuery.trim())}`;
+    
+        if (searchQuery.trim()) {
+            router.push(searchPath); // Navigate to the search results page
+            setSearchQuery(''); // Clear the search field after submission
+        } else {
+            router.push(targetRolePath); // Navigate to the base path if the search query is empty
+        }
     };
-
+    
     const handleMobileMenuClick = () => {
         if (userRole === 'teacher') {
             router.push('/teacher/sidebar');
@@ -135,7 +141,6 @@ const Header = () => {
                     />
                 </Link>
 
-                {/* Conditionally render the Chat icon only if the user is authenticated */}
                 {isAuthenticated && (
                     <Link href={`/${userRole}/chat`}>
                         <Image

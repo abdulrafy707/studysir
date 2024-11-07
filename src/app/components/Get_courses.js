@@ -389,7 +389,7 @@ export default function CourseList({ course }) {
               className="rounded-full object-cover w-12 h-12 sm:w-16 sm:h-16" // Adjusted profile image size
             />
             <div className="ml-1 mt-3">
-              <h2 className="text-sm sm:text-lg font-bold">{teachers[course.teacher_id].fullname || 'Teacher Name'}</h2>
+              <h2 className="text-lg sm:text-lg font-bold">{teachers[course.teacher_id].fullname || 'Teacher Name'}</h2>
               <p className="text-xs sm:text-sm text-gray-500">{teachers[course.teacher_id].city}, {teachers[course.teacher_id].country}</p>
             </div>
           </div>

@@ -53,8 +53,8 @@ export default function NotificationsPage() {
   }
 
   return (
-    <div className="h-screen text-black flex flex-col items-center justify-start bg-gray-100 py-4 px-4 sm:px-6 lg:px-8">
-      <h1 className="text-2xl font-bold mb-6 w-full text-center">Notifications</h1>
+    <div className="h-screen text-black flex flex-col top-1 items-center justify-start bg-gray-100 py-2 px-4 sm:px-6 lg:px-8">
+     
       {notifications.length > 0 ? (
         <div className="w-full space-y-4">
           {notifications.map((notification) => (

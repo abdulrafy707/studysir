@@ -1,11 +1,11 @@
 'use client';
 
 import { useEffect, useState } from "react";
-import JobCard from "@/app/components/JobCard";  // Correct import for JobCard
-
-import TeacherCard from "@/app/components/Teachercard"; // Correct import for TeacherCard
+import JobCard from "@/app/components/JobCard";
+import TeacherCard from "@/app/components/Teachercard";
 import { ThreeDots } from 'react-loader-spinner';
 import CourseList from "@/app/components/Get_courses";
+import Image from "next/image"; // Import Image component if using Next.js
 
 export default function SavedPostsPage() {
   const [savedPosts, setSavedPosts] = useState([]);
@@ -54,6 +54,7 @@ export default function SavedPostsPage() {
   if (!savedPosts.length) {
     return (
       <div className="flex flex-col items-center justify-center mt-8">
+        <Image src="/nosavepost.png" alt="No posts available" width={150} height={150} /> {/* Display no post image */}
         <p className="text-red-500 font-semibold mt-4">No saved posts available.</p>
       </div>
     );
