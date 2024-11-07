@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react";
 import JobCard from "@/app/components/JobCard";  // Correct import for JobCard
-import CourseCard from "@/app/components/CourseCard";  // Correct import for CourseCard
+
 import TeacherCard from "@/app/components/Teachercard"; // Correct import for TeacherCard
 import { ThreeDots } from 'react-loader-spinner';
+import CourseList from "@/app/components/Get_courses";
 
 export default function SavedPostsPage() {
   const [savedPosts, setSavedPosts] = useState([]);
@@ -65,7 +66,7 @@ export default function SavedPostsPage() {
           case 'studentpost':
             return <JobCard key={index} post={post} />;
           case 'course':
-            return <CourseCard key={index} course={post} />;
+            return <CourseList key={index} course={post} />;
           case 'teacherpost':
             return <TeacherCard key={index} teacher={post} />;
           default:
