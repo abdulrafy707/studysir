@@ -69,7 +69,7 @@ const TeacherSideBar = () => {
     const sidebarItems = [
         { icon: '/course.png', label: 'Courses', path: 'my-courses' },
         { icon: '/digital.png', label: 'Digital Store', path: 'my-ebooks' },
-        { icon: '/managecalander.png', label: 'Money History', path: 'calendar' },
+        { icon: '/managecalander.png', label: 'Money History', path: 'money_history' },
         { icon: '/coins.png', label: 'Buy Coins', action: goToBuyCoin },
         { icon: '/coinhistory.png', label: 'Coins History', path: 'coin_history' },
         { icon: '/savedposts.png', label: 'Saved Posts', action: goToSavedPosts },

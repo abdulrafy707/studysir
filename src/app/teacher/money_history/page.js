@@ -81,9 +81,15 @@ const MoneyHistoryPage = () => {
           <Alert severity="error">{snackbarMessage}</Alert>
         </Snackbar>
       ) : history.length === 0 ? (
-        <Box display="flex" justifyContent="center" alignItems="center">
-          <p>No money history available for this teacher.</p>
-        </Box>
+        <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      height="100%"
+      sx={{ color: 'black' }}
+    >
+      <p>No money history available for this teacher.</p>
+    </Box>
       ) : (
         <TableContainer component={Paper}>
           <Table>
