@@ -59,21 +59,21 @@ export default function Page() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4">
+    <div className="min-h-screen text-black flex flex-col items-center justify-center px-4">
       {/* Search Bar */}
-      <div className="w-full sm:max-w-md lg:max-w-lg xl:max-w-xl flex justify-center mb-4">
+      <div className="w-full text-black sm:max-w-md lg:max-w-lg xl:max-w-xl flex justify-center mb-4">
         <input
           type="text"
           value={searchQuery}
           onChange={handleSearchInput}
           onKeyPress={handleKeyPress}
           placeholder="Search for a course by title or description..."
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+          className="w-full text-black px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
         />
       </div>
 
       {/* Render the CourseList component for each course */}
-      <div className="w-full sm:max-w-md lg:max-w-lg xl:max-w-xl">
+      <div className="w-full text-black sm:max-w-md lg:max-w-lg xl:max-w-xl">
         {courses.length > 0 ? (
           courses.map((course, index) => (
             <CourseList key={index} course={course} /> // Pass the course data to each CourseList component

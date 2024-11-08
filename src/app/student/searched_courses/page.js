@@ -73,7 +73,7 @@ export default function Page() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4">
+    <div className="min-h-screen text-black flex flex-col items-center justify-center px-4">
       <ToastContainer 
         position="top-right"
         autoClose={5000}
@@ -86,7 +86,7 @@ export default function Page() {
         theme="colored"
       />
       {/* Search Bar */}
-      <div className="w-full sm:max-w-md lg:max-w-lg xl:max-w-xl flex justify-center mb-4">
+      <div className="w-full text-black sm:max-w-md lg:max-w-lg xl:max-w-xl flex justify-center mb-4">
         <input
           type="text"
           value={searchQuery}

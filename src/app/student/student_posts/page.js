@@ -103,9 +103,9 @@ const fetchTeacherData = async (query = '') => {
   }
 
   return (
-    <div className="container mx-auto p-0">
+    <div className="container text-black mx-auto p-0">
       {/* Search Bar */}
-      <div className="flex justify-center mb-4">
+      <div className="flex text-black justify-center mb-4">
         <input
           type="text"
           value={searchQuery}

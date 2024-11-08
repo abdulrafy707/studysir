@@ -79,7 +79,7 @@ export default function Page() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4">
+    <div className="min-h-screen text-black flex flex-col items-center justify-center px-4">
       {/* Search Bar */}
       <div className="w-full max-w-md flex justify-center mb-4">
         <input
@@ -88,7 +88,7 @@ export default function Page() {
           onChange={handleSearchInput}
           onKeyPress={handleKeyPress}
           placeholder="Search for job posts..."
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+          className="w-full text-black px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
         />
       </div>
 

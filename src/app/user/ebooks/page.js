@@ -44,7 +44,7 @@ export default function Page() {
   };
 
   return (
-    <div className="container mx-auto p-0">
+    <div className="container text-black mx-auto p-0">
       <Header/>
       <div className="flex justify-center pt-16 mb-4">
         <input
@@ -53,7 +53,7 @@ export default function Page() {
           onChange={handleSearchInput}
           onKeyPress={handleKeyPress}
           placeholder="Search for an ebook by title or description..."
-          className="w-[400px] px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+          className="w-[400px] text-black px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
         />
       </div>
 
