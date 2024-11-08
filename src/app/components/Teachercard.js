@@ -152,10 +152,13 @@ export default function TeacherCard({ teacher, baseUrl }) {
           </div>
 
           <div className="flex items-center space-x-2">
-            <FaWallet className="text-gray-700 text-xs sm:text-sm" />
-            <p className="font-bold text-xs sm:text-sm">Fee:</p>
-            <p className="text-xs sm:text-sm">{teacher.fee || 'Not specified'}</p>
-          </div>
+  <FaWallet className="text-gray-700 text-xs sm:text-sm" />
+  <p className="font-bold text-xs sm:text-sm">Fee:</p>
+  <p className="text-xs sm:text-sm">
+    {teacher.fee ? `$${teacher.fee}` : 'Not specified'}
+  </p>
+</div>
+
         </div>
 
         <hr className="mt-4" />

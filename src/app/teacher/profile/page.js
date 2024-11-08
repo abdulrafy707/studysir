@@ -216,7 +216,7 @@ export default function TeacherProfilePage() {
           <p><FaUserAlt className="inline-block mr-2"/> <strong>Designation:</strong> {teacher.designation}</p>
           <p><MdLanguage className="inline-block mr-2"/> <strong>Languages:</strong> {teacher.languages.join(', ')}</p>
           <p><FaBook className="inline-block mr-2"/> <strong>Subjects:</strong> {teacher.subjects.join(', ')}</p>
-          <p><FaMoneyBillAlt className="inline-block mr-2"/> <strong>Fee:</strong> {teacher.fee}</p>
+          <p><FaMoneyBillAlt className="inline-block mr-2"/> <strong>Fee in $:</strong> {teacher.fee}</p>
           <p><FaBookOpen className="inline-block mr-2" /> <strong>Description:</strong> {teacher.description}</p>
 
           <p><FaMoneyBillAlt className="inline-block mr-2"/> <strong>Current Coins:</strong> {teacher.current_coins}</p>
@@ -330,7 +330,7 @@ export default function TeacherProfilePage() {
 
           {/* Fee with Icon */}
           <div>
-            <label htmlFor="fee" className="block text-sm font-medium text-gray-700">Fee</label>
+            <label htmlFor="fee" className="block text-sm font-medium text-gray-700">Fee in $</label>
             <div className="relative">
               <FaMoneyBillAlt className="absolute left-3 top-2.5 text-gray-500" />
               <input
