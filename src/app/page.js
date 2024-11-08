@@ -111,7 +111,7 @@ export default function Home() {
         </div>
 
         {/* Content container with negative margin to pull it closer to the banner */}
-        <div className="w-full max-w-2xl space-y-4 sm:mt-[-1rem] sm:p-4">
+        <div className="w-full max-w-2xl space-y-3 sm:mt-[-1rem] sm:p-4">
           {combinedRecords.map((record, index) => {
             if (record.type === 'job') return <JobCard key={index} post={record} />;
             if (record.type === 'course') return <CourseCard key={index} course={record} />;
