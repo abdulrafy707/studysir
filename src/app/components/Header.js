@@ -60,6 +60,10 @@ const Header = () => {
     const getIconSrc = (page, defaultIcon, activeIcon) => (
         activePage === page ? activeIcon : defaultIcon
     );
+    // Fallback to default profile image if the user's image fails to load
+    const handleImageError = () => {
+        setUserImage('/noprofile.png');
+    };
 
     return (
         <header className="bg-white text-black flex items-center justify-between px-4 py-1 sm:py-2 shadow-md w-full fixed top-0 z-50">
@@ -171,7 +175,14 @@ const Header = () => {
                             </Link>
                         )}
                         <Link href={`/${userRole}/profile`}>
-                            <Image src={userImage} alt="User Avatar" width={30} height={30} className="w-8 h-8 md:w-9 md:h-9 rounded-full cursor-pointer" />
+                            <Image
+                                src={userImage}
+                                alt="User Avatar"
+                                width={30}
+                                height={30}
+                                className="w-8 h-8 md:w-9 md:h-9 rounded-full cursor-pointer"
+                                onError={handleImageError} // Set fallback image on error
+                            />
                         </Link>
                     </>
                 ) : (

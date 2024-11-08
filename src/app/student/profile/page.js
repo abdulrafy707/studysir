@@ -43,7 +43,7 @@ export default function StudentUpdateForm() {
                 city: studentData.city || '',
                 country: studentData.country || '',
                 status: studentData.status || '',
-                image: studentData.image ? `${baseUrl}/uploads/${studentData.image}` : '/default-profile.png', // Set the image URL
+                image: studentData.image ? `${baseUrl}/uploads/${studentData.image}` : '/noprofile.png', // Set the image URL
                 current_money: studentData.current_money || 0, // Fetch and set the current money
               });
             } else {
@@ -141,11 +141,13 @@ export default function StudentUpdateForm() {
 
       <div className="flex flex-col items-center mb-6">
         <div className="relative">
-          <img
-            src={student.image}
-            alt="Profile"
-            className="w-32 h-32 rounded-full object-cover shadow-lg mb-4"
-          />
+        <img
+  src={student.image}
+  alt="Profile"
+  className="w-32 h-32 rounded-full object-cover shadow-lg mb-4"
+  onError={() => setStudent((prevState) => ({ ...prevState, image: '/noprofile.png' }))} // Set fallback if image fails to load
+/>
+
           {isEditing && (
             <label className="absolute bottom-0 right-0 bg-blue-600 text-white p-2 rounded-full cursor-pointer">
               <FaCamera />

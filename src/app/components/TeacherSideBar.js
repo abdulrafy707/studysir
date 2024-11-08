@@ -79,6 +79,11 @@ const TeacherSidebar = () => {
         return null;
     }
 
+     // Image onError handler for fallback
+     const handleImageError = () => {
+        setUserImage('/noprofile.png');
+    };
+
     return (
         <div>
             {/* Sidebar for Desktop */}
@@ -92,6 +97,7 @@ const TeacherSidebar = () => {
                             width={40}
                             height={40}
                             className="rounded-full"
+                            onError={handleImageError}
                         />
                         <span className="font-bold">{userName}</span>
                     </li>

@@ -133,19 +133,25 @@ const Sidebar = () => {
         return null;
     }
 
+    // Image onError handler for fallback
+    const handleImageError = () => {
+        setUserImage('/noprofile.png');
+    };
+
+
     return (
         <div>
             {/* Sidebar for Desktop only */}
             <div className={`hidden md:block text-black fixed inset-y-0 left-0 bg-gray-100 w-64 p-5 pt-6 h-screen overflow-y-auto sticky top-0`}>
                 <ul className="space-y-3">
-                    {/* User Profile */}
-                    <li className="flex items-center space-x-3">
+                <li className="flex items-center space-x-3">
                         <Image
-                            src={userImage ? `${baseUrl}/uploads/${userImage}` : '/default-profile.png'}
+                            src={userImage}
                             alt={userName}
                             width={40}
                             height={40}
                             className="rounded-full"
+                            onError={handleImageError}
                         />
                         <span className="font-bold">{userName}</span>
                     </li>

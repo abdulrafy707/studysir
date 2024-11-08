@@ -8,6 +8,8 @@ export default function TeacherCard({ teacher, baseUrl }) {
   const [likes, setLikes] = useState(teacher.likes || 0);
   const [liked, setLiked] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [showFullDescription, setShowFullDescription] = useState(false);
+  const [useFallbackImage, setUseFallbackImage] = useState(false);
 
   const handleLikeTeacher = async () => {
     const userData = JSON.parse(localStorage.getItem('user'));
@@ -80,32 +82,52 @@ export default function TeacherCard({ teacher, baseUrl }) {
     }
   };
 
+  // Function to get truncated description
+  const getTruncatedDescription = (description, wordLimit = 100) => {
+    if (!description) return '';
+    const words = description.split(' ');
+    return words.length > wordLimit ? words.slice(0, wordLimit).join(' ') + '...' : description;
+  };
+
+  const toggleDescription = () => {
+    setShowFullDescription(!showFullDescription);
+  };
+
   return (
     <div className="flex justify-center">
       <div className="bg-white text-black border rounded-lg w-[300px] sm:w-[500px] md:w-[600px] p-4 my-3 relative mx-auto" style={{ boxShadow: '-1px 1px 10px 0px #00000040' }}>
-      <div className="flex items-center">
-  <img
-    src={teacher.image ? `${baseUrl}/uploads/${teacher.image}` : '/default-profile.png'}
-    alt="Profile Picture"
-    className="rounded-full w-10 h-10 sm:w-12 sm:h-12"
-  />
-  <div className="ml-1">
-  <h2 className="text-lg sm:text-lg font-bold">
-    {teacher.designation ? `${teacher.designation} ` : ''}
-    {teacher.fullname || 'Teacher'}
-  </h2>
-  <p className="text-gray-500 text-xs sm:text-sm flex items-center">
-    <MdLocationOn className="mr-1" />
-    {teacher.city}, {teacher.country}
-  </p>
-</div>
+        <div className="flex items-center">
+          <img
+            src={useFallbackImage ? '/noprofile.png' : `${baseUrl}/uploads/${teacher.image}`}
+            alt="Profile Picture"
+            onError={() => setUseFallbackImage(true)} // Use fallback image if primary image fails to load
+            className="rounded-full w-10 h-10 sm:w-12 sm:h-12"
+          />
 
-</div>
+          <div className="ml-1">
+            <h2 className="text-lg sm:text-lg font-bold">
+              {teacher.designation ? `${teacher.designation} ` : ''}
+              {teacher.fullname || 'Teacher'}
+            </h2>
+            <p className="text-gray-500 text-xs sm:text-sm flex items-center">
+              <MdLocationOn className="mr-1" />
+              {teacher.city}, {teacher.country}
+            </p>
+          </div>
+        </div>
 
+        <h3 className="mt-4 text-xs sm:text-sm">
+          {showFullDescription
+            ? teacher.description || 'Teacher description not available'
+            : getTruncatedDescription(teacher.description || 'Teacher description not available', 100)}
+          {teacher.description && teacher.description.split(' ').length > 100 && (
+            <span className="text-blue-500 cursor-pointer" onClick={toggleDescription}>
+              {showFullDescription ? ' See Less' : ' See More'}
+            </span>
+          )}
+        </h3>
 
-
-        <h3 className="mt-4 text-xs sm:text-sm">{teacher.description || 'Teacher description not available'}</h3>
-         <hr></hr>
+        <hr />
         <div className="mt-4 space-y-2">
           <div className="flex items-center space-x-2">
             <FaLanguage className="text-gray-700 text-xs sm:text-sm" />

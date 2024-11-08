@@ -186,11 +186,13 @@ export default function TeacherProfilePage() {
 
       <div className="flex flex-col items-center mb-8">
         <div className="relative">
-          <img
-            src={teacher.image}
-            alt="Profile"
-            className="w-40 h-40 rounded-full object-cover mb-4 shadow-lg"
-          />
+        <img
+  src={teacher.image}
+  alt="Profile"
+  className="w-32 h-32 rounded-full object-cover shadow-lg mb-4"
+  onError={() => setStudent((prevState) => ({ ...prevState, image: '/noprofile.png' }))} // Set fallback if image fails to load
+/>
+
           {isEditing && (
             <label className="absolute bottom-0 right-0 bg-blue-600 text-white p-2 rounded-full cursor-pointer">
               <FaCamera />
